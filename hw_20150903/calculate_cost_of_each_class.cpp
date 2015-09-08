@@ -19,9 +19,9 @@ int main(int argc, const char * argv[]) {
 
 double calcCostEachClass() {
     // General data
-    const double TUITION_PER_SEMESTER = 25000;
-    const double AVERAGE_TOTAL_UNITS  = 15;
-
+    const int TUITION_PER_SEMESTER = 25000;
+    const int AVERAGE_TOTAL_UNITS  = 15;
+    
     // Data about the course
     int courseUnits      = 4;
     double hoursPerClass = 1.0;
