@@ -29,8 +29,11 @@ else
 2. Check the current amount in the account.
     - Say good-bye if the amount is zero or less.
 3. Ask the customer how much they want to withdraw.
-4. If the current amount is NOT enough, ask the customer if they want to proceed by paying a service fee of $25.00.
-5. If the withdrawal amount is greater than $300.00, a service charge of 4% of the amount over $300 will be charged. Inform the customer and ask if they stil want to proceed.
+4. If the current amount is NOT enough, ask the customer
+if they want to proceed by paying a service fee of $25.00.
+5. If the withdrawal amount is greater than $300.00,
+a service charge of 4% of the amount over $300 will be charged.
+Inform the customer and ask if they still want to proceed.
 6. Process the withdrawal (customerAccount - withdrawal - serviceCharge)
 7. Print a receipt.
 8. Display a thank you message.
