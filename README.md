@@ -1,5 +1,17 @@
 # cpp_practice_code
 
+- This repo is for me to practice the c++ programming.
+- I write notes on what I learned for future reference.
+
+==
+
+## std::cin vs std::cin.getline
+
+|   |   |   |
+|---|---|---|
+|std::cin         |getting first word| |
+|std::cin.getline |getting line      |[doc](http://www.cplusplus.com/reference/string/string/getline/)|
+
 ==
 
 ##  String info functions
@@ -148,7 +160,9 @@ int main() {
 
 ==
 
-## Integer numeric data types
+## Data types
+
+### Integer numeric data types
 
 | Definition | Size | Supported number range | Standard-defined minimum size |
 |---|---|---|---|
@@ -158,18 +172,14 @@ int main() {
 |long long myVar;|64 bits|-9,223,372,036,854,775,808 to 9,223,372,036,854,775,807 |64 bits|
 |int myVar;      |32 bits|-2,147,483,648 to 2,147,483,647 |16 bits|
 
-==
-
-## Floating-point numeric data types
+### Floating-point numeric data types
 
 |Definition | Size     |Supported number range |
 |---|---|---|
 |float x;   |  32 bits |-3.4x1038 to 3.4*1038  |
 |double x;  |  64 bits |-1.7x10308 to 1.7*10308|
 
-==
-
-## Unsigned
+### Unsigned
 
 Sometimes a programmer knows that a variable's numbers will always be positive (0 or greater), such as when the variable stores a person's age or weight. The programmer can prepend the word "unsigned" to inform the compiler that the integers will always be positive. Because the integer's sign needs not be stored, the integer range reaches slightly higher numbers.
 
@@ -194,15 +204,6 @@ double areaSquare = 49.0;
 sideSquare = sqrt(areaSquare);
 
 ```
-
-==
-
-## std::cin vs std::cin.getline
-
-|   |   |   |
-|---|---|---|
-|std::cin         |getting first word| |
-|std::cin.getline |getting line      |[doc](http://www.cplusplus.com/reference/string/string/getline/)|
 
 ==
 
@@ -255,26 +256,23 @@ myVector.at(2) = 2025;
 ```cpp
 #include <vector>
 //... 
-// just declare it and add elements
-vector<int> myVector;
-myVector.push_back(2038);
-myVector.push_back(2051);
-myVector.push_back(2064);
-// ...
-```
-
-```cpp
-#include <vector>
-//... 
 // Define an int vector with 50 elements each initialized to 0
 vector <int> myVector(50, 0); 
 ```
 
-### Vector resize
+### Checking the current vector size
+
+- `myVector.size()` returns the current size of myVector
+
+```cpp
+currentSize = sensorReadings.size();
+```
+
+### Resizing a vector
 
 - Commonly, the size of a list of items is not known during a program's compile time
 - a vector's size can be set or changed while a program is executing
-- If the new size is larger, resize() adds elements at the end. If smaller, resize() deletes elements from the end.
+- If the new size is larger, `resize()` adds elements at the end. If smaller, `resize()` deletes elements from the end.
 - Immediately after the definition, a vector has no element.
 - [doc](http://www.cplusplus.com/reference/vector/vector/)
 ```cpp
@@ -307,11 +305,47 @@ int main() {
 }
 ```
 
+
+### Functions dealing with a vector's back
+
+#### void push_back(const int newVal);
+- Creates a new element at the end of vector and assigns the given value to that element, thus increasing the vector's size by 1
+
+```cpp
+#include <vector>
+//... 
+// Can just declare it and add elements
+vector<int> myVector;
+myVector.push_back(2038);
+myVector.push_back(2051);
+myVector.push_back(2064);
+```
+
+#### int back();
+- Returns value of vector's last element
+- Vector is unchanged.
+
+#### void pop_back(); 
+- Removes the last element.
+- returns void
+
+### Vector copy operation
+- The `=` operator conveniently performs an element-by-element copy of a vector
+- The operation vctrB = vctrA resizes vctrB to vctrA's size, appending or deleting elements as needed.
+- vctrB commonly has a size of 0 before the operation.
+
+```cpp
+vector<int> userVals(4);  // element values 44, 55, 66, 77
+vector<int> newVals; // no element
+newVals = userVals;  // element values 44, 55, 66, 77
+```
+
+### Vector equality operation
+- the `==` operator conveniently compares vectors element-by-element
+- `vctrA == vctrB` evaluates to true if the vectors are **the same size** AND **each element pair is equal**.
+
+
 ==
-
-
-
-
 
 
 
