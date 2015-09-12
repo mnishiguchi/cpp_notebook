@@ -60,15 +60,26 @@ int main() {
 
 ## String modify operations
 
-|   |   |   |
-|---|---|---|
-|push_back(newChar) |Appends newChar to the end.|   |
-|append(moreString) |Appends a copy of string moreString.|   |
-|str1 + str2 |Returns a new string having str1 with str2 appended. str1 may be a string variable or string literal (or a character array variable). Likewise for str2. One of str1 or str2 (not both) may be a character.|   |
-|insert(indx, subStr) |Inserts string subStr starting at index indx.|   |
-|replace(indx, num, subStr) |Replaces characters at indices indx to indx+num with a copy of subStr. subStr's length does not have to be the same as num.|   |
-|clear() |Deletes characters, sets size to 0.  |   |
-|resize(newLength) |Resize string to have newLength characters. If decrease, drops extra chars. If increase, sets new chars to null ('\0', ASCII value 0).| |
+#### push_back(newChar)
+- Appends newChar to the end.       
+
+#### append(moreString)
+- Appends a copy of string moreString. 
+      
+#### str1 + str2
+- Returns a new string having str1 with str2 appended. str1 may be a string variable or string literal (or a character array variable). Likewise for str2. One of str1 or str2 (not both) may be a character.
+
+#### insert(indx, subStr)
+- Inserts string subStr starting at index indx.       
+
+#### replace(indx, num, subStr)
+- Replaces characters at indices indx to indx+num with a copy of subStr. subStr's length does not have to be the same as num.       
+
+#### clear()
+- Deletes characters, sets size to 0.         
+
+#### resize(newLength)
+- Resize string to have newLength characters. If decrease, drops extra chars. If increase, sets new chars to null ('\0', ASCII value 0).     
 
 ==
 
@@ -78,34 +89,39 @@ int main() {
 - ctype stands for character type. The first c indicates the library is originally from the C language.
 - [doc](http://www.cplusplus.com/reference/cctype/)
 
-isalpha(c)  true if alphabetic: a-z or A-Z
+####isalpha(c)
+- true if alphabetic: a-z or A-Z
 ```cpp
 isalpha('x') // true
 isalpha('6') // false
 isalpha('!') // false
 ```
 
-isdigit(c)  true if digit: 0-9. 
+####isdigit(c)
+- true if digit: 0-9. 
 ```cpp
 isdigit('x') // false
 isdigit('6') // true
 ```
 
-isspace(c)  true if whitespace. 
+####isspace(c)
+- true if whitespace. 
 ```cpp
 isspace(' ')  // true
 isspace('\n') // true
 isspace('x')  // false
 ```
 
-toupper(c)  Uppercase version
+####toupper(c)
+- Uppercase version
 ```cpp  
 toupper('a')  // A
 toupper('A')  // A
 toupper('3')  // 3
 ```
 
-tolower(c)  Lowercase version 
+####tolower(c)
+- Lowercase version 
 ```cpp  
 tolower('A')  // a
 tolower('a')  // a
@@ -344,9 +360,111 @@ newVals = userVals;  // element values 44, 55, 66, 77
 - the `==` operator conveniently compares vectors element-by-element
 - `vctrA == vctrB` evaluates to true if the vectors are **the same size** AND **each element pair is equal**.
 
+### Reversing a vector
+
+```cpp
+   // Reverse by swapping from outermost elements inwards until reaching the middle
+   for (i = 0; i < (NUM_ELEMENTS / 2); ++i) {
+      tmpValue = myVector.at(i);
+      myVector.at(i) = myVector.at(NUM_ELEMENTS - 1 - i);
+      myVector.at(NUM_ELEMENTS - 1 - i) = tmpValue;
+   }
+```
+
+### Arrays vs vectors
+- using vectors rather than arrays is good practice
+- the compiler does not check for out of range indices, for neither arrays nor vectors.
+- Vectors are safer because myVector.at(i) is checked during execution to ensure the index is within the vector's valid range (The program will throw an exception if the index is out of the vector's valid range.)
+- Vectors can be accessed using brackets [], but brackets involve no range checking, so a good practice is to use .at() to access vector elements.
 
 ==
 
+## Two-dimensional arrays
+
+```cpp
+// Defining a two dimensional array of integers
+int numVals[2][3];
+```
+
+```cpp
+// Initializing a 2D array
+int numVals[2][3] = { {22, 44, 66}, {97, 98, 99} };
+```
+
+```cpp
+// Use multiple lines to make rows more visible
+int numVals[2][3] = {
+   {22, 44, 66}, // Row 0
+   {97, 98, 99}  // Row 1
+};
+```
+
+==
+
+## C string vs string type
+
+### Char arrays / C strings
+
+- Must end with a null character `\0`.
+- Given a string literal, the compiler automatically appends a null character.
+- Known as a null-terminated string.
+- When printed, printing stops at the null character.
+- Once a string is assigned, a C string cannot be assigned later. Functions exist to copy one string's characters to another.
+- When iterating over a string, the loop should iterate until reaching the null character, rather than relying on index
+
+```cpp
+// the compiler automatically appends a null character
+char movieTitle[20] = "Dragonball";
+```
+
+If a char array is initialized when declared, the char array's size may be omitted.
+```cpp
+// The compiler determines the size from the string literal
+// in this case 9 + 1 (for the null character)
+char userName[] = "Masatoshi";
+```
+
+### C++ string type
+
+- accessible after `#include <string>`
+- Help reduce errors and increase programmer convenience
+- Yet legacy code uses C strings
+- some commonly-used C++ functions only accept C strings as parameters (e.g., ofstream myfile; myfile.open ("somefile.txt");)
+- C++ provides common functions for handling C strings, which can be used by  `#include <cstring>`. [[<cstring> doc](http://www.cplusplus.com/reference/cstring/)]
+
+### Some C string modification functions
+
+#### strcpy(destStr, sourceStr)
+- Copies sourceStr (up to and including null character) to destStr.
+-  a common error is to copy a source string that is too large, causing an out-of-range access in the destination string. 
+
+#### strncpy(destStr, sourceStr, numChars)
+- Copies up to numChars characters.
+- Does not append a null character.
+- [doc](http://www.cplusplus.com/reference/cstring/strncpy/)
+
+#### strcat(destStr, sourceStr) 
+- Copies sourceStr (up to and including null character) to end of destStr (starting at destStr's null character).
+- second parameter must be a string, not a single character.
+
+#### strncat(destStr, sourceStr, numChars)
+- Copies up to numChars characters to destStr's end, then appends null character.
+
+### Some C string info functions
+
+#### strchr(sourceStr, searchChar) 
+- Returns NULL if searchChar does not exist in sourceStr.
+- (Else, returns address of first occurrence). 
+- NULL is defined in the cstring library.
+
+#### size_t strlen(sourceStr) 
+- Returns number of characters in sourceStr up to, but not including, first null character.
+- size_t is integer type.
+
+#### int strcmp(str1, str2) 
+- Returns 0 if str1 and str2 are equal, non-zero if they differ.
+
+==
 
 
 
