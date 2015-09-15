@@ -56,6 +56,18 @@ GuitaristNode* createGuitarists() {
     return head;
 }
 
+GuitaristNode* deleteFirstNode(GuitaristNode* head) {
+
+    // Remember the address of the new head
+    GuitaristNode* newHead = head->next;
+
+    // Delete the node from the memory
+    delete head;
+
+    // Return the address of new head
+    return newHead;
+}
+
 // Print a linked list from head to tail
 void printGuitarists(GuitaristNode* head) {
 
@@ -65,39 +77,27 @@ void printGuitarists(GuitaristNode* head) {
     // Print the entire list
     while (currentNode != nullptr) {
         cout << "Guitarist: "
-        << currentNode->nickName
-        << " using "
-        << currentNode->guitar
-        << endl;
+             << currentNode->nickName
+             << " using "
+             << currentNode->guitar
+             << endl;
         currentNode = currentNode->next;
     }
 }
 
 int main() {
     GuitaristNode* head;
-    GuitaristNode* temp;
 
     //==> Creating a list
 
     head = createGuitarists();
-
-    // Print the entire list
     printGuitarists(head);
 
     cout << "--------------------------------------------------------" << endl;
 
     //==> Deleting the first node
 
-    // Remember the address of the new head
-    temp = head->next;
-
-    // Delete the node from the memory
-    delete head;
-
-    // Set the head to the new address
-    head = temp;
-
-    // Print the entire list
+    head = deleteFirstNode(head);
     printGuitarists(head);
 
     return 0;
