@@ -452,7 +452,8 @@ char userName[] = "Masatoshi";
 
 ### Some C string info functions
 
-#### strchr(sourceStr, searchChar) 
+#### strchr(sourceStr, searchChar)
+- stands for "string character"
 - Returns NULL if searchChar does not exist in sourceStr.
 - (Else, returns address of first occurrence). 
 - NULL is defined in the cstring library.
