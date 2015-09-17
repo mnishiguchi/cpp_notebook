@@ -164,9 +164,10 @@ char userName[] = "Masatoshi";
 - Help reduce errors and increase programmer convenience
 - Yet legacy code uses C strings
 - some commonly-used C++ functions only accept C strings as parameters (e.g., ofstream myfile; myfile.open ("somefile.txt");)
-- C++ provides common functions for handling C strings, which can be used by  `#include <cstring>`. [[<cstring> doc](http://www.cplusplus.com/reference/cstring/)]
+- C++ provides common functions for handling C strings, which can be used by  `#include <cstring>`. [[doc](http://www.cplusplus.com/reference/cstring/)]
 
 ### Some C string modification functions
+`#include <cstring>`. [[doc](http://www.cplusplus.com/reference/cstring/)]
 
 #### strcpy(destStr, sourceStr)
 - Copies sourceStr (up to and including null character) to destStr.
@@ -185,6 +186,7 @@ char userName[] = "Masatoshi";
 - Copies up to numChars characters to destStr's end, then appends null character.
 
 ### Some C string info functions
+`#include <cstring>`. [[doc](http://www.cplusplus.com/reference/cstring/)]
 
 #### strchr(sourceStr, searchChar)
 - stands for "string character"
@@ -198,3 +200,64 @@ char userName[] = "Masatoshi";
 
 #### int strcmp(str1, str2) 
 - Returns 0 if str1 and str2 are equal, non-zero if they differ.
+
+### String functions with pointers
+`#include <cstring>`. [[doc](http://www.cplusplus.com/reference/cstring/)]
+
+```cpp
+char string1[10] = "abcxyz"; 
+char string2[10] = "xyz";
+char newText[10] = ""; 
+char* subStr = 0; 
+
+if (strcmp(string1, string2) == 0) {     // abcxyz does not equal xyz
+   // ...
+}
+if (strcmp(&string1[3], "xyz") == 0) {   // xyz equals xyz
+   // ...
+}
+subStr = &string1[3];                     // Points to 'x' in string1
+if (strcmp(subStr, string2) == 0) {       // xyz equals xyz
+   // ...
+}
+strcpy(newText, subStr);                  // newText is now "xyz"
+```
+
+#### strchr(sourceStr, searchChar)
+- Returns 0 if searchChar does not exist in sourceStr.
+- Else, returns pointer to first occurrence. 
+
+```cpp
+if (strchr(orgName, 'D') != 0) {     // 'D' exists in orgName?
+   subString = strchr(orgName, 'D'); // Points to first 'D'
+   strcpy(newText, subString);       // newText now "Dept. of Redundancy Dept."
+}  
+if (strchr(orgName, 'Z') != 0) {     // 'Z' exists in orgName?
+   ... // Doesn't exist, branch not taken
+}
+```
+
+#### strrchr(sourceStr, searchChar)
+- Returns 0 if searchChar does not exist in sourceStr.
+- Else, returns pointer to LAST occurrence
+- (searches in reverse, hence middle 'r' in name)
+
+```cpp
+if (strrchr(orgName, 'D') != 0) {    // 'D' exists in orgName?
+   subString = strrchr(orgName);     // Points to last 'D'
+   strcpy(newText, subString);       // newText now "Dept."
+}
+```
+
+#### strstr(str1, str2) 
+- Returns char* pointing to first occurrence of string str2 within string str1.
+- Returns 0 if not found
+
+```cpp
+subString = strstr(orgName, "Dept"); // Points to first 'D'
+if (subString != 0) {
+   strcpy(newText, subString);       // newText now "Dept. of Redundancy Dept."
+}
+```
+
+

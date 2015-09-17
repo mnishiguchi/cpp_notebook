@@ -21,22 +21,41 @@
 
 - For vectors with thousands of elements, a single call to insert() or erase() can require thousands of instructions, so a program with many inserts or erases on large vectors may run very slowly
 
-### Linked list
+## initializing the pointer to 0
+- 0, NULL, nullptr keyword
+- Used to indicate that the pointer variable points to nothing
+- initialize the pointer to 0, avoiding use of NULL
+- C++ creator Bjarne Stroustrup's advice: "In C, it has been popular to define a macro NULL to represent the zero pointer. Because of C++'s tighter type checking, the use of plain 0, rather than any suggested NULL macro, leads to fewer problems."
+- the nullptr keyword (see Wikipedia: C++11) in newer versions of the C++ standard would be even better, but is not yet supported by many C++ compilers
 
-- a list wherein each item contains not just data but also a pointer—a link—to the next item in the list.
+## Operators: new, delete, and ->
 
-### Linked list vs vector
+### The new operator
+- Allocates memory for the given type and returns a pointer(i.e., the address) to that allocated memory
+- returns 0 if the operator failed to allocate memory
 
-#### Vector
-- Stores items in contiguous memory locations.
-- Supports quick access to i'th element via v.at(i),
-- but may be slow for inserts or deletes on large lists due to necessary shifting of elements.
+```cpp
+pointerVariable = new type;
+```
 
-#### Linked list
-- Stores each item anywhere in memory, with each item pointing to the next item in the list.
-- Supports fast inserts or deletes,
-- but access to i'th element may be slow as the list must be traversed from the first item to the i'th item.
-- Also uses more memory due to storing a link for each item.
+### ->: member access operator
+
+Accesses a class's member functions by first dereferencing a pointer
+
+```cpp
+a->b   // Equivalent to (*a).b
+```
+
+### The delete operator
+- does the opposite of the new operator
+- deallocates a memory block pointed to by a pointer variable, which must have been previously allocated by new
+- Dereferencing a pointer whose memory has been deallocated is a common error, and may cause strange program behavior that is difficult to debug
+
+```cpp
+delete pointerVariable;
+```
+
+
 
 
 
