@@ -223,27 +223,6 @@ sideSquare = sqrt(areaSquare);
 
 ==
 
-## Pointers
-
-### Variables and Memory
-
-- When declaring a variable, the computer associates the variable name with a particular location in memory and stores a value there.
-- When refering to the variable by name , the computer must take two steps:
-    + 1. Look up the address that the variable name corresponds to
-    + 2. Go to that location in memory and retrieve or set the value it contains
-
-### * and &
-
-#### The * operator (used in two different ways)
-1. When declaring a pointer, indicates that the variable being declared is a pointer
-2. When using a pointer that has been set to point to some value, dereferences it (accessing or setting the value it points to)
-
-#### The & operator (used in two different ways)
-1. to indicate a reference data type (as in int &x;)
-2. to take the address of a variable (as in int *ptr = &x;)
-
-==
-
 ## Vectors
 
 - an ordered list of items of a given data type
@@ -377,6 +356,30 @@ newVals = userVals;  // element values 44, 55, 66, 77
 - Vectors are safer because myVector.at(i) is checked during execution to ensure the index is within the vector's valid range (The program will throw an exception if the index is out of the vector's valid range.)
 - Vectors can be accessed using brackets [], but brackets involve no range checking, so a good practice is to use .at() to access vector elements.
 
+### begin and end
+
+[doc](http://www.cplusplus.com/reference/vector/vector/begin/)
+
+```cpp
+// vector::begin/end
+#include <iostream>
+#include <vector>
+
+int main ()
+{
+  std::vector<int> myvector;
+  for (int i=1; i<=5; i++) myvector.push_back(i);
+
+  std::cout << "myvector contains:";
+  for (std::vector<int>::iterator it = myvector.begin() ; it != myvector.end(); ++it)
+    std::cout << ' ' << *it;
+  std::cout << '\n';
+
+  return 0;
+}
+```
+
+
 ==
 
 ## Two-dimensional arrays
@@ -444,7 +447,7 @@ char userName[] = "Masatoshi";
 - [doc](http://www.cplusplus.com/reference/cstring/strncpy/)
 
 #### strcat(destStr, sourceStr) 
-- Copies sourceStr (up to and including null character) to end of destStr (starting at destStr's null character).
+- Copies sourceStr (up to and including null character) to end of destStr (starting at destStr's null character).`
 - second parameter must be a string, not a single character.
 
 #### strncat(destStr, sourceStr, numChars)
@@ -467,7 +470,73 @@ char userName[] = "Masatoshi";
 
 ==
 
+## Classes
+
+- good practice is to make ALL data members of a class private, using member functions to access that data
+- good practice explicitly uses the public: and private: keywords for clarity, rather than relying on defaults
+- [doc](http://www.cplusplus.com/doc/tutorial/classes/)
+
+```cpp
+// Declare a member function named GetSalary, not changing the value of any data member.
+int GetSalary() const; 
+```
+- keyword const informs the class user and compiler that the function won't change any data member values.
+
+```cpp
+// the first line of a function definition for the member function SetSalary
+void Employee::SetSalary(int salaryAmount) {
+   ...
+}
+// - Just like a normal function definition, except the function name has Employee:: prepended to tell the compiler this is a member function of class Employee.
+```
+
+```cpp
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+class RightTriangle {
+   public:
+      void SetSide1(double side1Val);
+      void SetSide2(double side2Val);
+      double GetHypotenuse() const;
+
+   private:
+      double side1;
+      double side2;
+};
+
+void RightTriangle::SetSide1(double side1Val) {
+   side1 = side1Val;
+
+   return;
+}
+
+void RightTriangle::SetSide2(double side2Val) {
+   side2 = side2Val;
+   return;
+}
+
+double RightTriangle::GetHypotenuse() const {
+
+   return sqrt((side1 * side1) + (side2 * side2));
+}
+
+int main() {
+   RightTriangle triangleA;
+
+   triangleA.SetSide1(3.0);
+   triangleA.SetSide2(4.0);
+   
+   cout << "Hypotenuse: " << triangleA.GetHypotenuse() << endl;
+   
+   return 0;
+}
+```
 
 
+## << flush
+
+- The << flush forces cout to flush any characters in its buffer to the screen before doing each task, otherwise the characters may be held in the buffer until after a later task completes. 
 
 
