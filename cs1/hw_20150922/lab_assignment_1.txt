@@ -1,0 +1,7 @@
+Your first lab assignment:
+
+Chapter 2: Problems; 5, 6, 10, 19 and 20.
+
+Declaration : analysis must show all; Variables, constants, string declarations where applicable, calculations, and assignments statements
+
+Program: identify your input, processing, and output statements in your program using comments statements
