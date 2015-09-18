@@ -114,6 +114,22 @@ cout << setprecision(3);
 - E.g., scientific: p=1 yields 1.2e+01
 
 ```cpp
+#include <iostream>
+#include <ios>
+#include <iomanip>
+using namespace std;
+
+int main() {
+   double outsideTemperature = 103.45632;
+    
+   //  prints outsideTemperature with 2 digits in the fraction
+   cout << fixed << setprecision(2) << outsideTemperature << endl;
+
+   return 0;
+}
+```
+
+```cpp
 cout << scientific << setprecision(2);
 ```
 
