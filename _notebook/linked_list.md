@@ -44,6 +44,24 @@ In general, there are two types of linked lists
 - we can build such a list in either a forward manner or a backward manner
 
 
+## Doubly Linked Lists
+
+- can be traversed in either direction
+    + traversing the list starting at the first node
+    + traversing the list starting at the last node
+
+As before, the typical operations on a doubly linked list are:
+1. Initialize the list.
+2. Destroy the list.
+3. Determine whether the list is empty.
+4. Search the list for a given item.
+5. Retrieve the first element of the list.
+6. Retrieve the last element of the list.
+7. Insert an item in the list.
+8. Delete an item from the list.
+9. Find the length of the list.
+10. Print the list.
+11. Make a copy of the doubly linked list.
 
 
 
