@@ -7,6 +7,7 @@
 //
 
 #include <iostream>
+#include <iomanip>
 using namespace std;
 
 /**
@@ -55,7 +56,7 @@ class VGameList {
         void addLast(string title, string genre, int minAge);
         void removeByTitle(string titleToDelete);
         void showAll();
-    
+
         // Constructor
         VGameList();
 };
@@ -70,12 +71,12 @@ VGameList::VGameList() {
  * If the list is empty, the new node will become the head node.
  */
 void VGameList::addLast(string title, string genre, int minAge) {
-    
+
     /* Key points
      * - Assign the previous pointer and the tail pointer correctly.
      * - Use the tail pointer as a quick way to append to the linked list.
      */
-    
+
     // Create a new node base on the specified data
     VGameNode* newNode = new VGameNode(title, genre, minAge);
 
@@ -90,7 +91,7 @@ void VGameList::addLast(string title, string genre, int minAge) {
         // Set the new node at the end of the list.
         tail->next    = newNode;  // Connect the last element to the new node
         newNode->prev = tail;     // Set new node's prev pointer
-        
+
         // Update the tail pointer.
         tail = newNode;
     }
@@ -98,53 +99,89 @@ void VGameList::addLast(string title, string genre, int minAge) {
 
 /**
  * Remove a node with the specified title if any.
- * TODO: assign the previous pointer and the tail pointer correctly
  */
 void VGameList::removeByTitle(string titleToDelete) {
+
+    /* Key points
+     * - Assign the previous pointer and the tail pointer correctly.
+     */
 
     VGameNode* curr;      // Pointer to traverse the list
     VGameNode* trailCurr; // Pointer to remember the previous node
 
-    bool found;
+    bool found = false;
 
+    // Case1: If the list is empty, there are nothing to delete.
     if (head == NULL) {
         cout << "Cannot delele from an empty list" << endl;
+        return;
+    }
 
+    // Case2: If the head node is the one we are looking for.
+    if (head->title == titleToDelete) {
+        // Current node is head.
+        curr = head;
+
+        // The next node becomes the head.
+        head = head->next;
+
+        // Update prev pointer.
+        if (head != NULL) {
+            head->prev = NULL;
+        }
+
+        // Note: Next pointer need not be updated.
+
+        // Delete the node that was previously the head.
+        delete curr;
+
+    // Otherwise, traverse the list and examine each node.
     } else {
+        // Initialize trailCurr and curr.
+        trailCurr = head;
+        curr      = head->next;
 
-        if (head->title == titleToDelete) {
-            curr = head;
-            head = head->next;
+        // Traverse the list until the item is found or the end is reached.
+        while (curr != NULL && !found) {
+
+            // Equality checking
+            if (curr->title == titleToDelete) {
+                found = true;  // Then exit the loop.
+            } else {
+                // Update trailCurr and curr.
+                trailCurr = curr;
+                curr      = curr->next;
+            }
+        }
+
+        // Case3: The item was found
+        if (found) {
+            // Update the next pointer of the node before the one to be deleted.
+            trailCurr->next = curr->next;
+
+            // Note: Now curr is the item to be deleted.
+
+            // Set up the previous node's next pointer.
+            trailCurr = curr->prev;
+            trailCurr->next = curr->next;
+
+            // Case3-1: The item is in the middle of the list.
+            // Set up the next node's previous pointer.
+            if (curr->next != NULL) {
+                curr->next->prev = trailCurr;
+            }
+
+            /// Case3-2: The item is at the end of the list.
+            if (curr == tail) {
+                tail = trailCurr;
+            }
+
+            // Delete the node from memory.
             delete curr;
 
+        // Case4: The item was not found in the list.
         } else {
-            found = false;
-
-            trailCurr = head;
-            curr      = head->next;
-
-            while (curr != NULL && !found) {
-                // Found????
-                if (curr->title != titleToDelete) {
-                    trailCurr = curr;
-                    curr      = curr->next;
-
-                } else {
-                    found = true;
-                }
-            }
-
-            if (found) {
-                // Update the next pointer of the node before the one to be deleted
-                trailCurr->next = curr->next;
-
-                // Delete the node
-                delete curr;
-
-            // The whole list was exhausted
-            } else {
-                cout << "The item to be deleted is not in the list" << endl;
-            }
+            cout << "The item to be deleted is not in the list" << endl;
         }
     }
 }
@@ -154,12 +191,35 @@ void VGameList::removeByTitle(string titleToDelete) {
  */
 void VGameList::showAll() {
 
-    // The cursor
-    VGameNode* curr = head;
+    // Empty list
+    if (head == NULL) {
+        cout << "The list is empty." << endl;
+    }
 
+    // Traverse the list.
+    VGameNode* curr = head;
     while (curr != NULL) {
+        cout << left;
+
         // Print one element at a time
-        cout << "Game: " << curr->title << endl;
+        cout << setw(16) << curr->title;
+
+        // For debugging
+        if (curr->prev != NULL) {
+            cout << setw(6) << "prev:"
+                 << setw(14) << curr->prev->title;
+        } else {
+            cout << setw(20) << "prev:";
+        }
+
+        if (curr->next != NULL) {
+            cout << setw(6) << "next:"
+                 << setw(14) << curr->next->title;
+        } else {
+            cout << setw(20) << "next:";
+        }
+
+        cout << endl;
 
         // Move the cursor to next
         curr = curr->next;
@@ -184,12 +244,29 @@ int main() {
 
     myGames.showAll();
 
-//    cout << "------------------------------------------" << endl;
-//
-//    myGames.removeByTitle("Some title45");
-//    myGames.removeByTitle("Some title67");
-//
-//    myGames.showAll();
+    cout << "------------------------------------------" << endl;
+    myGames.removeByTitle("Some title12");
+    myGames.showAll();
+
+    cout << "------------------------------------------" << endl;
+    myGames.removeByTitle("Some title45");
+    myGames.showAll();
+
+    cout << "------------------------------------------" << endl;
+    myGames.removeByTitle("Some title67");
+    myGames.showAll();
+
+    cout << "------------------------------------------" << endl;
+    myGames.removeByTitle("Some title23");
+    myGames.showAll();
+
+    cout << "------------------------------------------" << endl;
+    myGames.removeByTitle("Some title56");
+    myGames.showAll();
+
+    cout << "------------------------------------------" << endl;
+    myGames.removeByTitle("Some title34");
+    myGames.showAll();
 
     return 0;
 }

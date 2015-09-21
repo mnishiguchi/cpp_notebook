@@ -301,7 +301,7 @@ void doublyLinkedList<Type>::deleteNode(const Type& deleteItem) {
     if (first == NULL) {
         cout << "Cannot delete from an empty list." << endl;
 
-    //node to be deleted is the first node
+    // Node to be deleted is the first node
     } else if (first->info == deleteItem) {
         current = first;
         first = first->next;
