@@ -66,26 +66,33 @@ VGameList::VGameList() {
 }
 
 /**
- * Append a new node to the end of the list
- * TODO: assign the previous pointer and the tail pointer correctly
- * TODO: use the tail pointer as a quick way to append to the linked list.
+ * Append a new node to the end of the list.
+ * If the list is empty, the new node will become the head node.
  */
 void VGameList::addLast(string title, string genre, int minAge) {
-    VGameNode* node = new VGameNode(title, genre, minAge);
+    
+    /* Key points
+     * - Assign the previous pointer and the tail pointer correctly.
+     * - Use the tail pointer as a quick way to append to the linked list.
+     */
+    
+    // Create a new node base on the specified data
+    VGameNode* newNode = new VGameNode(title, genre, minAge);
 
-    // Head is the only element at the moment
+    // Case1: Empty list
     if (head == NULL) {
-        head = node;
+        // The new node becomes the head.
+        head = newNode;
+        tail = newNode;
 
+    // Case2: Non-empty list
     } else {
-        VGameNode* curr = head;
-
-        while (curr->next != NULL) {
-            curr = curr->next;
-        }
-
-        // node is NULL now
-        curr->next = node;
+        // Set the new node at the end of the list.
+        tail->next    = newNode;  // Connect the last element to the new node
+        newNode->prev = tail;     // Set new node's prev pointer
+        
+        // Update the tail pointer.
+        tail = newNode;
     }
 }
 
@@ -177,12 +184,12 @@ int main() {
 
     myGames.showAll();
 
-    cout << "------------------------------------------" << endl;
-
-    myGames.removeByTitle("Some title45");
-    myGames.removeByTitle("Some title67");
-
-    myGames.showAll();
+//    cout << "------------------------------------------" << endl;
+//
+//    myGames.removeByTitle("Some title45");
+//    myGames.removeByTitle("Some title67");
+//
+//    myGames.showAll();
 
     return 0;
 }
