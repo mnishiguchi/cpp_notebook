@@ -156,6 +156,14 @@ cout << scientific << setprecision(2);
 ```cpp
 // creating a line of 30 asterisks, without having to type 30 asterisks
 cout << setfill('*') << setw(30) << "" << endl;
+
+void drawLine() {
+    cout << setfill('-') << setw(80) << "" << setfill(' ') << endl;
+}
+
+void drawLine(char c, int n) {
+    cout << setfill(c) << setw(n) << "" << setfill(' ') << endl;
+}
 ```
 
 #### left
