@@ -9,6 +9,7 @@
 - contains the definitions of two data types:
     + ifstream - input file stream
     + ofstream - output file stream
+- [calc_average_scores](https://github.com/mnishiguchi/cpp_practice_code/blob/master/cs1/chap3_programming_exercises/calc_average_scores/calc_average_scores/main.cpp)
 
 ## The five-step process
 1. Include the header file fstream in the program
@@ -39,3 +40,12 @@ outFile << "The paycheck is: $" << pay << endl;
 inFile.close(); 
 outFile.close();
 ```
+
+## Checking if a file was successfully opened
+
+```cpp
+if (!inFile.is_open() || !outFile.is_open()) {
+    cout << "Error opening a file" << endl;
+}
+```
+

@@ -28,7 +28,7 @@ int main() {
 
     // Open the files (absolute path)
     inFile.open("/Users/masa/data_cpp_exercises/test_scores.txt");
-    outFile.open("/Users/masa/data_cpp_exercises/test_scores_average.txt");
+    outFile.open("/Users/masa/data_cpp_exercises/outData.txt");
 
     // Format the output
     // a fixed decimal format with a decimal point and trailing zeros

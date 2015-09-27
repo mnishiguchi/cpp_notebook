@@ -19,12 +19,13 @@
 - The system automatically puts the standard input into a data buffer associated with cin, from which >> can extract data
 - [doc](http://www.cplusplus.com/reference/istream/istream/)
 
-## std::cin functions
+## Some functions
 
 ### cin
 - Inputs first word
 
-### cin.get(varChar)
+### Reading a single character, incl. whitespace
+- `cin.get(varChar)`
 - Inputs the very next character, incl. whitespace characters, from the input stream.
 - Stores it in memory loacation indicated by its argment.
 
@@ -36,7 +37,8 @@ cin.get(ch2);  // ' '
 cin > num;     // 25
 ```
 
-### cin.getline
+### Reading a whole line
+- `getline(istream&  is, string& str)`
 - Inputs a line
 - Reads until it reaches the end of the current line
 - The newline character is also read but not stored in the string variable
@@ -44,8 +46,32 @@ cin > num;     // 25
 
 ```cpp
 // User's input: "    Hello, anybody there?"
-string = myString;
-getline(cin, myString);  // myString: "    Hello, anybody there?"
+string myLine;
+getline(cin, myLine);  // myLine: "    Hello, anybody there?"
+```
+
+### Reading a string
+- `getline(istream&  is, string& str, char delim)`
+- Extracts characters from istream and stores them into str until the delimitation character delim is found
+
+```cpp
+// User's input: "Masatoshi Nishiguchi 1234"
+string firstName;
+getline(inFile, firstName, ' ');  // firstName: "Masatoshi" 
+```
+
+### Reading a whole line and extracting data from it
+- `#include <sstream>`
+
+```cpp
+    // Read each line from the file
+    string line;
+    while (getline(inFile, line)) {
+        stringstream ss(line);
+        ss >> firstName >> lastName >> currentSalary >> payIncreasePercentage;
+        
+        //...
+    }
 ```
 
 ### cin.ignore(intExp, chExp)
