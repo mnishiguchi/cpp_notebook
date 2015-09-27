@@ -57,27 +57,5 @@ Sometimes a programmer knows that a variable's numbers will always be positive (
 
 ==
 
-## math functions
-
-- has about 20 math operations available for floating-point values
-- `#include <cmath>`
-- [doc](http://www.cplusplus.com/reference/cmath/)
-
-```cpp
-#include <iostream>
-#include <cmath>
-using namespace std;
-
-// ...
-
-double sideSquare = 0.0;
-double areaSquare = 49.0;
-
-sideSquare = sqrt(areaSquare);
-
-```
-
-==
-
 
 

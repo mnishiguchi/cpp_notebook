@@ -8,9 +8,16 @@
 |`length()`   |Number of characters|   |
 |`size()`     |Number of characters|   |
 |`empty()`    |true if length is 0 |   |
-|`find(item)` |Returns index of first item occurrence, else returns string::npos, which is defined with a value of -1. Item may be char, string variable, string literal or char array find(item, indx) starts at index indx.|[doc](http://www.cplusplus.com/reference/string/string/find/)|
+|`find(item)` |Returns index of first item occurrence, else returns string::npos. Item may be char, string variable, string literal or char array find(item, indx) starts at index indx.|[doc](http://www.cplusplus.com/reference/string/string/find/)|
 |`substr(indx, len)` |Returns substring starting at index and having len characters.|[doc](http://www.cplusplus.com/reference/string/string/substr/)|
 
+## std::string::npos
+- a static member constant value with the greatest possible value for an element of type size_t.
+- when used as the value for a len (or sublen) parameter in string's member functions, means "until the end of the string".
+- As a return value, it is usually used to indicate no matches.
+- This constant is defined with a value of -1, which because size_t is an unsigned integral type, it is the largest possible representable value for this type.
+- Note: In my system `npos = 18446744073709551615`
+- [doc](http://www.cplusplus.com/reference/string/string/npos/)
 
 ### Check if a string contains a certain word.
 
@@ -66,6 +73,11 @@ int main() {
 
 #### resize(newLength)
 - Resize string to have newLength characters. If decrease, drops extra chars. If increase, sets new chars to null ('\0', ASCII value 0).     
+
+#### substr(position, **length**)
+- Returns a newly constructed string object with its value initialized to a copy of a substring of this object.
+- The substring is the portion of the object that starts at character position pos and spans len characters (or until the end of the string, whichever comes first).
+- [doc](http://www.cplusplus.com/reference/string/string/substr/)
 
 ==
 

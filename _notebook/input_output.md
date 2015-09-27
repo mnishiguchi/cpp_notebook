@@ -1,18 +1,86 @@
 # input and output
+- The variables cin and cout are automatically defined and associated with teh standard input/output devices
+- This is not the case for file stream variables. We must declare variables, which include ifstream variables for input and ofstream variables for output
 
-## std::cin vs std::cin.getline
+## The istream and cin streams
 
-### std::cin
-- getting first word
+### istream
+- short for "input stream"
+- a class that supports input
+- Available via '#include <iostream>'
 
-### std::cin.getline
-- getting line
+### the >> operator
+- known as the extraction operator
+- to extract data from a data buffer and to write the data into different types of variables
+
+### cin
+- a predefined istream
+- pre-associated with a system's standard input, which is usually a computer keyboard
+- The system automatically puts the standard input into a data buffer associated with cin, from which >> can extract data
+- [doc](http://www.cplusplus.com/reference/istream/istream/)
+
+## std::cin functions
+
+### cin
+- Inputs first word
+
+### cin.get(varChar)
+- Inputs the very next character, incl. whitespace characters, from the input stream.
+- Stores it in memory loacation indicated by its argment.
+
+```cpp
+// User's input: A 25
+char ch1, ch2;
+cin.get(ch1);  // 'A'
+cin.get(ch2);  // ' '
+cin > num;     // 25
+```
+
+### cin.getline
+- Inputs a line
+- Reads until it reaches the end of the current line
+- The newline character is also read but not stored in the string variable
 - [doc](http://www.cplusplus.com/reference/string/string/getline/)
+
+```cpp
+// User's input: "    Hello, anybody there?"
+string = myString;
+getline(cin, myString);  // myString: "    Hello, anybody there?"
+```
+
+### cin.ignore(intExp, chExp)
+- Discards a portion of the input
+
+```cpp
+// Ignores either the next 100 characters or
+// all characters until the newline character is found.
+cin.ignore(100, '\n');
+```
+
+```cpp
+cin.ignore(100, 'A');
+```
+
+## The putback and peek functions
+### istreamVar.putback(ch);
+- Put the last character extracted from the input stream by the `get(varChar)` function back into the input stream.
+
+### istreamVar.peek(ch);
+- Returns the next character from the input stream but does not remove the character from that stream.
+- Used to check the next input without removing it from the input stream.
+
+## Input failure
+1. Occurs when attempting to read invalid data
+2. The input stream enters the fail state
+3. All further I/Ostatements using that stream are ignored
+4. The program quietly continues to execute with whatever values are stored in variables and produces incorrect results 
+
+Note: Restore the input stream by calling `istreamVar.clear()`
 
 ## istreamVar.clear();
 
 - Restores the input stream to a working state
-- Still need to clear the rest of the garbage from the input stream by using the function ignore
+- Still need to clear the rest of the garbage from the input stream by using `ignore(intExp, chExp)`
 
 ```cpp
     cout << "Enter the number of rows and columns: ";
@@ -22,13 +90,7 @@
     cin.ignore(100, '\n');  // Clear the buffer
 ```
 
-## << flush
-
-- The << flush forces cout to flush any characters in its buffer to the screen before doing each task, otherwise the characters may be held in the buffer until after a later task completes. 
-
-```cpp
-cout << "  Resizing vector..." << flush;
-```
+========================================
 
 ## The ostream and cout streams
 
@@ -51,24 +113,6 @@ cout << "  Resizing vector..." << flush;
 - evaluated from left to right like most operators
 - [doc](http://www.cplusplus.com/reference/ostream/ostream/)
 
-
-## The istream and cin streams
-
-### istream
-- short for "input stream"
-- a class that supports input
-- Available via '#include <iostream>'
-
-### the >> operator
-- known as the extraction operator
-- to extract data from a data buffer and to write the data into different types of variables
-
-### cin
-- a predefined istream
-- pre-associated with a system's standard input, which is usually a computer keyboard
-- The system automatically puts the standard input into a data buffer associated with cin, from which >> can extract data
-- [doc](http://www.cplusplus.com/reference/istream/istream/)
-
 ## Output formatting
 - adjust the way that output appears
 
@@ -88,30 +132,30 @@ cout << setprecision(3) << myFloat;
 #### fixed
 - Use fixed-point notation.
 - From `<ios>`
-- E.g., 12.34
+- E.g., `12.34`
 
 #### scientific
 - Use scientific notation.
 - From `<ios>`
-- E.g., 1.234e+01
+- E.g., `1.234e+01`
 
 #### setprecision(p)
 - From `<iomanip>`
 
-##### If stream has NOT been manipulated to fixed or scientific:
+##### Case1: If stream has NOT been manipulated to fixed or scientific
 - Sets max number of digits in number
 - **applies to entire number**
-- E.g., p=3 yields 12.3
-- E.g., p=5 yields 12.34
+- E.g., p=3 yields `12.3`
+- E.g., p=5 yields `12.34`
 
 ```cpp
 cout << setprecision(3);
 ```
 
-##### If stream has been manipulated to fixed or scientific:
+##### Case2: If stream has been manipulated to fixed or scientific
 - Sets max number of digits **in fraction only (after the decimal point)**
-- E.g., fixed: p=1 yields 12.3
-- E.g., scientific: p=1 yields 1.2e+01
+- E.g., fixed: p=1 yields `12.3`
+- E.g., scientific: p=1 yields `1.2e+01`
 
 ```cpp
 #include <iostream>
@@ -138,20 +182,20 @@ cout << scientific << setprecision(2);
 - Opposite is `noshowpoint`. 
 - From `<ios>`
 - E.g., For 99.0 with precision=2 and fixed: 
-    + 99 (default or noshowpoint)
-    + 99.00 (showpoint)
+    + `99` (default or noshowpoint)
+    + `99.00` (showpoint)
 
 #### setw(n)
 - Sets the number of characters **for the next output item only**
 - (does not persist, in contrast to other manipulators).
 - By default, the item will be right-aligned, and filled with spaces.
 - From `<iomanip>`
-- E.g., For n=7: "    Amy"
+- E.g., For n=7: `"    Amy"`
 
 #### setfill(c)
 - Sets the fill to character c. 
 - From `<iomanip>`
-- E.g., For c='*': "****Amy"
+- E.g., For c=`'*'`: `"****Amy"`
 
 ```cpp
 // creating a line of 30 asterisks, without having to type 30 asterisks
@@ -169,20 +213,33 @@ void drawLine(char c, int n) {
 #### left
 - Changes to left alignment. 
 - From `<ios>`
-- E.g., "Amy    "
+- also, `cout.setf(ios::left)` and `cout.unsetf(ios::left)`
+- E.g., `"Amy    "`
+
+```cpp
+cout << left;
+```
 
 #### right
 - Changes back to right alignment. 
 - From `<ios>`
-- E.g., "    Amy"
+- also, `cout.setf(ios::left)` and `cout.unsetf(ios::left)`
+- E.g., `"    Amy"`
+
+```cpp
+cout << right;
+```
 
 #### endl
-- Inserts a newline character '\n' into the output buffer
+- Inserts a newline character `'\n'` into the output buffer
 - **informs the system to flush the buffer**
 - From `<iostream>`
 
 #### flush
 - Informs the system to flush the buffer
+- Flushes any characters in its buffer to the screen before doing each task, otherwise the characters may be held in the buffer until after a later task completes. 
 - From `<iostream>`
 
-
+```cpp
+cout << "  Resizing vector..." << flush;
+```
