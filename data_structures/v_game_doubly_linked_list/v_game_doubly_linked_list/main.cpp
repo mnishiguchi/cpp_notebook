@@ -33,11 +33,13 @@ class VGameNode {
 // Default constructor
 VGameNode::VGameNode() {
     next = NULL;
+    prev = NULL;
 }
 
 // Constructor to create a node with a specific set of data
 VGameNode::VGameNode(string t, string g, int a) {
     next = NULL;
+    prev = NULL;
     title  = t;
     genre  = g;
     minAge = a;
@@ -55,17 +57,28 @@ class VGameList {
         // Function prototypes
         void addLast(string title, string genre, int minAge);
         void insertByTitle(string title, string genre, int minAge);
+        void removeAll();
         void removeByTitle(string titleToDelete);
         void showAll();
         void debugPrint();
 
         // Constructor
         VGameList();
+
+        // Destructor
+        ~VGameList();
 };
 
 // Default constructor
 VGameList::VGameList() {
     head = NULL;
+    tail = NULL;
+}
+
+// Destructor
+VGameList::~VGameList() {
+    cout << "VGameList is about to be destructed" << endl;
+    removeAll();
 }
 
 /**
@@ -166,6 +179,36 @@ void VGameList::insertByTitle(string title, string genre, int minAge) {
             curr->prev = newNode;
         }
     }
+}
+
+/**
+ * Remove all the nodes
+ */
+void VGameList::removeAll() {
+
+    // Return if the list is empty
+    if (head == NULL) {
+        cout << "The list is empty." << endl;
+        return;
+    }
+
+    // Traverse the list.
+    VGameNode* curr = head;
+    VGameNode* temp;
+    while (curr != NULL) {
+
+        // Remember the next node
+        temp = curr->next;
+
+        // Delete one node at a time
+        delete curr;
+
+        // Move the cursor to next
+        curr = temp;
+    }
+    
+    head = NULL;
+    tail = NULL;
 }
 
 /**
@@ -293,6 +336,7 @@ void VGameList::showAll() {
         curr = curr->next;
     }
 }
+
 /**
  * Prints each node with its previous and next nodes for debugging purposes.
  */
@@ -349,53 +393,75 @@ void drawLine() {
  */
 int main() {
 
-    // 1. Create an empty list.
+     // 1. Create an empty list with the dynamic memory allocation.
 
-    VGameList myGames;
+     VGameList* theStore;
+     theStore = new VGameList;
 
-    // 2. Add elements to the list.
+     // 2. Add elements to the list.
+    
+     theStore->insertByTitle("Barney's Mistery", "Kids", 10);
+     theStore->insertByTitle("Final Fantasy VII", "Roll-playing", 10);
+     theStore->showAll();
+    
+     drawLine();
+    
+     // 3. Remove all the elements.
+    
+     delete theStore;  // Destructor will be called
+     theStore->showAll();
+    
+     drawLine();
+    
+     // -------------------------------------------
 
-    myGames.addLast("Street Fighter II", "Action", 10);
-    myGames.addLast("Space Invaders", "Shooter", 10);
-    myGames.addLast("Final Fantasy IV", "Roll-playing", 10);
-    myGames.addLast("Mystery House", "Adventure", 10);
-    myGames.addLast("SimCity", "Simulation", 10);
-    myGames.addLast("Civilization", "Strategy", 10);
-    myGames.showAll();
+     // 1. Create an empty list as a regular variable.
 
-    // 3. Remove the elements by title, one at a time, until the list is empty.
+     VGameList myGames;
 
-    drawLine();
+     // 2. Add elements to the list.
 
-    myGames.removeByTitle("Final Fantasy IV");
-    myGames.showAll();
+     myGames.addLast("Street Fighter II", "Action", 10);
+     myGames.addLast("Space Invaders", "Shooter", 10);
+     myGames.addLast("Final Fantasy IV", "Roll-playing", 10);
+     myGames.addLast("Mystery House", "Adventure", 10);
+     myGames.addLast("SimCity", "Simulation", 10);
+     myGames.addLast("Civilization", "Strategy", 10);
+     myGames.showAll();
+    
+     drawLine();
+    
+     // 3. Remove the elements by title, one at a time, until the list is empty.
 
-    drawLine();
+     myGames.removeByTitle("Final Fantasy IV");
+     myGames.showAll();
 
-    myGames.removeByTitle("SimCity");
-    myGames.showAll();
+     drawLine();
 
-    drawLine();
+     myGames.removeByTitle("SimCity");
+     myGames.showAll();
 
-    myGames.removeByTitle("Space Invaders");
-    myGames.showAll();
+     drawLine();
 
-    drawLine();
+     myGames.removeByTitle("Space Invaders");
+     myGames.showAll();
 
-    myGames.removeByTitle("Street Fighter II");
-    myGames.showAll();
+     drawLine();
 
-    drawLine();
+     myGames.removeByTitle("Street Fighter II");
+     myGames.showAll();
 
-    myGames.removeByTitle("Civilization");
-    myGames.showAll();
+     drawLine();
 
-    drawLine();
+     myGames.removeByTitle("Civilization");
+     myGames.showAll();
 
-    myGames.removeByTitle("Mystery House");
-    myGames.showAll();
+     drawLine();
 
-    drawLine();
+     myGames.removeByTitle("Mystery House");
+     myGames.showAll();
+
+     drawLine();
 
     return 0;
 }
