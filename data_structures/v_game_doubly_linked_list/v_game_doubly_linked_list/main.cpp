@@ -104,7 +104,7 @@ void VGameList::addLast(string title, string genre, int minAge) {
         // Update the tail pointer.
         tail = newNode;
 
-        // Note: head need not be updated since newNode was added to the ent of the list.
+        // Note: head need not be updated since newNode was added to the end of the list.
     }
 }
 
@@ -206,7 +206,7 @@ void VGameList::removeAll() {
         // Move the cursor to next
         curr = temp;
     }
-    
+
     head = NULL;
     tail = NULL;
 }
@@ -285,7 +285,7 @@ void VGameList::removeByTitle(string titleToDelete) {
                 curr->next->prev = trailCurr;
             }
 
-            /// Case3-2: The item is at the end of the list.
+            // Case3-2: The item is at the end of the list.
             if (curr == tail) {
                 tail = trailCurr;
             }
@@ -399,20 +399,20 @@ int main() {
      theStore = new VGameList;
 
      // 2. Add elements to the list.
-    
+
      theStore->insertByTitle("Barney's Mistery", "Kids", 10);
      theStore->insertByTitle("Final Fantasy VII", "Roll-playing", 10);
      theStore->showAll();
-    
+
      drawLine();
-    
+
      // 3. Remove all the elements.
-    
+
      delete theStore;  // Destructor will be called
      theStore->showAll();
-    
+
      drawLine();
-    
+
      // -------------------------------------------
 
      // 1. Create an empty list as a regular variable.
@@ -428,9 +428,9 @@ int main() {
      myGames.addLast("SimCity", "Simulation", 10);
      myGames.addLast("Civilization", "Strategy", 10);
      myGames.showAll();
-    
+
      drawLine();
-    
+
      // 3. Remove the elements by title, one at a time, until the list is empty.
 
      myGames.removeByTitle("Final Fantasy IV");
