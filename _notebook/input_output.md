@@ -116,6 +116,27 @@ Note: Restore the input stream by calling `istreamVar.clear()`
     cin.ignore(100, '\n');  // Clear the buffer
 ```
 
+## cin.fail()
+- returns true if the input stream encounters errors, most commonly which happens due to reading incorrect data type.
+
+```cpp
+int i;
+cin >> i;
+
+if(cin.fail()) {
+  // error handling
+  cout << "Error reading input" << endl;
+}
+```
+
+```cpp
+int i;
+cin >> i;
+
+if(!cin) {
+  // error handling
+}
+```
 ========================================
 
 ## The ostream and cout streams
