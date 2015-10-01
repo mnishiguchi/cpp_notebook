@@ -15,15 +15,23 @@ using namespace std;
  * Class that represents a node
  */
 class TaskNode {
-    
+
 public:
+    // Functions
     bool isCompleted();
+
+    // Constructors
     TaskNode(int m);  // Constructor with parameters
     TaskNode();       // Default constructor
-    
+
     int milliseconds;
     TaskNode* next;
 };
+
+/** constructor */
+TaskNode::TaskNode() {
+    next         = NULL;
+}
 
 /** constructor */
 TaskNode::TaskNode(int m) {
@@ -35,10 +43,9 @@ TaskNode::TaskNode(int m) {
  * Returns true if the task is completed
  */
 bool TaskNode::isCompleted() {
-    
-    // TODO
+
     if (milliseconds <= 0) {
-        cout << "Task #" << this << " completed" << endl;
+        cout << "Task #" << this << " completed " << this->milliseconds << endl << endl;
         return true;
     }
     return false;
@@ -51,121 +58,186 @@ class TaskList {
 public:
     // Address of the beginning of the list
     TaskNode* head;
-    
+    int maxSize;
+    int size;
+    int timeSlice;
+
     // Functions
     void addNode(TaskNode* node);
-    void addPool(TaskNode[]);
-    void removeAll();
-    void run();
+    bool isEmpty();
+    bool isFull();
+    void loadPool(TaskNode[]);
     void showAll();
-    
+
     // Default constructor
     TaskList();
-    
-    // Destructor
-    ~TaskList();
 };
 
 /** Default constructor */
 TaskList::TaskList() {
     head = NULL;
-}
-
-/** Destructor */
-TaskList::~TaskList() {
-    cout << "TaskList is about to be destructed" << endl;
-    removeAll();
+    maxSize = 3;
+    timeSlice = 10;
+    size = 0;
 }
 
 /**
  * Add a new node to the beginning of the list.
  */
 void TaskList::addNode(TaskNode* newNode) {
-    
+
+    if (isFull()) {
+        cout << "Could not add a node because the list is full" << endl;
+        return;
+    }
+
     // Case1: Empty list
     if (head == NULL) {
         head       = newNode;  // The new node becomes the head.
         head->next = newNode;  // next is itself
-        
-        // Case2: Non-empty list
+
+    // Case2: Non-empty list
     } else {
         // Go to the last node.
         TaskNode* curr = head;
         while (curr->next != head) {
             curr = curr->next;
         }
-        
+
         // Note: Now curr is the last node.
-        
+
         // Insert the newNode between head and tail.
         curr->next       = newNode;  // Set the last node's next pointer.
         curr->next->next = head;     // Set the new node's next pointer.
-        
+
         // Update the head pointer.
         head = newNode;  // The new node becomes the head.
+
+
     }
+    // Update the size
+    size++;
+    cout << "Size updated to " << size << endl << endl;
 }
 
 /**
  * Add a pool of TaskNode objects to the list.
  * Last element's milliseconds is expected to be -1.
+ *
+ * 1. Add nodes until the max size
+ * 2. Run the circular list
+ * 3. Switch tasks every time slice
+ * 4. Reload the list when one task is completed and removed
+ * 5. Repeat until all the tasks are completed and removed
  */
-void TaskList::addPool(TaskNode* pool) {
-    
-    // Keep on adding nodes until the end is reached.
-    for (int i = 0; pool[i].milliseconds != -1; i++) {
-        addNode(&pool[i]);
+void TaskList::loadPool(TaskNode* pool) {
+    TaskNode* curr;
+    TaskNode* temp;
+
+    int i = 0;
+    bool isPoolEmpty = false;
+
+    // Keep on adding nodes until the end of the pool is reached
+    while ( !isPoolEmpty || !isEmpty() ) {
+
+        // Check if the pool is empty
+        if ( pool[i].milliseconds == -1 ) {
+            isPoolEmpty = true;
+            cout << "isPoolEmpty = true;" << endl;
+
+        // Add a node unless the stack is full
+        } else {
+            while ( !isFull() ) {
+                addNode( &pool[i] );
+                showAll();
+                i++; // Move the cursor to next item in the pool
+            }
+        }
+
+        // Repeat performing the tasks until one node is completed and disconnected
+        curr = head;
+        while ( !isEmpty() ) {
+
+            // Subtract msecs (Performing a task)
+            curr->milliseconds -= timeSlice;
+
+            if ( curr->next->isCompleted() ) {
+                // Remember the node to disconnect
+                temp = curr->next;
+
+                // Disconnect the node
+                curr->next = curr->next->next;
+                temp->next = NULL;
+
+                // Decrement the size
+                size--;
+                cout << "Size updated to " << size << endl << endl;
+
+                // Update the head if head is the one that was disconnected
+                if ( temp == head ) {
+                    head = curr->next;
+                }
+
+                showAll();
+
+                // Exit the loop
+                break;
+
+            // Move the cursor to next in order to add a new node
+            } else {
+                curr = curr->next;
+            }
+        }
     }
+    cout << "Outside the loop" << endl;
+    showAll();
+
+    // Finally delete the pool
+    // delete[] pool;
+
+    return;
 }
 
 /**
- * Remove all the elements in the list.
+ * Returns true if the list is empty.
  */
-void TaskList::removeAll() {
-    
-    // TODO
-    
+bool TaskList::isEmpty() {
+    return size == 0;
 }
 
 /**
- * Run the scheduler.
+ * Returns true if the list is full.
  */
-void TaskList::run() {
-    
-    //    // TODO
-    //    // When next node is done
-    //    if (this->next->milliseconds == NULL) {
-    //        temp = this->next->next
-    //        delete this->next
-    //    }
+bool TaskList::isFull() {
+    return size == maxSize;
 }
 
 /**
  * Print all the elements in the list to the console.
  */
 void TaskList::showAll() {
-    
+
     // Return if the list is empty
     if (head == NULL) {
         cout << "The list is empty." << endl;
         return;
     }
-    
+
     // Print the attributes names.
     cout << left;
     cout << setw(16) << "   pid";
     cout << right;
-    cout << setw(8) << "msec";
+    cout << setw(8)  << "msec";
     cout << setw(16) << "next";
     cout << endl;
-    
+
     // Draw a horizonal rule.
     cout << setfill('-') << setw(40) << "" << setfill(' ') << endl;
-    
+
     // Traverse the list until the end of the list.
     TaskNode* curr   = head;
     bool isEndOfList = false;
-    
+
     while (!isEndOfList) {
         // Print current node
         cout << left;
@@ -174,15 +246,15 @@ void TaskList::showAll() {
         cout << setw(8) << curr->milliseconds;
         cout << setw(16) << curr->next;
         cout << endl;
-        
+
         if (curr->next != head) {
             curr = curr->next;  // Move the cursor to next and continue.
         } else {
             isEndOfList = true; // Exit the loop.
         }
     }
-    
-    cout << "--- end of the list ---" << endl;
+
+    cout << "--- end of the list ---" << endl << endl;
 }
 
 /**
@@ -195,25 +267,13 @@ void drawLine(int n) {
 }
 
 int main() {
-    
+
     // 1. Dynamically create a circular linked list
-    
+
     TaskList* tasks = new TaskList();
-    
-    // 2. Add nodes individually
-    
-    tasks->addNode(new TaskNode(12));
-    tasks->showAll();
-    
-    drawLine(40);
-    
-    tasks->addNode(new TaskNode(24));
-    tasks->showAll();
-    
-    drawLine(40);
-    
-    // 3. Add a pool of nodes
-    
+
+    // 2. Load and run a pool of nodes
+
     TaskNode pool[] = {
         TaskNode(30),
         TaskNode(22),
@@ -225,11 +285,10 @@ int main() {
         TaskNode(53),
         TaskNode(-1),  // Sentinel
     };
-    
-    tasks->addPool(pool);
-    tasks->showAll();
-    
+
+    tasks->loadPool(pool);
+
     drawLine(40);
-    
+
     return 0;
 }
