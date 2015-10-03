@@ -1,0 +1,236 @@
+//
+// Chapter 16 : Exercises
+//
+
+1. Mark the following statements as true or false.
+
+a. In a linked list, the order of the elements is determined by the order
+in which the nodes were created to store the elements.
+
+false
+
+b. In a linked list, memory allocated for the nodes is sequential.
+
+false
+
+c. A single linked list can be traversed in either direction.
+
+true  // TODO
+
+d. In a linked list, nodes are always inserted either at the beginning or the end
+because a linked link is not a random-access data structure.
+
+false
+
+2. Describe the two typical components of a single linked list node.
+
+  data
+  - A variable that contains data.
+
+  link (next pointer)
+  - A pointer that holds the memory address of the next node.
+  - Points to NULL if the node does not have a next node.
+
+3. What is stored in the link field of the last node of a nonempty single linked list?
+- null pointer (namely 0, NULL, or nullptr)
+
+4. Suppose that first is a pointer to a linked list. What is stored in first?
+
+the memory address of the first node
+
+5. Suppose that the fourth node of a linked list is to be deleted, and
+p points to the fourth node?
+Why do you need a pointer to the third node of the linked list?
+
+Because before deleting the fourth node, we need to update the next pointer of the
+third node so that it will point to the fifth node.
+
+6. What is the output, if any, of each of the following C++ statements?
+
+a. cout << current->info;           // 75
+
+b. current = current->link;
+   cout << current->info;           // 35
+
+c. cout << temp->link->link->info;  // 50
+
+d. trail->link = NULL;
+   cout << trail->info;             // 65
+
+e. cout << last->link->info;        // error because last->link is NULL
+
+
+7. What is the value of each of the following relational expressions?
+
+a. current->link == temp            // false
+
+b. temp->link->link->info == 50     // true
+
+c. trail->link->link == 0           // true
+
+d. last->link == NULL               // true
+
+e. list == current                  // true
+
+
+8. What are the effects, if any, of each of the following C++ statements?
+
+a. trail->link = NULL;
+   delete last;
+
+   Deleting a node at the end of the list
+
+b. temp->link = trail;
+
+   Connecting the third nodes to the seventh node.
+   In other words, the third node's next will be the seventh node.
+   This operation will cause memory leak if the node 4, 5 and 6 have not already
+   deleted from memory appropriately.
+
+c. list->info = 19;
+
+   Update the first node's data to 19
+
+d. current = current->link;
+   current->link = temp->link;
+
+   Connecting the second nodes to the fourth node.
+   In other words, the second node's next will be the fourth node.
+   This operation will cause memory leak if the third has not already
+   deleted from memory appropriately.
+
+
+9. Write C++ statements to do the following:
+
+a. Set the info of the second node to 52.
+
+    current->link->info = 52;
+
+b. Make current point to the node with info 10.
+
+    current = current->link->link->link;
+
+c. Make trail point to the node before temp.
+
+    trail = current->link;
+
+d. Make temp point to an empty list.
+
+    temp = NULL;
+
+e. Set the value of the node before trail to 36.
+
+    temp->link->link->link->info = 36;
+
+f. Write a while loop to make current point to the node with info 10.
+
+    while (current->info != 10) {
+      current = current->link;
+    }
+
+
+10. Mark each of the following statements as valid or invalid.
+If a statement is invalid, explain why.
+
+a. current = list;
+
+Valid.
+
+b. temp->link->link = NULL;
+
+Valid if last three nodes of the list have already been appropriately deleted from memory.
+Invaild otherwise because it causes memory leak.
+
+c. trail->link = 0;
+
+Valid.
+
+d. *temp = last;
+
+Invalid because temp is dereferencing the pointer.
+Since both temp and last are of the same data type, if we want to assign to temp
+what last is holding, the asterisk is not necessary.
+
+e. list = 75;
+
+Invalid because list is a pointer of type nodeType, which is to hold a memory address.
+
+f. temp->link->info = 75;
+
+Valid.
+
+g. current->info = trail->link;
+
+Invalid because current->info is presumably a interger variable while trail->link
+is a pointer of type nodeType.
+
+h. *list = *last;
+
+Invalid because we do not know the resulting values of dereferencing these pointers.
+
+i. current = last;
+
+Valid.
+
+j. cout << trail->link->link->info;
+
+Invalid because trail->link->link is NULL, which does not have info field.
+
+
+11. Write C++ statements to do the following:
+
+a. Write a C++ code so that current traverses the entire list.
+while (current->link =! NULL) {
+  trail   = current;
+  current = current->link;
+}
+
+b. Create the node with info 68 and insert between trail and last.
+
+// Create a new node
+nodeType* newNode = new nodeType;
+
+// Set the next of newNode
+newNode->link = last;
+
+// Update the next of trail
+trail->link = newNode;
+
+
+c. Delete the last node of the list and also deallocate the memory occupied by this node.
+After deleting the node, make last point to the last node of the list and the link of the last node must be NULL.
+
+// I chose this design in order to explicitly initialize pointers
+// because we cannot assume where current and trail pointers are in the example.
+
+// Move the cursor to the last node
+trail   = NULL;
+current = list;
+while (current =! last) {
+  trail   = current;
+  current = current->link;
+}
+
+// Update the trailing node's next
+trail->link = NULL;
+
+// Delete the last node from memory
+delete current;
+
+// Update last pointer
+last = trail;
+
+d. Delete the node with info 10. Also, deallocate the memory occupied by this node.
+
+// Move the cursor to the first occurence a node with the value of 10.
+while (current->info =! 10) {
+  trail   = current;
+  current = current->link;
+}
+
+// Update the trailing node's next
+trail->link = trail->link->link;
+
+// Delete the node from memeory
+delete current;
+

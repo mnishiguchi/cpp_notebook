@@ -36,7 +36,7 @@ int main() {
    string userInput;
 
    // userInput = "That darn cat.";
-   cin >> userInput;
+   getline(cin, userInput);
 
    if (userInput.find("darn") == -1) {
       cout << userInput << endl;

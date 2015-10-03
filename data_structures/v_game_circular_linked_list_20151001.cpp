@@ -192,6 +192,9 @@ void TaskList::loadPool(TaskNode* pool) {
     cout << "Outside the loop" << endl;
     showAll();
 
+    // Finally delete the pool
+    // delete[] pool;
+
     return;
 }
 
