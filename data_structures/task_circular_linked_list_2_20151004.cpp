@@ -30,7 +30,7 @@ public:
     int taskID;
     Task* next;
 
-private:
+    // Static
     static int count;
 };
 
@@ -167,9 +167,9 @@ void printList(Task* head) {
 /**
  * Utility function to draw a horizontal seperator.
  */
-void drawLine() {
+void drawLine(int n) {
     cout << endl;
-    cout << setfill('~') << setw(32) << "" << setfill(' ') << endl;
+    cout << setfill('~') << setw(n) << "" << setfill(' ') << endl;
 }
 
 
@@ -179,12 +179,11 @@ void drawLine() {
  */
 int main() {
 
-    // Configuration
     const int CAPACITY      = 3;
     const int TIME_TO_ALLOC = 10;
 
-    // variables for global use
-    Task* head   = NULL;
+    // Initialize the global variables
+    Task* head      = NULL;
     int currSize = 0;
 
     // The pool of tasks to be performed
@@ -218,27 +217,25 @@ int main() {
 
     // === Load and perform the tasks ===
 
-    // variables for local use
-    int idx = 0;
     Task* curr = NULL;
     Task* temp = NULL;
+
+    int idx = 0;
 
     // Condition to terminate: Both list and pool are empty
 
     while ( !isPoolEmpty(&pool[idx]) || !isListEmpty(currSize) ) {
 
-        // Section1: Adding tasks
+        //==> Section1: Adding tasks
 
         // If the pool is not empty and the list is not full,
         // add new tasks until the list is full
 
         if ( !isPoolEmpty(&pool[idx]) ) {
             while ( currSize != CAPACITY ) {
-                // Add a new task and update the head
                 head = addTask( &pool[idx], head, currSize, CAPACITY );
-                
                 printList(head);
-                drawLine();
+                drawLine(40);
 
                 idx++;  // Move the cursor to next item in the pool
             }
@@ -247,7 +244,7 @@ int main() {
             cout << "The pool is empty" << endl;
         }
 
-        // Section2: Performing tasks
+        //==> Section2: Performing tasks
 
         // Repeat performing the tasks until one node is completed
         // Delete the task if completed
@@ -280,7 +277,7 @@ int main() {
                 }
 
                 printList(head);
-                drawLine();
+                drawLine(40);
 
                 break;  // Exit the loop
             }
