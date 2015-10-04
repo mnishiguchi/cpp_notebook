@@ -19,6 +19,8 @@
 - The system automatically puts the standard input into a data buffer associated with cin, from which >> can extract data
 - [doc](http://www.cplusplus.com/reference/istream/istream/)
 
+==
+
 ## Some functions
 
 ### cin
@@ -87,6 +89,8 @@ cin.ignore(100, '\n');
 cin.ignore(100, 'A');
 ```
 
+==
+
 ## The putback and peek functions
 ### istreamVar.putback(ch);
 - Put the last character extracted from the input stream by the `get(varChar)` function back into the input stream.
@@ -95,6 +99,8 @@ cin.ignore(100, 'A');
 - Returns the next character from the input stream but does not remove the character from that stream.
 - Used to check the next input without removing it from the input stream.
 
+==
+
 ## Input failure
 1. Occurs when attempting to read invalid data
 2. The input stream enters the fail state
@@ -102,6 +108,8 @@ cin.ignore(100, 'A');
 4. The program quietly continues to execute with whatever values are stored in variables and produces incorrect results 
 
 Note: Restore the input stream by calling `istreamVar.clear()`
+
+==
 
 ## istreamVar.clear();
 
@@ -115,6 +123,8 @@ Note: Restore the input stream by calling `istreamVar.clear()`
     cin.clear();            // Restore input stream
     cin.ignore(100, '\n');  // Clear the buffer
 ```
+
+==
 
 ## cin.fail()
 - returns true if the input stream encounters errors, most commonly which happens due to reading incorrect data type.
@@ -130,14 +140,16 @@ if(cin.fail()) {
 ```
 
 ```cpp
-int i;
-cin >> i;
+int num;
+cin >> num;  // Read a number
 
-if(!cin) {
-  // error handling
+if (!cin) {  // If cin is in a bad state
+    cin.clear();
+    cin.ignore(1024, '\n');
 }
 ```
-========================================
+
+==
 
 ## The ostream and cout streams
 
@@ -159,6 +171,8 @@ if(!cin) {
 - returns a reference to the ostream that called it
 - evaluated from left to right like most operators
 - [doc](http://www.cplusplus.com/reference/ostream/ostream/)
+
+==
 
 ## Output formatting
 - adjust the way that output appears

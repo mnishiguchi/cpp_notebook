@@ -46,10 +46,12 @@ class VGameStack {
 public:
     // Addresses of the beginning and end of the list
     VGameNode* top;  // First element
-    VGameNode* back;  // Last element
+    VGameNode* back; // Last element
+    int size;        // TODO : increment / decrement when adding / deleting elements
 
     // Functions
     bool isEmpty();
+    VGameNode* peek();
     VGameNode* pop();
     void push(string title, string genre, int minAge);
     void removeAll();
@@ -67,6 +69,7 @@ public:
 VGameStack::VGameStack() {
     top = NULL;
     back = NULL;
+    size = 0;
 }
 
 // Destructor
@@ -82,7 +85,13 @@ bool VGameStack::isEmpty() {
     return top == NULL;  // return !top; works also.
 }
 
+VGameNode* VGameStack::peek() {
+    return top;
+}
+
+
 /**
+ * TODO
  * Removes and returns a node from the top of the stack.
  */
 VGameNode* VGameStack::pop() {
@@ -96,7 +105,7 @@ VGameNode* VGameStack::pop() {
     // Case2: not empty
     VGameNode* curr = top;   // Remember the top
     top        = top->next;  // Next node becomes top
-    curr->next = NULL;        // The popped node's next is NULL.
+    curr->next = NULL;       // The popped node's next is NULL.
 
     // Note: back did not change
 

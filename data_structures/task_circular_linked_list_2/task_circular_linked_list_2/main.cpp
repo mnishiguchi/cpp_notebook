@@ -8,7 +8,6 @@
 
 #include <iostream>
 #include <iomanip>
-#include <ios>
 using namespace std;
 
 /**
@@ -65,15 +64,13 @@ void Task::performTask(const int msec) {
     taskTimeMilli -= msec;
 }
 
-
-
 /**
  * Adds a new node to the beginning of the list if the list is not full.
  * Updates the list size counter. Returns a new head node.
  */
-Task* addTask(Task* newNode, Task* head, int& currSize, const int CAPACITY) {
+Task* addTask(Task* newNode, Task* head, int& listSize, const int CAPACITY) {
 
-    bool isListFull = (currSize == CAPACITY);
+    bool isListFull = (listSize == CAPACITY);
 
     if (isListFull) {
         cout << endl;
@@ -105,18 +102,24 @@ Task* addTask(Task* newNode, Task* head, int& currSize, const int CAPACITY) {
     }
 
     // Update the size
-    currSize++;
+    listSize++;
     cout << endl;
     cout << "Task added" << endl;
-    cout << "Size updated to " << currSize << endl;
+    cout << "Size updated to " << listSize << endl;
 
     return head;
 }
 
+/**
+ * Returns true if the list is empty.
+ */
 bool isListEmpty(int size) {
     return size <= 0;
 }
 
+/**
+ * Returns true if the specified Task object contains the sentinel value(-1).
+ */
 bool isPoolEmpty(Task* t) {
     return t->taskTimeMilli == -1;
 }
@@ -176,6 +179,7 @@ void drawLine() {
 
 /**
  * Main function of this program.
+ * Simulates running tasks that are stored in an array.
  */
 int main() {
 
@@ -185,7 +189,7 @@ int main() {
 
     // variables for global use
     Task* head   = NULL;
-    int currSize = 0;
+    int listSize = 0;
 
     // The pool of tasks to be performed
 
@@ -216,16 +220,16 @@ int main() {
     // };
 
 
-    // === Load and perform the tasks ===
+    // Load and perform the tasks
 
     // variables for local use
     int idx = 0;
     Task* curr = NULL;
     Task* temp = NULL;
 
-    // Condition to terminate: Both list and pool are empty
+    // Condition to terminate: Both pool and list are empty
 
-    while ( !isPoolEmpty(&pool[idx]) || !isListEmpty(currSize) ) {
+    while ( !isPoolEmpty(&pool[idx]) || !isListEmpty(listSize) ) {
 
         // Section1: Adding tasks
 
@@ -233,10 +237,10 @@ int main() {
         // add new tasks until the list is full
 
         if ( !isPoolEmpty(&pool[idx]) ) {
-            while ( currSize != CAPACITY ) {
+            while ( listSize != CAPACITY ) {
                 // Add a new task and update the head
-                head = addTask( &pool[idx], head, currSize, CAPACITY );
-                
+                head = addTask( &pool[idx], head, listSize, CAPACITY );
+
                 printList(head);
                 drawLine();
 
@@ -264,15 +268,18 @@ int main() {
             } else {
                 temp = curr->next;  // Remember the node to delete
 
-                // Delete the node  // TODO
+                // Delete the node
                 curr->next = curr->next->next;
                 temp->next = NULL;
 
+                // Note: Since the pool is a regular array,
+                // there is no need to delete it out of memeory
+
                 // Decrement the size
-                currSize--;
+                listSize--;
                 cout << endl;
                 cout << "Task removed" << endl;
-                cout << "Size updated to " << currSize << endl;
+                cout << "Size updated to " << listSize << endl;
 
                 // Update the head if head is the one that was deleted
                 if ( temp == head ) {
@@ -284,7 +291,7 @@ int main() {
 
                 break;  // Exit the loop
             }
-        } while ( !isListEmpty(currSize) );
+        } while ( !isListEmpty(listSize) );
     }
 
     cout << endl;
