@@ -40,15 +40,15 @@ VGameNode::VGameNode(string t, string g, int a) {
 }
 
 /**
- * Class that represents a linked list
+ * Class that represents a stack
  */
 class VGameStack {
 public:
     // Addresses of the beginning and end of the list
     VGameNode* top;  // First element
     VGameNode* back; // Last element
-    
-    int size;        // TODO : increment / decrement when adding / deleting elements
+
+    int size;
 
     // Functions
     bool isEmpty();
@@ -110,7 +110,7 @@ VGameNode* VGameStack::pop() {
     curr->next = NULL;       // The popped node's next is NULL.
 
     // Note: back did not change
-    
+
     size--;  // Update the size
 
     return curr;
@@ -169,7 +169,7 @@ void VGameStack::removeFirst() {
     delete temp;             // Delete the node out of memory
 
     // Note: back did not change
-    
+
     size--;  // Update the size
 }
 
@@ -188,7 +188,7 @@ void VGameStack::showAll() {
     // Print the stack size.
     cout << "Stack size: " << size << endl;
     cout << endl;
-    
+
     // Print the attributes names.
     cout << left;
     cout << setw(24) << "TITLE";
