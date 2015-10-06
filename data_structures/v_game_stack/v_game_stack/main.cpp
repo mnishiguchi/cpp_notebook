@@ -47,6 +47,7 @@ public:
     // Addresses of the beginning and end of the list
     VGameNode* top;  // First element
     VGameNode* back; // Last element
+    
     int size;        // TODO : increment / decrement when adding / deleting elements
 
     // Functions
@@ -89,10 +90,11 @@ VGameNode* VGameStack::peek() {
     return top;
 }
 
-
 /**
- * TODO
- * Removes and returns a node from the top of the stack.
+ * Removes and returns a node from the top of the stack a la Java's ArrayList.
+ * In C++, usually it is not preferred because the popped element will stay in memeory.
+ * The section of code that creates an object in memory should take care of
+ * deleting it as well.
  */
 VGameNode* VGameStack::pop() {
 
@@ -108,6 +110,8 @@ VGameNode* VGameStack::pop() {
     curr->next = NULL;       // The popped node's next is NULL.
 
     // Note: back did not change
+    
+    size--;  // Update the size
 
     return curr;
 }
@@ -135,6 +139,7 @@ void VGameStack::push(string title, string genre, int minAge) {
 
         // Note: back did not change
     }
+    size++;  // Update the size
 }
 
 /**
@@ -149,6 +154,7 @@ void VGameStack::removeAll() {
 
 /**
  * Delete the top node from memory.
+ * Alternative to pop()
  */
 void VGameStack::removeFirst() {
     // Return if the stack is empty
@@ -163,6 +169,8 @@ void VGameStack::removeFirst() {
     delete temp;             // Delete the node out of memory
 
     // Note: back did not change
+    
+    size--;  // Update the size
 }
 
 /**
@@ -173,9 +181,14 @@ void VGameStack::showAll() {
     // Return if the stack is empty
     if (top == NULL) {
         cout << "The stack is empty." << endl;
+        cout << "Stack size: " << size << endl;
         return;
     }
 
+    // Print the stack size.
+    cout << "Stack size: " << size << endl;
+    cout << endl;
+    
     // Print the attributes names.
     cout << left;
     cout << setw(24) << "TITLE";
