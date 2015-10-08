@@ -21,6 +21,20 @@
 
 ==
 
+## Valid Input for a Variable of the Simple Data Type
+
+### char
+- One printable character except the blank
+
+### int
+- An integer (possibly preceded by a +/- sign)
+
+### double
+- A decimal number (possibly preceded by a +/- sign)
+- If the actual data input is an integer, the input is converted to a decimal number with the zero decimal part.
+
+==
+
 ## Some functions
 
 ### cin
@@ -202,6 +216,7 @@ cout << setprecision(3) << myFloat;
 
 #### setprecision(p)
 - From `<iomanip>`
+- http://www.cplusplus.com/reference/iomanip/setprecision/
 
 ##### Case1: If stream has NOT been manipulated to fixed or scientific
 - Sets max number of digits in number
