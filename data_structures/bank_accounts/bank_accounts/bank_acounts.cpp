@@ -199,6 +199,59 @@ void AccountStack::printAll() {
     }
 }
 
+/**
+ * Class that represents a bank
+ */
+class Bank {
+public:
+    /*
+     + Element index 0: A-D
+     + Element index 1: E-G
+     + Element index 2: H-M
+     + Element index 3: N-S
+     + Element index 4: T-Z
+     */
+    AccountStack accounts[5];
+    string categories[5] = {"A-D", "E-G", "H-M", "N-S", "T-Z"};
+
+    /**
+     * Returns an appropriate index of the accounts array for the specified account name.
+     */
+    int findIndexFor(string name) {
+
+        char initial = toupper(name[0]);
+        if (initial >= 'A' && initial <= 'D') {
+          return 0;
+        } else if (initial >= 'E' && initial <= 'G') {
+          return 1;
+        } else if (initial >= 'H' && initial <= 'M') {
+          return 2;
+        } else if (initial >= 'N' && initial <= 'S') {
+          return 3;
+        } else if (initial >= 'T' && initial <= 'Z') {
+          return 4;
+        }
+
+        // Error message
+        cout << endl;
+        cout << initial << " is an invalid initial for an account name." << endl;
+        return -1;
+    }
+
+    /**
+     * Add the specified bank account to an appropreate stack.
+     */
+    void addAccount(BankAccount* account) {
+        // Determine the appropriate index based on the name.
+        int index = findIndexFor(account->acctName);
+
+        // Add the account to the stack.
+        accounts[index].push(account);
+        
+        cout << account->acctName << " pushed to the stack (" << categories[index] << ")" << endl;
+    }
+};
+
 
 
 int main() {
