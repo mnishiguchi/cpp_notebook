@@ -18,11 +18,10 @@ class Task {
 public:
     // Functions
     bool isCompleted();
-    void performTask(const int msec);
+    void performTask(const int MSEC);
 
     // Constructors
     Task(int m);  // Constructor with parameters
-    Task();       // Default constructor
 
     // Instance variables
     int taskTimeMilli;
@@ -35,15 +34,6 @@ private:
 
 // Initialize the instance counter
 int Task::count = 0;
-
-/** constructor */
-Task::Task() {
-    taskTimeMilli = 0;
-    next   = NULL;
-    taskID = ++count;
-
-    cout << "Task #" << taskID << " was created (" << taskTimeMilli << ")" << endl;
-}
 
 /** constructor */
 Task::Task(int m) {
@@ -69,8 +59,8 @@ bool Task::isCompleted() {
 /**
  * Perform the specified task for the allocated timeslice.
  */
-void Task::performTask(const int msec) {
-    taskTimeMilli -= msec;
+void Task::performTask(const int MSEC) {
+    taskTimeMilli -= MSEC;
 }
 
 /**
@@ -118,8 +108,8 @@ bool isListEmpty(int size) {
 /**
  * Returns true if the specified Task object contains the sentinel value(-1).
  */
-bool isPoolEmpty(Task* t) {
-    return t->taskTimeMilli == -1;
+bool isPoolEmpty(Task* pool, int index) {
+    return pool[index].taskTimeMilli == -1;
 }
 
 /**
@@ -210,14 +200,14 @@ int main() {
 
     // Condition to terminate: Both pool and list are empty
 
-    while ( !isPoolEmpty(&pool[idx]) || !isListEmpty(listSize) ) {
+    while ( !isPoolEmpty(pool, idx) || !isListEmpty(listSize) ) {
 
         // Section1: Adding tasks
 
         // If the pool is not empty and the list is not full,
         // add new tasks until the list is full
 
-        if ( !isPoolEmpty(&pool[idx]) ) {
+        if ( !isPoolEmpty(pool, idx) ) {
             while ( listSize != CAPACITY ) {
                 // Add a new task and update the tail
                 tail = addTask( &pool[idx], tail, listSize, CAPACITY );

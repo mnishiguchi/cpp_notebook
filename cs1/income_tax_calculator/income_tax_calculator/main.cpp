@@ -1,10 +1,47 @@
 //
-//  main.cpp
+//  APCT-233C-01 Project
 //  income_tax_calculator
+//  main.cpp
+//
+//  Prompts the user to enter filing status and taxable income and compute income tax.
+//  The tax rates are based on those for 2015.
 //
 //  Created by Masatoshi Nishiguchi on 10/13/15.
 //  Copyright (c) 2015 Masatoshi Nishiguchi. All rights reserved.
 //
+
+/* ANALYSIS
+
+Taxable income computation
+    Adjusted gross income – (Exemptions + Deductions)
+
+Income tax computation
+    Refer to the Federal income tax brackets
+
+Example case - Single Woman with no dependents:
+    Gross income: $62,000
+    Adjustments:  $4,000
+    Tax credit:   $500
+
+    Deductions:
+       $7,500: mortgage interest
+       $2,200: property taxes
+       $2,400: charitable contributions
+
+    Adjusted gross income = Gross income – Adjustments
+                          = $62,000 - $4000
+                          = $58,000
+
+    Taxable income = Adjusted gross income – (Exemptions + Deductions)
+                   = $58,000 – ($3,500 + $12,100)
+                   = $58,000 – $15,600
+                   = $42,400
+
+    Tax computation = (9,225 * 0.10) + ((37,450 - 9,225) * 0.15) + ((42,400 - 37,450) * 0.25)
+                    = 6393.75
+
+    Income tax = Tax computation – Tax credits
+*/
 
 #include <iostream>
 using namespace std;
