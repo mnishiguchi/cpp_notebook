@@ -170,6 +170,12 @@ If a char array is initialized when declared, the char array's size may be omitt
 char userName[] = "Masatoshi";
 ```
 
+#### Checking if a character array is empty
+```cpp
+if(text[0] == '\0') {}
+```
+
+
 ### C++ string type
 
 - accessible after `#include <string>`

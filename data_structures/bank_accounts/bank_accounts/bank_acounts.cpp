@@ -14,257 +14,62 @@
 #include <ios>
 using namespace std;
 
+
+//===> class BankAccount
+
 /**
- * Class that represents an bank account.
- * Functions as a node in a linked list.
+ * Class that represents an bank account. Functions as a node in a linked list.
  */
 class BankAccount {
 public:
     // Constructor with parameters
     BankAccount(string acctName, string acctType, double balance);
 
+    // Functions
+    static int getInstanceCount() { return count; };
+
     // Instance variables
     string acctName;
     string acctType;
     double acctBalance;
+    int acctID;
     BankAccount* next;
+
+private:
+    static int count;
 };
 
-// Constructor with parameters
+// Initialize the instance counter
+int BankAccount::count = 0;
+
+/** Constructor with parameters */
 BankAccount::BankAccount(string name, string type, double balance) {
     next = NULL;
     acctName    = name;
     acctType    = type;
     acctBalance = balance;
+    acctID      = ++count;
 
-    cout << "account created for " << acctName << endl;
+    cout << "Account created: #" << acctID << " " << acctName << endl;
 }
+
+
+//===> class AccountLinkedList
 
 /**
- * Class that represents a stack of BankAccount nodes
- */
-class AccountStack {
-public:
-    // Functions
-    int getSize();
-    bool isEmpty();
-    bool isFull();
-    BankAccount* peek();
-    void popFirstToSideCollection();
-    void push(BankAccount* account);
-    void removeAll();
-    void removeFirst();
-    void printAll();
-
-    void incrementSize() { size++; }
-    void decrementSize() { size--; }
-
-    // Constructor
-    AccountStack();
-
-    // Destructor
-    ~AccountStack();
-
-private:
-    const int MAX_SIZE = 4;
-    int size;
-    BankAccount* top;  // First node
-};
-
-/** Default constructor */
-AccountStack::AccountStack() {
-    top  = NULL;
-    size = 0;
-}
-
-/** Destructor */
-AccountStack::~AccountStack() {
-    cout << "AccountStack is about to be destructed" << endl;
-    removeAll();
-}
-
-/**
- * Returns the current size of the stack.
- */
-int AccountStack::getSize() {
-    return size;
-}
-
-/**
- * Returns true if the stack is empty.
- */
-bool AccountStack::isEmpty() {
-    return top == NULL;  // return !top; works also.
-}
-
-/**
- * Returns true if the stack is full.
- */
-bool AccountStack::isFull() {
-    return size >= MAX_SIZE;
-}
-
-/**
- * Returns the BankAccount node that is currently at the top of the stack.
- */
-BankAccount* AccountStack::peek() {
-    return top;
-}
-
-/**
- * TODO
- */
-void AccountStack::popFirstToSideCollection() {
-    // TODO
-}
-
-/**
- * Add a node at the top of the stack.
- */
-void AccountStack::push(BankAccount* newNode) {
-
-    // The new node becomes the top of the stack in either case.
-
-    // Case1: Empty stack
-    if (isEmpty()) {
-        top = newNode;
-
-    // Case2: Non-empty stack
-    } else {
-        newNode->next = top;
-        top           = newNode;
-    }
-
-    incrementSize();
-}
-
-/**
- * Empty the stack deleting all the node from memory (if not already empty).
- */
-void AccountStack::removeAll() {
-    while (!isEmpty()) {
-        removeFirst();
-    }
-}
-
-/**
- * Delete the top node from memory.
- */
-void AccountStack::removeFirst() {
-    // Case1: Empty stack
-    if (top == NULL) {
-        cout << "The stack is empty." << endl;
-        return;
-    }
-
-    // Case2: Non-empty stack
-    BankAccount* temp = top;        // Remember the current top
-    top               = top->next;  // Next node becomes top
-    delete temp;
-
-    decrementSize();
-}
-
-void AccountStack::printAll() {
-    // Return if the stack is empty.
-    if (top == NULL) {
-        cout << "The stack is empty." << endl;
-        cout << "Stack size: " << size << endl;
-        return;
-    }
-
-    // Print the stack size.
-    cout << "Stack size: " << size << endl;
-    cout << endl;
-
-    // Print the attributes names.
-    cout << left  << setw(12) << "acctName"
-         << right << setw(12) << "acctType"
-                  << setw(12) << "acctBal" << endl;
-
-    // Draw a horizonal line.
-    cout << setfill('-') << setw(36) << "" << setfill(' ') << endl;
-
-    // Formatting for floating-point numbers.
-    cout << fixed << showpoint << setprecision(2);
-
-    // Traverse the list and print each node.
-    BankAccount* curr = top;
-    while (curr != NULL) {
-        cout << left  << setw(12) << curr->acctName
-             << right << setw(12) << curr->acctType
-                      << setw(12) << curr->acctBalance << endl;
-
-        curr = curr->next;  // Move the cursor to next.
-    }
-}
-
-/**
- * Class that represents a bank
- */
-class Bank {
-public:
-    /*
-     + Element index 0: A-D
-     + Element index 1: E-G
-     + Element index 2: H-M
-     + Element index 3: N-S
-     + Element index 4: T-Z
-     */
-    AccountStack accounts[5];
-    string categories[5] = {"A-D", "E-G", "H-M", "N-S", "T-Z"};
-
-    /**
-     * Returns an appropriate index of the accounts array for the specified account name.
-     */
-    int findIndexFor(string name) {
-
-        char initial = toupper(name[0]);
-        if (initial >= 'A' && initial <= 'D') {
-          return 0;
-        } else if (initial >= 'E' && initial <= 'G') {
-          return 1;
-        } else if (initial >= 'H' && initial <= 'M') {
-          return 2;
-        } else if (initial >= 'N' && initial <= 'S') {
-          return 3;
-        } else if (initial >= 'T' && initial <= 'Z') {
-          return 4;
-        }
-
-        // Error message
-        cout << endl;
-        cout << initial << " is an invalid initial for an account name." << endl;
-        return -1;
-    }
-
-    /**
-     * Add the specified bank account to an appropreate stack.
-     */
-    void addAccount(BankAccount* account) {
-        // Determine the appropriate index based on the name.
-        int index = findIndexFor(account->acctName);
-
-        // Add the account to the stack.
-        accounts[index].push(account);
-
-        cout << account->acctName << " pushed to the stack (" << categories[index] << ")" << endl;
-    }
-};
-
-/**
- * Class that represents a linked list of BankAccount nodes
+ * Class that represents a linked list of BankAccount nodes.
+ * In this particular program, this class is used for the side collection.
  */
 class AccountLinkedList {
 public:
     // Functions
-    int getSize();
-    bool isEmpty();
+    int getSize() const;
+    bool isEmpty() const;
     void insertByName(BankAccount* account);
-    BankAccount* peek();
+    BankAccount* peek() const;
     void removeAll();
     void removeFirst();
-    void printAll();
+    void printAll() const;
 
     void incrementSize() { size++; }
     void decrementSize() { size--; }
@@ -288,22 +93,22 @@ AccountLinkedList::AccountLinkedList() {
 
 /** Destructor */
 AccountLinkedList::~AccountLinkedList() {
-    cout << "AccountLinkedList is about to be destructed" << endl;
+    cout << "AccountLinkedList is about to be destructed." << endl;
     removeAll();
 }
 
 /**
  * Returns the current size of the stack.
  */
-int AccountLinkedList::getSize() {
+int AccountLinkedList::getSize() const {
     return size;
 }
 
 /**
  * Returns true if the stack is empty.
  */
-bool AccountLinkedList::isEmpty() {
-    return head == NULL;  // return !head; works also.
+bool AccountLinkedList::isEmpty() const {
+    return head == NULL;
 }
 
 /**
@@ -357,12 +162,12 @@ void AccountLinkedList::insertByName(BankAccount* newNode) {
 /**
  * Returns the BankAccount node that is currently at the head of the stack.
  */
-BankAccount* AccountLinkedList::peek() {
+BankAccount* AccountLinkedList::peek() const {
     return head;
 }
 
 /**
- * Empty the stack deleting all the node from memory (if not already empty).
+ * Empties the stack deleting all the node from memory (if not already empty).
  */
 void AccountLinkedList::removeAll() {
     while (!isEmpty()) {
@@ -371,7 +176,7 @@ void AccountLinkedList::removeAll() {
 }
 
 /**
- * Delete the head node from memory.
+ * Deletes the head node from memory.
  */
 void AccountLinkedList::removeFirst() {
     // Case1: Empty list
@@ -381,23 +186,25 @@ void AccountLinkedList::removeFirst() {
     }
 
     // Case2: Non-empty list
-    BankAccount* temp = head;         // Remember the current head
-    head               = head->next;  // Next node becomes head
+    BankAccount* temp = head;        // Remember the current head
+    head              = head->next;  // Next node becomes head
+
+    cout << temp->acctName << " is about to be destructed." << endl;
     delete temp;
 
     decrementSize();
 }
 
-void AccountLinkedList::printAll() {
+void AccountLinkedList::printAll() const {
     // Return if the list is empty.
-    if (head == NULL) {
+    if (isEmpty()) {
         cout << "The list is empty." << endl;
-        cout << "Stack size: " << size << endl;
+        cout << "List size: " << size << endl;
         return;
     }
 
     // Print the list size.
-    cout << "list size: " << size << endl;
+    cout << "List size: " << size << endl;
     cout << endl;
 
     // Print the attributes names.
@@ -423,17 +230,307 @@ void AccountLinkedList::printAll() {
 }
 
 
+//===> class AccountStack
+
+/**
+ * Class that represents a stack of BankAccount nodes
+ */
+class AccountStack {
+public:
+    // Functions
+    int getSize() const;
+    bool isEmpty() const;
+    bool isFull() const;
+    BankAccount* peek() const;
+    void popFirstTo(AccountLinkedList* sideCollection);
+    bool push(BankAccount* account);
+    void removeAll();
+    void removeFirst();
+    void printAll() const;
+
+    void incrementSize() { size++; }
+    void decrementSize() { size--; }
+
+    // Constructor
+    AccountStack();
+
+    // Destructor
+    ~AccountStack();
+
+private:
+    const int MAX_SIZE = 4;
+    int size;
+    BankAccount* top;  // First node
+};
+
+/** Default constructor */
+AccountStack::AccountStack() {
+    top  = NULL;
+    size = 0;
+}
+
+/** Destructor */
+AccountStack::~AccountStack() {
+    cout << "AccountStack is about to be destructed." << endl;
+    removeAll();
+}
+
+/**
+ * Returns the current size of the stack.
+ */
+int AccountStack::getSize() const {
+    return size;
+}
+
+/**
+ * Returns true if the stack is empty.
+ */
+bool AccountStack::isEmpty() const {
+    return top == NULL;  // return !top; works also.
+}
+
+/**
+ * Returns true if the stack is full.
+ */
+bool AccountStack::isFull() const {
+    return size >= MAX_SIZE;
+}
+
+/**
+ * Returns the BankAccount node that is currently at the top of the stack.
+ */
+BankAccount* AccountStack::peek() const {
+    return top;
+}
+
+/**
+ * Removes a top node from the stack and adds the node to a side collection.
+ */
+void AccountStack::popFirstTo(AccountLinkedList* sideCollection) {
+
+    // Empty stack
+    if (isEmpty()) {
+        cout << "The stack is empty." << endl;
+        return;
+    }
+
+    // Non-empty stack
+    BankAccount* curr = top;        // Remember the top
+    top               = top->next;  // Next node becomes top
+    curr->next        = NULL;       // The popped node's next is NULL
+
+    // Add the popped node to the side collection.
+    sideCollection->insertByName(curr);
+    decrementSize();
+
+    cout << curr->acctName << " was transferred to a sideCollection." << endl;
+}
+
+/**
+ * Adds a node at the top of the stack.
+ * Returns true if successful, else false.
+ */
+bool AccountStack::push(BankAccount* newNode) {
+
+    if (isFull()) {
+        cout << "The stack is full." << endl;
+        return false;
+    }
+
+    // The new node becomes the top of the stack in either case.
+
+    if (isEmpty()) {    // Case1: Empty stack
+        top = newNode;
+    } else {            // Case2: Non-empty stack
+        newNode->next = top;
+        top           = newNode;
+    }
+    incrementSize();
+    return true;
+}
+
+/**
+ * Empty the stack deleting all the node from memory (if not already empty).
+ */
+void AccountStack::removeAll() {
+    while (!isEmpty()) {
+        removeFirst();
+    }
+}
+
+/**
+ * Delete the top node from memory.
+ */
+void AccountStack::removeFirst() {
+    // Case1: Empty stack
+    if (isEmpty()) {
+        cout << "The stack is empty." << endl;
+        return;
+    }
+
+    // Case2: Non-empty stack
+    BankAccount* temp = top;        // Remember the current top
+    top               = top->next;  // Next node becomes top
+
+    cout << temp->acctName << "is about to be destructed." << endl;
+    delete temp;
+
+    decrementSize();
+}
+
+void AccountStack::printAll() const {
+    // Return if the stack is empty.
+    if (isEmpty()) {
+        cout << "The stack is empty." << endl;
+        cout << "Stack size: " << size << endl;
+        return;
+    }
+
+    // Print the stack size.
+    cout << "Stack size: " << size << endl;
+    cout << endl;
+
+    // Print the attributes names.
+    cout << left  << setw(12) << "acctName"
+         << right << setw(12) << "acctType"
+                  << setw(12) << "acctBal" << endl;
+
+    // Draw a horizonal line.
+    cout << setfill('-') << setw(36) << "" << setfill(' ') << endl;
+
+    // Formatting for floating-point numbers.
+    cout << fixed << showpoint << setprecision(2);
+
+    // Traverse the list and print each node.
+    BankAccount* curr = top;
+    while (curr != NULL) {
+        cout << left  << setw(12) << curr->acctName
+             << right << setw(12) << curr->acctType
+                      << setw(12) << curr->acctBalance << endl;
+
+        curr = curr->next;  // Move the cursor to next.
+    }
+}
+
+
+//===> class Bank
+
+/**
+ * Class that represents a bank
+ */
+class Bank {
+public:
+    /*
+     + Element index 0: A-D
+     + Element index 1: E-G
+     + Element index 2: H-M
+     + Element index 3: N-S
+     + Element index 4: T-Z
+     */
+    const int NUM_STACKS = 5;
+    AccountStack acctStacks[5];
+    string categories[5] = { "A-D", "E-G", "H-M", "N-S", "T-Z" };
+
+    AccountLinkedList* sideCollection = new AccountLinkedList;
+
+    /** Destructor */
+    ~Bank() {
+        cout << "Bank is about to be destructed." << endl;
+        delete sideCollection;
+    }
+
+    /**
+     * Returns an appropriate index of the accounts array for the specified account name.
+     */
+    int findIndexFor(string name) const {
+
+        char initial = toupper(name[0]);
+        if (initial >= 'A' && initial <= 'D') {
+          return 0;
+        } else if (initial >= 'E' && initial <= 'G') {
+          return 1;
+        } else if (initial >= 'H' && initial <= 'M') {
+          return 2;
+        } else if (initial >= 'N' && initial <= 'S') {
+          return 3;
+        } else if (initial >= 'T' && initial <= 'Z') {
+          return 4;
+        }
+
+        // Error message
+        cout << endl;
+        cout << initial << " is an invalid initial for an account name." << endl;
+        return -1;
+    }
+
+    /**
+     * Adds the specified bank account to an appropreate stack.
+     */
+    void addAccount(BankAccount* account) {
+
+        // Determine the appropriate index based on the name.
+        int index = findIndexFor(account->acctName);
+
+        // Attempt top add the account to the stack.
+        // If the push is unsuccessful, pop one to the side collection and retry.
+        while (!acctStacks[index].push(account)) {
+            acctStacks[index].popFirstTo(sideCollection);
+        }
+
+        cout << account->acctName << " pushed to the stack (" << categories[index] << ")" << endl;
+    }
+
+    /**
+     * Transfers all the accounts in the stacks to a side collection.
+     */
+    void moveAllToSideCollection() {
+        for (int index = 0; index < NUM_STACKS; index++) {
+            while (!acctStacks[index].isEmpty()) {
+                acctStacks[index].popFirstTo(sideCollection);
+            }
+        }
+    }
+};
+
+
+//===> main function
+
+/**
+ * Utility function to clear the temporary variables.
+ */
+void clearVars(char* acctName, char* acctType, double acctBal) {
+    acctName[0] = '\0';
+    acctType[0] = '\0';
+    acctBal     = NULL;
+}
+
+/**
+ * Utility function to draw a horizontal seperator.
+ */
+void drawLine() {
+    cout << setfill('~') << setw(48) << "" << setfill(' ') << endl;
+}
+
+/**
+ * The main function of this program
+ * 1. Reads the data of bank accounts from a file.
+ * 2. For each, dynamically creates a BankAccount object and adds it to an apporiate stack.
+ * 3. If a stack is full pops one and moves it to the side collection.
+ * 4. After reading all the data from the file, move the rest of the accounts to the side collection.
+ * 5. After all accounts are moved to the side collection, prints all the accounts.
+ * 6. Deletes all the dynamically created objects out of memory.
+ */
 int main() {
 
     ifstream reader;
 
+    // Temporary data containers for each line.
     char acctName[101], acctType[11];
     double acctBal;
+    BankAccount* newAccount;
 
-    // Print column names
-    cout << left  << setw(12) << "acctName"
-         << right << setw(12) << "acctType"
-                  << setw(12) << "acctBal" << endl;
+    // Create a bank
+    Bank* bank = new Bank;
 
     // Open the appropriate file
     reader.open("/Users/masa/data_cpp_exercises/bank_data.txt");
@@ -452,26 +549,47 @@ int main() {
 
         reader.ignore();
 
-        /************************************************
+        //************************************************
 
-         In this section, fill the appropriate BankAccount instance with values retrieved
-              (acctName, acctType, acctBal)
+        // Data validation (rejecting data with an empty string)
+        if (acctName[0] == '\0' || acctName[0] == '\0') {
+           cout << "Ignored data with empty name or empty type." << endl;
+           continue;
+        }
 
-         ************************************************/
+        // Create a new account with this data set and add to the bank.
+        newAccount = new BankAccount(acctName, acctType, acctBal);
+        bank->addAccount(newAccount);
+        drawLine();
 
+        clearVars(acctName, acctType, acctBal);
 
-        // Print data for each person
-        cout << fixed << showpoint << setprecision(2);
-        cout << left  << setw(12) << acctName
-             << right << setw(12) << acctType
-                      << setw(12) << acctBal << endl;
-
-        // Clear the temporary storage
-        acctName[0] = '\0';
-        acctType[0] = '\0';
-        acctBal = NULL;
+        //************************************************
     }
-    reader.close();   // Close the file
+    reader.close();  // Close the file
+
+    // Total number of the bank accounts
+    int numAccounts = BankAccount::getInstanceCount();
+    cout << "Total number of accounts: " << numAccounts << endl;
+    drawLine();
+
+    // Transfer all the accounts to a side collection.
+    cout << "Moving all the accounts in the stacks to a side collection." << endl;
+    bank->moveAllToSideCollection();
+    drawLine();
+
+    // Print all the stacks.
+    for (int i = 0; i < bank->NUM_STACKS; i++) {
+        bank->acctStacks[i].printAll();
+        drawLine();
+    }
+
+    // Print the side collection.
+    bank->sideCollection->printAll();
+    drawLine();
+
+    // Delete all the dynamically created objects.
+    delete bank;
 
     return 0;
 }

@@ -61,5 +61,22 @@ Sometimes a programmer knows that a variable's numbers will always be positive (
 
 - http://www.tutorialspoint.com/cplusplus/cpp_overloading.htm
 
+==
+
+## Ternary operator
+- https://en.wikipedia.org/wiki/%3F:#C.2B.2B
+
+```cpp
+if (amount1 > amount2) {
+    cout << amount1 << endl;
+} else {
+    cout << amount2 << endl;
+}
+
+cout << (amount1 > amount2 ? amount1 : amount2);
+```
+
+==
+
 
 

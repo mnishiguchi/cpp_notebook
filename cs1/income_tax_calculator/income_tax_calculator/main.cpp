@@ -28,19 +28,20 @@ Example case - Single Woman with no dependents:
        $2,200: property taxes
        $2,400: charitable contributions
 
-    Adjusted gross income = Gross income – Adjustments
-                          = $62,000 - $4000
-                          = $58,000
+    Adjusted gross income
+                    = Gross income – Adjustments
+                    = $62,000 - $4000
+                    = $58,000
 
-    Taxable income = Adjusted gross income – (Exemptions + Deductions)
-                   = $58,000 – ($3,500 + $12,100)
-                   = $58,000 – $15,600
-                   = $42,400
+    Taxable income  = Adjusted gross income – (Exemptions + Deductions)
+                    = $58,000 – ($3,500 + $12,100)
+                    = $58,000 – $15,600
+                    = $42,400
 
     Tax computation = (9,225 * 0.10) + ((37,450 - 9,225) * 0.15) + ((42,400 - 37,450) * 0.25)
                     = 6393.75
 
-    Income tax = Tax computation – Tax credits
+    Income tax      = Tax computation – Tax credits
 */
 
 #include <iostream>

@@ -1,5 +1,10 @@
 # arrays
 
+## Checking if a character array is empty
+```cpp
+if(text[0] == '\0') {}
+```
+
 ## Two-dimensional arrays
 
 ```cpp

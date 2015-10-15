@@ -1,0 +1,187 @@
+1.
+if (y == 0) {
+    x = 100;
+}
+
+2.
+if (y == 10) {
+    x = 0;
+}
+
+3.
+if (sales < 10000) {
+    commission = 0.1;
+} else if (sales <= 15000) {
+    commission = 0.15;   
+} else {
+    commission = 0.2;   
+}
+
+4.
+if (minimum) {
+    hours = 10 ;
+}
+
+5.
+if (amount1 > 10 && amount2 < 100 ) {
+    if (amount1 > amount2) {
+        cout << amount1 << endl;
+    } else {
+        cout << amount2 << endl;
+    }
+}
+
+6. 
+if (grade >= 0 && grade <= 100 ) {
+    cout << "The number is valid" << endl;
+}
+
+7.
+if (temperature >= –50 && temperature <= 150) {
+    cout << "The number is valid" << endl;
+}
+
+8. 
+if (hours < 0 || hours > 80) {
+    cout << "The number is not valid" << endl;
+}
+
+9.
+if (str1 > str2) {
+    cout << str1 << endl;
+} else {
+    cout << str2 << endl;
+}
+
+10. 
+switch (choice) {
+    case 1:
+        cout << fixed << showpoint << setprecision(2);
+        break;
+    case 2:
+    case 3:
+        cout << fixed << showpoint << setprecision(4);
+        break;
+    case 4:
+        cout << fixed << showpoint << setprecision(6);
+        break;
+    default:
+        cout << fixed << showpoint << setprecision(8);
+}
+
+11. Match the conditional expression with the if/else statement that performs the same operation.
+A) q = x < y ? a + b : x * 2;
+B) q = x < y ? x * 2 : a + b;
+C) x < y ? q = 0 : q = 1;
+
+If Else statement 
+C:   if (x < y)
+         q = 0;
+     else
+         q = 1;
+
+A:   if (x < y)
+         q = a + b;
+     else
+         q = x * 2;
+
+B:   if (x < y)
+         q = x * 2;
+     else
+         q = a + b;
+
+12 - 15
+x = 5, y = 6, and z = 8
+
+12. x == 5 || y > 3   // true || true  => true   
+13. 7 <= x && z > 4   // false && true => false
+14. 2 != y && z != 4  // true && true  => true
+15. x >= 0 || x <= y  // true || true  => true
+
+17.
+// This program averages 3 test scores.
+// It uses the variable perfectScore as a flag.
+include <iostream>
+using namespace std;
+int main()
+{
+    cout << "Enter your 3 test scores and I will ";  // Unnecessary semicolon
+         << "average them:";
+
+    int score1, score2, score3,                      // Invalid use of comma
+    cin >> score1 >> score2 >> score3;
+
+    double average;
+    average = (score1 + score2 + score3) / 3.0;
+
+    if (average = 100);                          // perfectScore is undefined
+         perfectScore = true;  // Set the flag variable
+
+    cout << "Your average is " << average << endl;
+
+    bool perfectScore;
+    if (perfectScore);
+    {
+        cout << "Congratulations!\n";
+        cout << "That's a perfect score.\n";
+        cout << "You deserve a pat on the back!\n";
+        return 0;
+                                                    // Missing closing brace
+}
+
+18.
+// This program divides a user-supplied number by another
+// user-supplied number. It checks for division by zero.
+#include <iostream>
+using namespace std;
+int main()
+{
+    double num1, num2, quotient;
+
+    cout << "Enter a number: ";
+    cin >> num1;
+    cout << "Enter another number: ";
+    cin >> num2;
+
+    if (num2 == 0)  // missing opening and closing brace for if block.
+        cout << "Division by zero is not possible.\n";
+
+    cout << "Please run the program again ";
+    cout << "and enter a number besides zero.\n";
+    else            // missing opening and closing brace for else block.
+        quotient = num1 / num2;
+
+    cout << "The quotient of " << num1 << 
+    cout << " divided by " << num2 << " is ";
+    cout << quotient << endl;
+
+    return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
