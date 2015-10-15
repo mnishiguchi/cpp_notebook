@@ -247,11 +247,180 @@ public:
 
         // Add the account to the stack.
         accounts[index].push(account);
-        
+
         cout << account->acctName << " pushed to the stack (" << categories[index] << ")" << endl;
     }
 };
 
+/**
+ * Class that represents a linked list of BankAccount nodes
+ */
+class AccountLinkedList {
+public:
+    // Functions
+    int getSize();
+    bool isEmpty();
+    void insertByName(BankAccount* account);
+    BankAccount* peek();
+    void removeAll();
+    void removeFirst();
+    void printAll();
+
+    void incrementSize() { size++; }
+    void decrementSize() { size--; }
+
+    // Constructor
+    AccountLinkedList();
+
+    // Destructor
+    ~AccountLinkedList();
+
+private:
+    int size;
+    BankAccount* head;  // First node
+};
+
+/** Default constructor */
+AccountLinkedList::AccountLinkedList() {
+    head  = NULL;
+    size = 0;
+}
+
+/** Destructor */
+AccountLinkedList::~AccountLinkedList() {
+    cout << "AccountLinkedList is about to be destructed" << endl;
+    removeAll();
+}
+
+/**
+ * Returns the current size of the stack.
+ */
+int AccountLinkedList::getSize() {
+    return size;
+}
+
+/**
+ * Returns true if the stack is empty.
+ */
+bool AccountLinkedList::isEmpty() {
+    return head == NULL;  // return !head; works also.
+}
+
+/**
+ * Insert the specified account in an appropriate position so that the list is
+ * alphabetically sorted by account name.
+ * The list must be already sorted or empty in order to get the intended result.
+ */
+void AccountLinkedList::insertByName(BankAccount* newNode) {
+
+    bool isFound;
+
+    if(isEmpty()) {
+        head = newNode;
+
+    } else {
+        BankAccount* curr      = head;
+        BankAccount* trailCurr = NULL;
+
+        // Case1: Insert before the first node
+        if (newNode->acctName < head->acctName) {
+            newNode->next = head;
+            head          = newNode;
+
+        // Case2: Search the list for the node before which we have to insert.
+        } else {
+            // Initialze the cursors.
+            trailCurr = head;        // Initially pointing to the first node.
+            curr      = head->next;  // Initially pointing to the second node.
+
+            // Traverse the list until the insertion position is found.
+            isFound = false;
+            while (curr != NULL && !isFound) {
+                if (curr->acctName < newNode->acctName) {
+                    trailCurr = curr;
+                    curr      = curr->next;
+
+                } else {
+                    isFound = true;
+                }
+            }
+
+            // Insert the new node there.
+            trailCurr->next = newNode;
+            newNode->next   = curr;
+        }
+    }
+
+    incrementSize();
+}
+
+/**
+ * Returns the BankAccount node that is currently at the head of the stack.
+ */
+BankAccount* AccountLinkedList::peek() {
+    return head;
+}
+
+/**
+ * Empty the stack deleting all the node from memory (if not already empty).
+ */
+void AccountLinkedList::removeAll() {
+    while (!isEmpty()) {
+        removeFirst();
+    }
+}
+
+/**
+ * Delete the head node from memory.
+ */
+void AccountLinkedList::removeFirst() {
+    // Case1: Empty list
+    if (head == NULL) {
+        cout << "The list is empty." << endl;
+        return;
+    }
+
+    // Case2: Non-empty list
+    BankAccount* temp = head;         // Remember the current head
+    head               = head->next;  // Next node becomes head
+    delete temp;
+
+    decrementSize();
+}
+
+void AccountLinkedList::printAll() {
+    // Return if the list is empty.
+    if (head == NULL) {
+        cout << "The list is empty." << endl;
+        cout << "Stack size: " << size << endl;
+        return;
+    }
+
+    // Print the list size.
+    cout << "list size: " << size << endl;
+    cout << endl;
+
+    // Print the attributes names.
+    cout << left  << setw(12) << "acctName"
+         << right << setw(12) << "acctType"
+                  << setw(12) << "acctBal" << endl;
+
+    // Draw a horizonal line.
+    cout << setfill('-') << setw(36) << "" << setfill(' ') << endl;
+
+    // Formatting for floating-point numbers.
+    cout << fixed << showpoint << setprecision(2);
+
+    // Traverse the list and print each node.
+    BankAccount* curr = head;
+    while (curr != NULL) {
+        cout << left  << setw(12) << curr->acctName
+             << right << setw(12) << curr->acctType
+                      << setw(12) << curr->acctBalance << endl;
+
+        curr = curr->next;  // Move the cursor to next.
+    }
+}
 
 
 int main() {
