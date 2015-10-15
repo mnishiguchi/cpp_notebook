@@ -14,11 +14,197 @@
 #include <ios>
 using namespace std;
 
+/**
+ * Class that represents an bank account.
+ * Functions as a node in a linked list.
+ */
+class BankAccount {
+public:
+    // Constructor with parameters
+    BankAccount(string acctName, string acctType, double balance);
+
+    // Instance variables
+    string acctName;
+    string acctType;
+    double acctBalance;
+    BankAccount* next;
+};
+
+// Constructor with parameters
+BankAccount::BankAccount(string name, string type, double balance) {
+    next = NULL;
+    acctName    = name;
+    acctType    = type;
+    acctBalance = balance;
+
+    cout << "account created for " << acctName << endl;
+}
+
+/**
+ * Class that represents a stack of BankAccount nodes
+ */
+class AccountStack {
+public:
+    // Functions
+    int getSize();
+    bool isEmpty();
+    bool isFull();
+    BankAccount* peek();
+    void popFirstToSideCollection();
+    void push(BankAccount* account);
+    void removeAll();
+    void removeFirst();
+    void printAll();
+
+    void incrementSize() { size++; }
+    void decrementSize() { size--; }
+
+    // Constructor
+    AccountStack();
+
+    // Destructor
+    ~AccountStack();
+
+private:
+    const int MAX_SIZE = 4;
+    int size;
+    BankAccount* top;  // First node
+};
+
+/** Default constructor */
+AccountStack::AccountStack() {
+    top  = NULL;
+    size = 0;
+}
+
+/** Destructor */
+AccountStack::~AccountStack() {
+    cout << "AccountStack is about to be destructed" << endl;
+    removeAll();
+}
+
+/**
+ * Returns the current size of the stack.
+ */
+int AccountStack::getSize() {
+    return size;
+}
+
+/**
+ * Returns true if the stack is empty.
+ */
+bool AccountStack::isEmpty() {
+    return top == NULL;  // return !top; works also.
+}
+
+/**
+ * Returns true if the stack is full.
+ */
+bool AccountStack::isFull() {
+    return size >= MAX_SIZE;
+}
+
+/**
+ * Returns the BankAccount node that is currently at the top of the stack.
+ */
+BankAccount* AccountStack::peek() {
+    return top;
+}
+
+/**
+ * TODO
+ */
+void AccountStack::popFirstToSideCollection() {
+    // TODO
+}
+
+/**
+ * Add a node at the top of the stack.
+ */
+void AccountStack::push(BankAccount* newNode) {
+
+    // The new node becomes the top of the stack in either case.
+
+    // Case1: Empty stack
+    if (isEmpty()) {
+        top = newNode;
+
+    // Case2: Non-empty stack
+    } else {
+        newNode->next = top;
+        top           = newNode;
+    }
+
+    incrementSize();
+}
+
+/**
+ * Empty the stack deleting all the node from memory (if not already empty).
+ */
+void AccountStack::removeAll() {
+    while (!isEmpty()) {
+        removeFirst();
+    }
+}
+
+/**
+ * Delete the top node from memory.
+ */
+void AccountStack::removeFirst() {
+    // Case1: Empty stack
+    if (top == NULL) {
+        cout << "The stack is empty." << endl;
+        return;
+    }
+
+    // Case2: Non-empty stack
+    BankAccount* temp = top;        // Remember the current top
+    top               = top->next;  // Next node becomes top
+    delete temp;
+
+    decrementSize();
+}
+
+void AccountStack::printAll() {
+    // Return if the stack is empty.
+    if (top == NULL) {
+        cout << "The stack is empty." << endl;
+        cout << "Stack size: " << size << endl;
+        return;
+    }
+
+    // Print the stack size.
+    cout << "Stack size: " << size << endl;
+    cout << endl;
+
+    // Print the attributes names.
+    cout << left  << setw(12) << "acctName"
+         << right << setw(12) << "acctType"
+                  << setw(12) << "acctBal" << endl;
+
+    // Draw a horizonal line.
+    cout << setfill('-') << setw(36) << "" << setfill(' ') << endl;
+
+    // Formatting for floating-point numbers.
+    cout << fixed << showpoint << setprecision(2);
+
+    // Traverse the list and print each node.
+    BankAccount* curr = top;
+    while (curr != NULL) {
+        cout << left  << setw(12) << curr->acctName
+             << right << setw(12) << curr->acctType
+                      << setw(12) << curr->acctBalance << endl;
+
+        curr = curr->next;  // Move the cursor to next.
+    }
+}
+
+
 
 int main() {
 
     ifstream reader;
-    
+
     char acctName[101], acctType[11];
     double acctBal;
 
@@ -57,7 +243,7 @@ int main() {
         cout << left  << setw(12) << acctName
              << right << setw(12) << acctType
                       << setw(12) << acctBal << endl;
-        
+
         // Clear the temporary storage
         acctName[0] = '\0';
         acctType[0] = '\0';
