@@ -193,13 +193,12 @@ void AccountLinkedList::removeAll() {
  * Deletes the head node from memory.
  */
 void AccountLinkedList::removeFirst() {
-    // Case1: Empty list
-    if (head == NULL) {
+
+    if (isEmpty()) {
         cout << "The list is empty." << endl;
         return;
     }
 
-    // Case2: Non-empty list
     BankAccount* temp = head;        // Remember the current head
     head              = head->next;  // Next node becomes head
 
@@ -210,7 +209,7 @@ void AccountLinkedList::removeFirst() {
 }
 
 void AccountLinkedList::printAll() const {
-    // Return if the list is empty.
+
     if (isEmpty()) {
         cout << "The list is empty." << endl;
         cout << "List size: " << size << endl;
@@ -250,6 +249,7 @@ void AccountLinkedList::printAll() const {
  */
 class AccountStack {
 public:
+
     // Functions
     int getSize() const;
     bool isEmpty() const;
@@ -321,13 +321,11 @@ BankAccount* AccountStack::peek() const {
  */
 void AccountStack::popFirstTo(AccountLinkedList* sideCollection) {
 
-    // Empty stack
     if (isEmpty()) {
         cout << "The stack is empty." << endl;
         return;
     }
 
-    // Non-empty stack
     BankAccount* curr = top;        // Remember the top
     top               = top->next;  // Next node becomes top
     curr->next        = NULL;       // The popped node's next is NULL
@@ -363,7 +361,7 @@ bool AccountStack::push(BankAccount* newNode) {
 }
 
 /**
- * Empty the stack deleting all the node from memory (if not already empty).
+ * Empties the stack deleting all the node from memory (if not already empty).
  */
 void AccountStack::removeAll() {
     while (!isEmpty()) {
@@ -372,16 +370,15 @@ void AccountStack::removeAll() {
 }
 
 /**
- * Delete the top node from memory.
+ * Deletes the top node from memory.
  */
 void AccountStack::removeFirst() {
-    // Case1: Empty stack
+
     if (isEmpty()) {
         cout << "The stack is empty." << endl;
         return;
     }
 
-    // Case2: Non-empty stack
     BankAccount* temp = top;        // Remember the current top
     top               = top->next;  // Next node becomes top
 
@@ -536,7 +533,7 @@ void Bank::printAccount(string acctName) const {
             curr = curr->next;
         }
     }
-    cout << "Name not found" << endl;
+    cout << "Name not found\n" << endl;
 }
 
 //****************************************************************************
@@ -583,7 +580,7 @@ int main() {
         //************************************************
 
         // Data validation (rejecting data with an empty string)
-        if (acctName[0] == '\0' || acctName[0] == '\0') {
+        if (acctName[0] == '\0' || acctType[0] == '\0') {
            cout << "Ignored data with empty name or empty type." << endl;
            continue;
         }
@@ -634,29 +631,33 @@ int main() {
         }
     }
 
-    // Transfer all the accounts to a side collection.
     cout << "\n-----Transfering the rest-----\n" << endl;
-    cout << "Moving all the accounts in the stacks to a side collection." << endl;
+    
+    // Transfer all the accounts to a side collection.
+    cout << "Moving all the accounts in the stacks to a side collection.\n" << endl;
     bank->moveAllToSideCollection();
 
     drawLine();
 
-    // Print all the stacks.
     cout << "\n-----Stacks-----\n" << endl;
+    
+    // Print all the stacks.
     for (int i = 0; i < bank->NUM_STACKS; i++) {
         cout << "Stack (" << bank->categories[i] << ")" << endl;
         bank->acctStacks[i].printAll();
         drawLine();
     }
 
-    // Print the side collection.
     cout << "\n-----Side collection-----\n" << endl;
+    
+    // Print the side collection.
     bank->sideCollection->printAll();
 
     drawLine();
 
-    // Delete all the dynamically created objects via bank.
     cout << "\n-----Clean up-----\n" << endl;
+    
+    // Delete all the dynamically created objects via bank.
     delete bank;
 
     return 0;
