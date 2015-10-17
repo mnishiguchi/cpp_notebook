@@ -1,11 +1,22 @@
-/*
-  CSCI-241C-01 Data structures
-  Mid-Term Exam
-  bank_accounts.cpp
-
-  Name: Masatoshi Nishiguchi (N00263071)
-  Date: 10/14/2015
- */
+/*****************************************************************************
+ * CSCI-241C-01 Data structures
+ * Mid-Term Exam
+ * bank_accounts.cpp
+ *
+ * Name: Masatoshi Nishiguchi (N00263071)
+ * Date: 10/14/2015
+ *****************************************************************************
+ *
+ * This program creates a collection of bank accounts and process them several ways.
+ * Its basic process is as follows:
+ *
+ * 1. Reads the data of bank accounts from a file.
+ * 2. For each, dynamically creates a BankAccount object and adds it to an apporiate stack.
+ * 3. If the assigned stack is full pops one and moves it to a side collection.
+ * 4. When finished reading all the data, moves the rest of the accounts to a side collection.
+ * 5. Prints all the accounts.
+ * 6. Deletes all the dynamically created objects out of memory.
+ *****************************************************************************/
 
 #include <iostream>
 #include <fstream>
@@ -22,11 +33,12 @@ using namespace std;
  */
 class BankAccount {
 public:
-    // Constructor with parameters
-    BankAccount(string acctName, string acctType, double balance);
 
     // Functions
     static int getInstanceCount() { return count; };
+
+    // Constructor with parameters
+    BankAccount(string acctName, string acctType, double balance);
 
     // Instance variables
     string acctName;
@@ -258,7 +270,7 @@ public:
     ~AccountStack();
 
 private:
-    const int MAX_SIZE = 4;
+    const int MAX_STACK_SIZE = 4;
     int size;
     BankAccount* top;  // First node
 };
@@ -293,7 +305,7 @@ bool AccountStack::isEmpty() const {
  * Returns true if the stack is full.
  */
 bool AccountStack::isFull() const {
-    return size >= MAX_SIZE;
+    return size >= MAX_STACK_SIZE;
 }
 
 /**
@@ -382,7 +394,6 @@ void AccountStack::printAll() const {
     // Return if the stack is empty.
     if (isEmpty()) {
         cout << "The stack is empty." << endl;
-        cout << "Stack size: " << size << endl;
         return;
     }
 
@@ -420,6 +431,18 @@ void AccountStack::printAll() const {
  */
 class Bank {
 public:
+
+    // Functions
+    void addAccount(BankAccount* account);
+    int findIndexFor(string name) const;
+    void moveAllToSideCollection();
+
+    // Destructor
+    ~Bank() {
+        cout << "Bank is about to be destructed." << endl;
+        delete sideCollection;
+    }
+
     /*
      + Element index 0: A-D
      + Element index 1: E-G
@@ -428,81 +451,65 @@ public:
      + Element index 4: T-Z
      */
     const int NUM_STACKS = 5;
-    AccountStack acctStacks[5];
     string categories[5] = { "A-D", "E-G", "H-M", "N-S", "T-Z" };
-
+    AccountStack acctStacks[5];
     AccountLinkedList* sideCollection = new AccountLinkedList;
+};
 
-    /** Destructor */
-    ~Bank() {
-        cout << "Bank is about to be destructed." << endl;
-        delete sideCollection;
+/**
+ * Returns an appropriate index of the accounts array for the specified account name.
+ */
+int Bank::findIndexFor(string name) const {
+
+    char initial = toupper(name[0]);
+    if (initial >= 'A' && initial <= 'D') {
+      return 0;
+    } else if (initial >= 'E' && initial <= 'G') {
+      return 1;
+    } else if (initial >= 'H' && initial <= 'M') {
+      return 2;
+    } else if (initial >= 'N' && initial <= 'S') {
+      return 3;
+    } else if (initial >= 'T' && initial <= 'Z') {
+      return 4;
     }
 
-    /**
-     * Returns an appropriate index of the accounts array for the specified account name.
-     */
-    int findIndexFor(string name) const {
+    // Error message
+    cout << endl;
+    cout << initial << " is an invalid initial for an account name." << endl;
+    return -1;
+}
 
-        char initial = toupper(name[0]);
-        if (initial >= 'A' && initial <= 'D') {
-          return 0;
-        } else if (initial >= 'E' && initial <= 'G') {
-          return 1;
-        } else if (initial >= 'H' && initial <= 'M') {
-          return 2;
-        } else if (initial >= 'N' && initial <= 'S') {
-          return 3;
-        } else if (initial >= 'T' && initial <= 'Z') {
-          return 4;
-        }
+/**
+ * Adds the specified bank account to an appropreate stack.
+ */
+void Bank::addAccount(BankAccount* account) {
 
-        // Error message
-        cout << endl;
-        cout << initial << " is an invalid initial for an account name." << endl;
-        return -1;
+    // Determine the appropriate index based on the name.
+    int index = findIndexFor(account->acctName);
+
+    // Attempt top add the account to the stack.
+    // If the push is unsuccessful, pop one to the side collection and retry.
+    while (!acctStacks[index].push(account)) {
+        acctStacks[index].popFirstTo(sideCollection);
     }
 
-    /**
-     * Adds the specified bank account to an appropreate stack.
-     */
-    void addAccount(BankAccount* account) {
+    cout << account->acctName << " pushed to the stack (" << categories[index] << ")" << endl;
+}
 
-        // Determine the appropriate index based on the name.
-        int index = findIndexFor(account->acctName);
-
-        // Attempt top add the account to the stack.
-        // If the push is unsuccessful, pop one to the side collection and retry.
-        while (!acctStacks[index].push(account)) {
+/**
+ * Transfers all the accounts in the stacks to a side collection.
+ */
+void Bank::moveAllToSideCollection() {
+    for (int index = 0; index < NUM_STACKS; index++) {
+        while (!acctStacks[index].isEmpty()) {
             acctStacks[index].popFirstTo(sideCollection);
         }
-
-        cout << account->acctName << " pushed to the stack (" << categories[index] << ")" << endl;
     }
-
-    /**
-     * Transfers all the accounts in the stacks to a side collection.
-     */
-    void moveAllToSideCollection() {
-        for (int index = 0; index < NUM_STACKS; index++) {
-            while (!acctStacks[index].isEmpty()) {
-                acctStacks[index].popFirstTo(sideCollection);
-            }
-        }
-    }
-};
+}
 
 
 //===> main function
-
-/**
- * Utility function to clear the temporary variables.
- */
-void clearVars(char* acctName, char* acctType, double acctBal) {
-    acctName[0] = '\0';
-    acctType[0] = '\0';
-    acctBal     = NULL;
-}
 
 /**
  * Utility function to draw a horizontal seperator.
@@ -512,13 +519,7 @@ void drawLine() {
 }
 
 /**
- * The main function of this program
- * 1. Reads the data of bank accounts from a file.
- * 2. For each, dynamically creates a BankAccount object and adds it to an apporiate stack.
- * 3. If a stack is full pops one and moves it to the side collection.
- * 4. After reading all the data from the file, move the rest of the accounts to the side collection.
- * 5. After all accounts are moved to the side collection, prints all the accounts.
- * 6. Deletes all the dynamically created objects out of memory.
+ * The main function of this program.
  */
 int main() {
 
@@ -560,35 +561,57 @@ int main() {
         // Create a new account with this data set and add to the bank.
         newAccount = new BankAccount(acctName, acctType, acctBal);
         bank->addAccount(newAccount);
+
         drawLine();
 
-        clearVars(acctName, acctType, acctBal);
+        // Clear the variables.
+        acctName[0] = '\0';
+        acctType[0] = '\0';
+        acctBal     = NULL;
 
         //************************************************
     }
     reader.close();  // Close the file
 
-    // Total number of the bank accounts
+    cout << "\n-----After reading all the data-----\n" << endl;
+
+    // Print the total number of the bank accounts.
     int numAccounts = BankAccount::getInstanceCount();
     cout << "Total number of accounts: " << numAccounts << endl;
+
+    // Print the number of account in each stack.
+    for (int i = 0; i < bank->NUM_STACKS; i++) {
+        cout << "Stack (" << bank->categories[i] << ") : " << bank->acctStacks[i].getSize() << endl;
+    }
+
+    // Print the number of account in the side collection.
+    cout << "Side collection : " << bank->sideCollection->getSize() << endl;
+
     drawLine();
 
     // Transfer all the accounts to a side collection.
+    cout << "\n-----Transfering the rest-----\n" << endl;
     cout << "Moving all the accounts in the stacks to a side collection." << endl;
     bank->moveAllToSideCollection();
+
     drawLine();
 
     // Print all the stacks.
+    cout << "\n-----Stacks-----\n" << endl;
     for (int i = 0; i < bank->NUM_STACKS; i++) {
+        cout << "Stack (" << bank->categories[i] << ")" << endl;
         bank->acctStacks[i].printAll();
         drawLine();
     }
 
     // Print the side collection.
+    cout << "\n-----Side collection-----\n" << endl;
     bank->sideCollection->printAll();
+
     drawLine();
 
-    // Delete all the dynamically created objects.
+    // Delete all the dynamically created objects via bank.
+    cout << "\n-----Clean up-----\n" << endl;
     delete bank;
 
     return 0;
