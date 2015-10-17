@@ -1,22 +1,27 @@
 /*****************************************************************************
- * CSCI-241C-01 Data structures
- * Mid-Term Exam
- * bank_accounts.cpp
- *
- * Name: Masatoshi Nishiguchi (N00263071)
- * Date: 10/14/2015
+
+   CSCI-241C-01 Data structures
+   Mid-Term Exam
+   bank_accounts.cpp
+
+   Name: Masatoshi Nishiguchi (N00263071)
+   Date: 10/14/2015
+
  *****************************************************************************
- *
- * This program creates a collection of bank accounts and process them several ways.
- * Its basic process is as follows:
- *
- * 1. Reads the data of bank accounts from a file.
- * 2. For each, dynamically creates a BankAccount object and adds it to an apporiate stack.
- * 3. If the assigned stack is full pops one and moves it to a side collection.
- * 4. When finished reading all the data, moves the rest of the accounts to a side collection.
- * 5. Prints all the accounts.
- * 6. Deletes all the dynamically created objects out of memory.
+
+   This program creates a collection of bank accounts and process them several ways.
+   Its basic process is as follows:
+
+   1. Reads the data of bank accounts from a file.
+   2. For each account, dynamically creates a BankAccount object and
+      adds it to an apporiate stack.
+   3. If the assigned stack is full pops one and moves it to a side collection.
+   4. After reading all the data, moves all the accounts to a side collection.
+   5. Prints all the accounts.
+   6. Deletes all the dynamically created objects out of memory.
+
  *****************************************************************************/
+
 
 #include <iostream>
 #include <fstream>
@@ -25,8 +30,6 @@
 #include <ios>
 using namespace std;
 
-
-//===> class BankAccount
 
 /**
  * Class that represents an bank account. Functions as a node in a linked list.
@@ -65,8 +68,7 @@ BankAccount::BankAccount(string name, string type, double balance) {
     cout << "Account created: #" << acctID << " " << acctName << endl;
 }
 
-
-//===> class AccountLinkedList
+//****************************************************************************
 
 /**
  * Class that represents a linked list of BankAccount nodes.
@@ -241,8 +243,7 @@ void AccountLinkedList::printAll() const {
     }
 }
 
-
-//===> class AccountStack
+//****************************************************************************
 
 /**
  * Class that represents a stack of BankAccount nodes
@@ -423,8 +424,7 @@ void AccountStack::printAll() const {
     }
 }
 
-
-//===> class Bank
+//****************************************************************************
 
 /**
  * Class that represents a bank
@@ -436,6 +436,7 @@ public:
     void addAccount(BankAccount* account);
     int findIndexFor(string name) const;
     void moveAllToSideCollection();
+    void printAccount(string acctName) const;
 
     // Destructor
     ~Bank() {
@@ -508,8 +509,37 @@ void Bank::moveAllToSideCollection() {
     }
 }
 
+/**
+ * Outputs the balance and account type for an account that matches a name
+ * passed as a parameter. If the name is not found, output the account data.
+ * Does NOT search the side collection.
+ */
+void Bank::printAccount(string acctName) const {
 
-//===> main function
+    // Determine the appropriate index based on the name.
+    int index = findIndexFor(acctName);
+
+    // Formatting for floating-point numbers.
+    cout << fixed << showpoint << setprecision(2);
+
+    // Search for the item that matches the name.
+    BankAccount* curr = acctStacks[index].peek();
+    while (curr != NULL) {
+        // If found, output the account data.
+        if (curr->acctName == acctName) {
+            cout << left  << setw(12) << curr->acctName
+                 << right << setw(12) << curr->acctType
+                          << setw(12) << curr->acctBalance << endl;
+            cout << endl;
+            return;
+        } else {
+            curr = curr->next;
+        }
+    }
+    cout << "Name not found" << endl;
+}
+
+//****************************************************************************
 
 /**
  * Utility function to draw a horizontal seperator.
@@ -588,6 +618,21 @@ int main() {
     cout << "Side collection : " << bank->sideCollection->getSize() << endl;
 
     drawLine();
+
+    cout << "\n-----Account search-----\n" << endl;
+
+    // Prompt the user for an account names to be searched for.
+    string searchName;
+
+    for (;;) {
+        cout << "Enter an accout name (hit enter to exit): ";
+        getline(cin, searchName);
+        if (!searchName.empty()) {
+            bank->printAccount(searchName);
+        } else {
+            break;
+        }
+    }
 
     // Transfer all the accounts to a side collection.
     cout << "\n-----Transfering the rest-----\n" << endl;
