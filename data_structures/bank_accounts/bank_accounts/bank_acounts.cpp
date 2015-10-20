@@ -10,15 +10,16 @@
  *****************************************************************************
 
    This program creates a collection of bank accounts and process them several ways.
-   Its basic process is as follows:
+   Its basic functionalities are as follows:
 
    1. Reads the data of bank accounts from a file.
    2. For each account, dynamically creates a BankAccount object and
       adds it to an apporiate stack.
    3. If the assigned stack is full pops one and moves it to a side collection.
    4. After reading all the data, moves all the accounts to a side collection.
-   5. Prints all the accounts.
-   6. Deletes all the dynamically created objects out of memory.
+   5. Prompts user for a search key (name) and shows the result.
+   6. Prints all the accounts.
+   7. Deletes all the dynamically created objects out of memory.
 
  *****************************************************************************/
 
@@ -632,7 +633,7 @@ int main() {
     }
 
     cout << "\n-----Transfering the rest-----\n" << endl;
-    
+
     // Transfer all the accounts to a side collection.
     cout << "Moving all the accounts in the stacks to a side collection.\n" << endl;
     bank->moveAllToSideCollection();
@@ -640,7 +641,7 @@ int main() {
     drawLine();
 
     cout << "\n-----Stacks-----\n" << endl;
-    
+
     // Print all the stacks.
     for (int i = 0; i < bank->NUM_STACKS; i++) {
         cout << "Stack (" << bank->categories[i] << ")" << endl;
@@ -649,14 +650,14 @@ int main() {
     }
 
     cout << "\n-----Side collection-----\n" << endl;
-    
+
     // Print the side collection.
     bank->sideCollection->printAll();
 
     drawLine();
 
     cout << "\n-----Clean up-----\n" << endl;
-    
+
     // Delete all the dynamically created objects via bank.
     delete bank;
 
