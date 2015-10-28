@@ -632,13 +632,13 @@ int main() {
         }
     }
 
-    cout << "\n-----Transfering the rest-----\n" << endl;
-
-    // Transfer all the accounts to a side collection.
-    cout << "Moving all the accounts in the stacks to a side collection.\n" << endl;
-    bank->moveAllToSideCollection();
-
-    drawLine();
+//    cout << "\n-----Transfering the rest-----\n" << endl;
+//
+//    // Transfer all the accounts to a side collection.
+//    cout << "Moving all the accounts in the stacks to a side collection.\n" << endl;
+//    bank->moveAllToSideCollection();
+//
+//    drawLine();
 
     cout << "\n-----Stacks-----\n" << endl;
 

@@ -1,21 +1,31 @@
 # Searching and sorting
 - http://www.sorting-algorithms.com/
 
+==
+
 ## Complexity
 - O(1)   - always constant
 - O(n)   - linear
 - O(n^2) - exponential
 
+==
+
 ## Binery seach
 - More efficient on a large number of items
 - The items must be sorted in order to use a binery search
+
+==
 
 ## What do we need before doing sort?
 - keys
 - sort order (ASC/DESC)
 
+==
+
 ## Why need sorting?
 - Makes data human-friendly
+
+==
 
 ## Big-O analysis
 
@@ -37,5 +47,10 @@ The growth rate is exponential. The growth rate is squared when the problem size
 ### Bubble sort
 O(n^2)
 
+==
 
-
+## Function pointer
+- Pass a function into another fuction
+- sort(func_ptr)
+    + sortByTitle()
+    + sortByMinAge(v_game_1, v_game_2)
