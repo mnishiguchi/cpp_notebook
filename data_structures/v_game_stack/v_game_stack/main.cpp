@@ -284,3 +284,205 @@ int main() {
 
     return 0;
 }
+
+// //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+// //    Generic stack
+// //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+// /**
+//  * Class that represents a stack
+//  */
+// template <typename NodeType>
+// class SimpleStack {
+// public:
+//     // Instance methods
+//     int getSize() const;
+//     bool isEmpty();
+//     NodeType* peek();
+//     NodeType* pop();
+//     void push(string title, string genre, int minAge);
+//     void removeAll();
+//     void removeFirst();
+//     void showAll();
+
+//     // Constructor
+//     SimpleStack();
+
+//     // Destructor
+//     ~SimpleStack();
+
+// private:
+//     NodeType* top;  // First element
+//     NodeType* back; // Last element
+//     int size;
+// };
+
+// // Default constructor
+// template <typename NodeType>
+// SimpleStack<NodeType>::SimpleStack() {
+//     top  = NULL;
+//     back = NULL;
+//     size = 0;
+// }
+
+// // Destructor
+// template <typename NodeType>
+// SimpleStack<NodeType>::~SimpleStack() {
+//     cout << "SimpleStack's destructor was called" << endl;
+//     removeAll();
+// }
+
+// /**
+//  * Returns the size of the stack.
+//  */
+// template <typename NodeType>
+// int SimpleStack<NodeType>::getSize() const {
+//     return size;
+// }
+
+// /**
+//  * Returns true if the stack is empty.
+//  */
+// template <typename NodeType>
+// bool SimpleStack<NodeType>::isEmpty() {
+//     return top == NULL;
+// }
+
+// template <typename NodeType>
+// NodeType* SimpleStack<NodeType>::peek() {
+//     return top;
+// }
+
+// /**
+//  * Removes and returns a node from the top of the stack a la Java's ArrayList.
+//  * In C++, usually it is not preferred because the popped element will stay in memeory.
+//  * The section of code that creates an object in memory should take care of
+//  * deleting it as well.
+//  */
+// template <typename NodeType>
+// NodeType* SimpleStack<NodeType>::pop() {
+
+//     // Return if the stack is empty
+//     if (top == NULL) {
+//         cout << "The stack is empty." << endl;
+//         return NULL;
+//     }
+
+//     // Case2: not empty
+//     NodeType* curr = top;   // Remember the top
+//     top        = top->next;  // Next node becomes top
+//     curr->next = NULL;       // The popped node's next is NULL.
+
+//     // Note: back did not change
+
+//     size--;  // Update the size
+
+//     return curr;
+// }
+
+// /**
+//  * Add a node before the top of the stack
+//  */
+// template <typename NodeType>
+// void SimpleStack<NodeType>::push(string title, string genre, int minAge) {
+
+//     // Create a new node base on the specified data.
+//     NodeType* newNode = new NodeType(title, genre, minAge);
+
+//     // Case1: Empty list
+//     if (top == NULL) {
+//         top  = newNode;  // The new node becomes the top.
+//         back = newNode;  // The new node is also back.
+
+//         // Case2: Non-empty list
+//     } else {
+//         // Set the new node at the top of the stack.
+//         newNode->next = top;
+
+//         // Update top
+//         top = newNode;
+
+//         // Note: back did not change
+//     }
+//     size++;  // Update the size
+// }
+
+// /**
+//  * Empty the stack.
+//  */
+// template <typename NodeType>
+// void SimpleStack<NodeType>::removeAll() {
+//     cout << "SimpleStack's removeAll() was called" << endl;
+//     while (!isEmpty()) {
+//         removeFirst();
+//     }
+// }
+
+// /**
+//  * Delete the top node from memory.
+//  * Alternative to pop()
+//  */
+// template <typename NodeType>
+// void SimpleStack<NodeType>::removeFirst() {
+//     // Return if the stack is empty
+//     if (top == NULL) {
+//         cout << "The stack is empty." << endl;
+//         return;
+//     }
+
+//     // Case2: not empty
+//     NodeType* temp = top;   // Remember the top
+//     top        = top->next;  // Next node becomes top
+
+//     cout << temp->getTitle() << " is about to be destructed." << endl;
+//     delete temp;             // Delete the node out of memory
+
+//     // Note: back did not change
+
+//     size--;  // Update the size
+// }
+
+// /**
+//  * Prints info of all the elements in the stack.
+//  */
+// template <typename NodeType>
+// void SimpleStack<NodeType>::showAll() {
+
+//     // Return if the stack is empty
+//     if (isEmpty()) {
+//         cout << "The stack is empty." << endl;
+//         cout << "Stack size: " << size << endl;
+//         return;
+//     }
+
+//     // Print the stack size.
+//     cout << "Stack size: " << size << endl;
+//     cout << endl;
+
+//     // Print the attributes names.
+//     cout << left;
+//     cout << setw(24) << "TITLE";
+//     cout << setw(16) << "GENRE";
+//     cout << setw(8) << "MIN AGE";
+//     cout << endl;
+
+//     // Draw a horizonal rule.
+//     cout << setfill('-') << setw(48) << "" << setfill(' ') << endl;
+
+//     // Traverse the list.
+//     NodeType* curr = top;
+//     while (curr != NULL) {
+
+//         // Print current node
+//         cout << left;
+//         cout << setw(24) << curr->getTitle();
+//         cout << setw(16) << curr->getGenre();
+//         cout << setw(8)  << curr->getMinAge();
+//         cout << endl;
+
+//         // Move the cursor to next
+//         curr = curr->next;
+//     }
+//     cout << "--- bottom of the stack---" << endl;
+// }
+

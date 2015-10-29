@@ -1,18 +1,17 @@
 /********************************************************************
 
-    v_game_sorting.cpp
-    Created by Masatoshi Nishiguchi on 10/29/15.
-    Copyright (c) 2015 Masatoshi Nishiguchi. All rights reserved.
+   CSCI-241C-01 Data structures
+   v_game_sorting.cpp
 
-********************************************************************/
+   Name: Masatoshi Nishiguchi (N00263071)
+   Date: 10/29/2015
+
+ ********************************************************************/
+
 
 #include <iostream>
 #include <iomanip>
 using namespace std;
-
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//    Node
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 /**
  * Class that represents a node
@@ -95,208 +94,7 @@ int VGameNode::getMinAge() const {
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//    List
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-/**
- * Class that represents a stack
- */
-template <typename NodeType>
-class SimpleStack {
-public:
-    // Instance methods
-    int getSize() const;
-    bool isEmpty();
-    NodeType* peek();
-    NodeType* pop();
-    void push(string title, string genre, int minAge);
-    void removeAll();
-    void removeFirst();
-    void showAll();
-
-    // Constructor
-    SimpleStack();
-
-    // Destructor
-    ~SimpleStack();
-
-private:
-    NodeType* top;  // First element
-    NodeType* back; // Last element
-    int size;
-};
-
-// Default constructor
-template <typename NodeType>
-SimpleStack<NodeType>::SimpleStack() {
-    top  = NULL;
-    back = NULL;
-    size = 0;
-}
-
-// Destructor
-template <typename NodeType>
-SimpleStack<NodeType>::~SimpleStack() {
-    cout << "SimpleStack's destructor was called" << endl;
-    removeAll();
-}
-
-/**
- * Returns the size of the stack.
- */
-template <typename NodeType>
-int SimpleStack<NodeType>::getSize() const {
-    return size;
-}
-
-/**
- * Returns true if the stack is empty.
- */
-template <typename NodeType>
-bool SimpleStack<NodeType>::isEmpty() {
-    return top == NULL;
-}
-
-template <typename NodeType>
-NodeType* SimpleStack<NodeType>::peek() {
-    return top;
-}
-
-/**
- * Removes and returns a node from the top of the stack a la Java's ArrayList.
- * In C++, usually it is not preferred because the popped element will stay in memeory.
- * The section of code that creates an object in memory should take care of
- * deleting it as well.
- */
-template <typename NodeType>
-NodeType* SimpleStack<NodeType>::pop() {
-
-    // Return if the stack is empty
-    if (top == NULL) {
-        cout << "The stack is empty." << endl;
-        return NULL;
-    }
-
-    // Case2: not empty
-    NodeType* curr = top;   // Remember the top
-    top        = top->next;  // Next node becomes top
-    curr->next = NULL;       // The popped node's next is NULL.
-
-    // Note: back did not change
-
-    size--;  // Update the size
-
-    return curr;
-}
-
-/**
- * Add a node before the top of the stack
- */
-template <typename NodeType>
-void SimpleStack<NodeType>::push(string title, string genre, int minAge) {
-
-    // Create a new node base on the specified data.
-    NodeType* newNode = new NodeType(title, genre, minAge);
-
-    // Case1: Empty list
-    if (top == NULL) {
-        top  = newNode;  // The new node becomes the top.
-        back = newNode;  // The new node is also back.
-
-        // Case2: Non-empty list
-    } else {
-        // Set the new node at the top of the stack.
-        newNode->next = top;
-
-        // Update top
-        top = newNode;
-
-        // Note: back did not change
-    }
-    size++;  // Update the size
-}
-
-/**
- * Empty the stack.
- */
-template <typename NodeType>
-void SimpleStack<NodeType>::removeAll() {
-    cout << "SimpleStack's removeAll() was called" << endl;
-    while (!isEmpty()) {
-        removeFirst();
-    }
-}
-
-/**
- * Delete the top node from memory.
- * Alternative to pop()
- */
-template <typename NodeType>
-void SimpleStack<NodeType>::removeFirst() {
-    // Return if the stack is empty
-    if (top == NULL) {
-        cout << "The stack is empty." << endl;
-        return;
-    }
-
-    // Case2: not empty
-    NodeType* temp = top;   // Remember the top
-    top        = top->next;  // Next node becomes top
-
-    cout << temp->getTitle() << " is about to be destructed." << endl;
-    delete temp;             // Delete the node out of memory
-
-    // Note: back did not change
-
-    size--;  // Update the size
-}
-
-/**
- * Prints info of all the elements in the stack.
- */
-template <typename NodeType>
-void SimpleStack<NodeType>::showAll() {
-
-    // Return if the stack is empty
-    if (isEmpty()) {
-        cout << "The stack is empty." << endl;
-        cout << "Stack size: " << size << endl;
-        return;
-    }
-
-    // Print the stack size.
-    cout << "Stack size: " << size << endl;
-    cout << endl;
-
-    // Print the attributes names.
-    cout << left;
-    cout << setw(24) << "TITLE";
-    cout << setw(16) << "GENRE";
-    cout << setw(8) << "MIN AGE";
-    cout << endl;
-
-    // Draw a horizonal rule.
-    cout << setfill('-') << setw(48) << "" << setfill(' ') << endl;
-
-    // Traverse the list.
-    NodeType* curr = top;
-    while (curr != NULL) {
-
-        // Print current node
-        cout << left;
-        cout << setw(24) << curr->getTitle();
-        cout << setw(16) << curr->getGenre();
-        cout << setw(8)  << curr->getMinAge();
-        cout << endl;
-
-        // Move the cursor to next
-        curr = curr->next;
-    }
-    cout << "--- bottom of the stack---" << endl;
-}
-
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//    Stand-alone functions
+//    Sorting related functions
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 /**
@@ -322,68 +120,158 @@ bool compareByTitle(VGameNode* g1, VGameNode* g2, bool isAscend) {
 }
 
 /**
- * Insertion sort
+ * Compare two VGameNodes by age.
+ * In ASC mode, returns true if g1 < g2, else false.
+ * In DESC mode, returns true if g1 > g2, else false.
  */
- void sortLinkedList( bool ( *vGameComparator )(VGameNode*, VGameNode*, bool),
-                      VGameNode* listhead,
-                      int len ) {
-    /*
-    Any sorting algorithm can be implemented here.
-    Use the function pointer vGameComparator to determine which of any two
-    VGameNode's come before the other.
-    This info will enable the sort algorithm to operate as needed.
-    */
+bool compareByMinAge(VGameNode* g1, VGameNode* g2, bool isAscend) {
 
-    // 0 node
-    if (listhead == NULL) {
+    // No need to sort
+    if (g1 == NULL || g2 == NULL) {
+        return true;
+    }
+
+    bool answer = g1->getMinAge() < g2->getMinAge();
+
+    if (!isAscend) {
+        answer = !answer;
+    }
+
+    cout << "Compared" << endl;
+    return answer;
+}
+
+/**
+ * Compare two VGameNodes by genre.
+ * In ASC mode, returns true if g1 < g2, else false.
+ * In DESC mode, returns true if g1 > g2, else false.
+ */
+bool compareByGenre(VGameNode* g1, VGameNode* g2, bool isAscend) {
+
+    // No need to sort
+    if (g1 == NULL || g2 == NULL) {
+        return true;
+    }
+
+    bool answer = g1->getGenre() < g2->getGenre();
+
+    if (!isAscend) {
+        answer = !answer;
+    }
+
+    cout << "Compared" << endl;
+    return answer;
+}
+
+/**
+ * Insert a new VGameNode object into a linked list based on the sorting key
+ * that is specified by one of the vGameComparator functions.
+ */
+VGameNode* insertNewNode( VGameNode* head, VGameNode* newNode,
+    bool ( *vGameComparator )(VGameNode*, VGameNode*, bool) ) {
+
+    //special case: newnode to be added as first node
+    if( head == NULL || !vGameComparator(head, newNode, true) ) {
+        newNode->next = head;
+        head = newNode;
+        return head;
+    }
+
+    VGameNode *ptr = head;
+    VGameNode *prev = NULL;
+    while ( ptr != NULL && vGameComparator(ptr, newNode, true) ) {
+        prev = ptr;
+        ptr = ptr->next;
+    }
+    newNode->next = ptr;
+    prev->next = newNode;
+    return head;
+}
+
+VGameNode* insertionSort( bool ( *vGameComparator )(VGameNode*, VGameNode*, bool),
+                      VGameNode* head) {
+
+    if( !head || !head->next ) {
+        return head;
+    }
+
+    VGameNode * ptr = head->next;
+    VGameNode * result = head;
+    result->next = NULL;
+
+    while ( ptr ) {
+        VGameNode *temp = ptr;
+        ptr = ptr->next;
+        result = insertNewNode(result, temp, vGameComparator);
+    }
+    return result;
+}
+
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//    Utility functions
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+/**
+ * Adds a node before the top of the stack
+ * Returns a new head node
+ */
+VGameNode* addNodeFirst(VGameNode* head, string title, string genre, int minAge) {
+
+    // Create a new node base on the specified data.
+    VGameNode* newNode = new VGameNode(title, genre, minAge);
+
+    // Case1: Empty list
+    if (head == NULL) {
         cout << "The list is empty" << endl;
+        return newNode;
+
+        // Case2: Non-empty list
+    } else {
+        // Set the new node at the top of the stack.
+        newNode->next = head;
+
+        // Update top
+        return newNode;
+
+        // Note: back did not change
+    }
+}
+
+/**
+ * Utility function to print all the nodes in the linked list.
+ */
+void printAll(VGameNode* head) {
+
+    // Return if the stack is empty
+    if (head == NULL) {
+        cout << "The stack is empty." << endl;
         return;
     }
 
-    // 1 node
-    if (listhead->next == NULL) {
-        cout << "The list has only one node" << endl;
-        return;
+    // Print the attributes names.
+    cout << left;
+    cout << setw(24) << "TITLE";
+    cout << setw(16) << "GENRE";
+    cout << setw(8) << "MIN AGE";
+    cout << endl;
+
+    // Draw a horizonal rule.
+    cout << setfill('-') << setw(48) << "" << setfill(' ') << endl;
+
+    // Traverse the list.
+    VGameNode* curr = head;
+    while (curr != NULL) {
+
+        // Print current node
+        cout << left;
+        cout << setw(24) << curr->getTitle();
+        cout << setw(16) << curr->getGenre();
+        cout << setw(8)  << curr->getMinAge();
+        cout << endl;
+
+        // Move the cursor to next
+        curr = curr->next;
     }
-
-    // 2 or more nodes
-    // Inspect the unsorted portion one by one.
-    VGameNode* firstUnsorted = listhead->next;
-    VGameNode* resultHead    = listhead;
-    resultHead->next         = NULL;
-
-    // Special case: firstUnsorted to be added as first node
-    if( resultHead == NULL || vGameComparator(firstUnsorted, resultHead, true) ) {
-        firstUnsorted->next = resultHead;
-        resultHead          = firstUnsorted;
-
-        return;
-    }
-
-    // Insert each node into the resultHead list
-    while (firstUnsorted != NULL) {
-
-
-        // Otherwise: Insert firstUnsorted into an appropriate position in the result list.
-        VGameNode* curr = resultHead;
-        VGameNode* prev = NULL;
-
-        // Finding the position
-        while ( curr != NULL && vGameComparator(curr, firstUnsorted, true) ) {
-            prev = curr;
-            curr = curr->next;
-        }
-
-        // Inserting firstUnsorted into the result list
-        firstUnsorted->next = curr;
-        prev->next          = firstUnsorted;
-
-        cout << "Inserted" << endl;
-
-        firstUnsorted = firstUnsorted->next;
-    }
-
-    cout << "sorting done" << endl;
 }
 
 /**
@@ -399,40 +287,46 @@ void drawLine() {
 //    Main
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-/**
- * Main function for the program.
- */
 int main() {
 
     // 1. Create an empty stack.
 
-    SimpleStack<VGameNode> gameStack;
+    VGameNode* gameStack = new VGameNode("Stu", "Action", 3);
 
     // 2. Push elements to the stack.
 
-    gameStack.push("Foo", "Action", 10);
-    gameStack.push("Pqr", "Shooter", 10);
-    gameStack.push("Bar", "Roll-playing", 10);
-    gameStack.push("Mno", "Adventure", 10);
-    gameStack.push("Abc", "Simulation", 10);
-    gameStack.push("Xyz", "Strategy", 10);
-    gameStack.showAll();
+    gameStack = addNodeFirst(gameStack, "Foo", "Action", 4);
+    gameStack = addNodeFirst(gameStack, "Pqr", "Shooter", 6);
+    gameStack = addNodeFirst(gameStack, "Bar", "Roll-playing", 9);
+    gameStack = addNodeFirst(gameStack, "Mno", "Adventure", 1);
+    gameStack = addNodeFirst(gameStack, "Abc", "Simulation", 2);
+    gameStack = addNodeFirst(gameStack, "Xyz", "Strategy", 5);
+
+    cout << "\nBefore sorting\n" << endl;
+    printAll(gameStack);
 
     drawLine();
 
     // 3. Sorting
 
-    sortLinkedList( &compareByTitle, gameStack.peek(), gameStack.getSize() );
-    gameStack.showAll();
+    gameStack = insertionSort( &compareByMinAge, gameStack);
+    cout << "\nAfter sorting by minage\n" << endl;
+    printAll(gameStack);
 
     drawLine();
 
-    // 6. Remove all the rest
-
-    gameStack.removeAll();
-    gameStack.showAll();
+    gameStack = insertionSort( &compareByTitle, gameStack);
+    cout << "\nAfter sorting by title\n" << endl;
+    printAll(gameStack);
 
     drawLine();
+
+    gameStack = insertionSort( &compareByGenre, gameStack);
+    cout << "\nAfter sorting by genre\n" << endl;
+    printAll(gameStack);
+
+    // TODO
+    // 4. Remove all the rest
 
     return 0;
 }
