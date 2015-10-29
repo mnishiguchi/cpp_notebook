@@ -8,7 +8,6 @@
 
  ********************************************************************/
 
-
 #include <iostream>
 #include <iomanip>
 using namespace std;
@@ -274,6 +273,40 @@ void printAll(VGameNode* head) {
     }
 }
 
+/** TODO
+ * Delete the top node from memory.
+ */
+VGameNode* removeFirstNode(VGameNode* head) {
+    // Return if the stack is empty
+    if (head == NULL) {
+        cout << "The stack is empty." << endl;
+        return NULL;
+    }
+
+    string name = head->getTitle();
+
+    // Case2: not empty
+    VGameNode* temp = head;        // Remember the head
+    head            = head->next;  // Next node becomes head
+
+    cout << "emoveFirstNode: " << name << endl;
+    delete temp;                   // Delete the node out of memory
+
+    // Note: back did not change
+
+    return head;
+}
+
+/** TODO
+ * Delete all the VGameNode out of memory
+ */
+VGameNode* removeAllNodes(VGameNode* head) {
+   while (head != NULL) {
+       head = removeFirstNode(head);
+   }
+   return head;
+}
+
 /**
  * Utility function to draw a horizontal seperator.
  */
@@ -290,10 +323,11 @@ void drawLine() {
 int main() {
 
     // 1. Create an empty stack.
-
+    cout << "\nCreating a new empty stack\n" << endl;
     VGameNode* gameStack = new VGameNode("Stu", "Action", 3);
 
     // 2. Push elements to the stack.
+    cout << "\nAdding nodes to the stack\n" << endl;
 
     gameStack = addNodeFirst(gameStack, "Foo", "Action", 4);
     gameStack = addNodeFirst(gameStack, "Pqr", "Shooter", 6);
@@ -304,29 +338,33 @@ int main() {
 
     cout << "\nBefore sorting\n" << endl;
     printAll(gameStack);
-
     drawLine();
 
     // 3. Sorting
+    cout << "\nSorting\n" << endl;
 
     gameStack = insertionSort( &compareByMinAge, gameStack);
     cout << "\nAfter sorting by minage\n" << endl;
     printAll(gameStack);
-
     drawLine();
 
     gameStack = insertionSort( &compareByTitle, gameStack);
     cout << "\nAfter sorting by title\n" << endl;
     printAll(gameStack);
-
     drawLine();
 
     gameStack = insertionSort( &compareByGenre, gameStack);
     cout << "\nAfter sorting by genre\n" << endl;
     printAll(gameStack);
+    drawLine();
 
-    // TODO
     // 4. Remove all the rest
+    cout << "\nClean up\n" << endl;
+
+    gameStack = removeAllNodes(gameStack);
+    cout << "\nAfter clean up\n" << endl;
+    printAll(gameStack);
+    drawLine();
 
     return 0;
 }

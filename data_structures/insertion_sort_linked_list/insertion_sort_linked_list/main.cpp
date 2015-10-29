@@ -15,7 +15,7 @@ struct ListNode {
     ListNode(int x) : val(x), next(NULL) {}
 };
 
-ListNode * addNode(ListNode *head, int d) {
+ListNode* addNode(ListNode *head, int d) {
     ListNode *temp = new ListNode(d);
     temp->next = head;
     return temp;
@@ -30,7 +30,7 @@ void printAllNodes(ListNode *head) {
     cout << endl;
 }
 
-ListNode * SortedInsert(ListNode * head, ListNode *newNode ) {
+ListNode* SortedInsert(ListNode * head, ListNode *newNode ) {
 
     //special case: newnode to be added as first node
     if( head == NULL || head->val >= newNode->val) {
