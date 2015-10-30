@@ -169,24 +169,29 @@ bool compareByGenre(VGameNode* g1, VGameNode* g2, bool isAscend) {
 VGameNode* insertNewNode( VGameNode* head, VGameNode* newNode,
     bool ( *vGameComparator )(VGameNode*, VGameNode*, bool) ) {
 
-    //special case: newnode to be added as first node
+    // Special case: newnode to be added as first node.
     if( head == NULL || !vGameComparator(head, newNode, true) ) {
         newNode->next = head;
-        head = newNode;
+        head          = newNode;
         return head;
     }
 
-    VGameNode *ptr = head;
+    VGameNode *ptr  = head;
     VGameNode *prev = NULL;
     while ( ptr != NULL && vGameComparator(ptr, newNode, true) ) {
         prev = ptr;
         ptr = ptr->next;
     }
+
     newNode->next = ptr;
-    prev->next = newNode;
+    prev->next    = newNode;
     return head;
 }
 
+/**
+ * Sorts a linked list based on the sorting key
+ * that is specified by one of the vGameComparator functions.
+ */
 VGameNode* insertionSort( bool ( *vGameComparator )(VGameNode*, VGameNode*, bool),
                       VGameNode* head) {
 
@@ -194,14 +199,14 @@ VGameNode* insertionSort( bool ( *vGameComparator )(VGameNode*, VGameNode*, bool
         return head;
     }
 
-    VGameNode * ptr = head->next;
+    VGameNode * ptr    = head->next;
     VGameNode * result = head;
-    result->next = NULL;
+    result->next       = NULL;
 
     while ( ptr ) {
         VGameNode *temp = ptr;
-        ptr = ptr->next;
-        result = insertNewNode(result, temp, vGameComparator);
+        ptr             = ptr->next;
+        result          = insertNewNode(result, temp, vGameComparator);
     }
     return result;
 }
@@ -273,8 +278,9 @@ void printAll(VGameNode* head) {
     }
 }
 
-/** TODO
- * Delete the top node from memory.
+/**
+ * Deletes the top node from memory.
+ * Returns the new head node of the stack.
  */
 VGameNode* removeFirstNode(VGameNode* head) {
     // Return if the stack is empty
@@ -297,8 +303,9 @@ VGameNode* removeFirstNode(VGameNode* head) {
     return head;
 }
 
-/** TODO
- * Delete all the VGameNode out of memory
+/**
+ * Deletes all the VGameNode out of memory.
+ * Returns the new head node of the stack.
  */
 VGameNode* removeAllNodes(VGameNode* head) {
    while (head != NULL) {
