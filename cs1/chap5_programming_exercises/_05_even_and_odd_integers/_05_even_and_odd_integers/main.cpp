@@ -8,18 +8,33 @@
   Copyright (c) 2015 Masatoshi Nishiguchi. All rights reserved.
 */
 
+/*
+ANALYSIS
+    If the input is 1, 2, 3, 9, 12, 34, the output is expected to be:
+    Sum of odd numbers  => 2 + 12 + 34 = 48
+    Sum of even numbers => 1 + 3 + 9   = 13
+
+OUTPUT
+    Enter as many integers as you like (Enter q to quit):
+    1 2 3 9 12 34 q
+
+    The sum of even integers: 48
+    The sum of odd integers:  13
+*/
+
+
 #include <iostream>
 using namespace std;
 
 /**
  * Class that represents a node of interger value
  */
-class intVal {
+class intNode {
 public:
     int value;
-    intVal* next;
+    intNode* next;
 
-    intVal() {
+    intNode() {
       value = 0;
       next  = NULL;
     }
@@ -28,8 +43,8 @@ public:
 /**
  * Add a invVal node to a head of a linked list
  */
-intVal* pushValue(intVal* head, int val) {
-    intVal* newNode = new intVal;
+intNode* pushValue(intNode* head, int val) {
+    intNode* newNode = new intNode;
     newNode->value  = val;
 
     if (head != NULL) {
@@ -42,7 +57,7 @@ intVal* pushValue(intVal* head, int val) {
  * Deletes the top node from memory.
  * Returns the new head node of the stack.
  */
-intVal* removeFirstNode(intVal* head) {
+intNode* removeFirstNode(intNode* head) {
     // Return if the stack is empty
     if (head == NULL) {
         cout << "The stack is empty." << endl;
@@ -50,10 +65,10 @@ intVal* removeFirstNode(intVal* head) {
     }
 
     // Case2: not empty
-    intVal* temp = head;         // Remember the head
+    intNode* temp = head;         // Remember the head
     head         = head->next;   // Next node becomes head
 
-    //ncout << "removeFirstNode: " << temp->value << endl;
+    // cout << "removeFirstNode: " << temp->value << endl;
     delete temp;                 // Delete the node out of memory
 
     // Note: back did not change
@@ -62,21 +77,23 @@ intVal* removeFirstNode(intVal* head) {
 }
 
 /**
- * Deletes all the intVal out of memory.
+ * Deletes all the intNode out of memory.
  */
-void removeAllNodes(intVal* head) {
+void removeAllNodes(intNode* head) {
    while (head != NULL) {
        head = removeFirstNode(head);
    }
 }
 
-void printAllNodes(intVal* head) {
+void printAllNodes(intNode* head) {
     if (head == NULL) {
         cout << "The list is empty" << endl;
         return;
     }
 
-    intVal* curr = head;
+    cout << "\nYour numbers: ";
+
+    intNode* curr = head;
     while (curr != NULL) {
         cout << curr->value << " ";
         curr = curr->next;
@@ -84,11 +101,11 @@ void printAllNodes(intVal* head) {
     cout << endl;
 }
 
-void printSumOdd(intVal* head) {
+void printSumOdd(intNode* head) {
 
     int sum  = 0;
 
-    intVal* curr = head;
+    intNode* curr = head;
     while (curr != NULL) {
         if ( curr->value % 2 == 1 ) {
             sum += curr->value;
@@ -99,11 +116,11 @@ void printSumOdd(intVal* head) {
     cout << "The sum of odd integers:  " << sum << endl;
 }
 
-void printSumEven(intVal* head) {
+void printSumEven(intNode* head) {
 
     int sum  = 0;
 
-    intVal* curr = head;
+    intNode* curr = head;
     while (curr != NULL) {
         if ( curr->value % 2 == 0 ) {
             sum += curr->value;
@@ -119,7 +136,7 @@ void printSumEven(intVal* head) {
  */
 int main() {
 
-    intVal* list  = NULL;
+    intNode* list  = NULL;
     bool finished = false;
     int num;
 
@@ -140,11 +157,7 @@ int main() {
         }
     }
 
-    // Output
-    
-    cout << "\nYour numbers: ";
-
-    printAllNodes(list);
+    // Output the result
     printSumEven(list);
     printSumOdd(list);
 
