@@ -25,18 +25,18 @@ ANALYSIS
     Year 6 - A: 8857, B: 8490 <==Town A has outgrown after 6 years
 
 OUTPUT 1
-    >>>Enter population and growh rate(%) of Town A (Example: 5000 4):
+    >>>Enter population and growth rate(%) of Town A (Example: 5000 4):
     5000 10
-    >>>Enter population and growh rate(%) of Town B (Example: 8000 2):
+    >>>Enter population and growth rate(%) of Town B (Example: 8000 2):
     8000 1
     Years elapsed: 6
     Town A: 8857
     Town B: 8490
 
 OUTPUT 2
-    >>>Enter population and growh rate(%) of Town A (Example: 5000 4):
+    >>>Enter population and growth rate(%) of Town A (Example: 5000 4):
     5000 4
-    >>>Enter population and growh rate(%) of Town B (Example: 8000 2):
+    >>>Enter population and growth rate(%) of Town B (Example: 8000 2):
     8000 2
     Years elapsed: 25
     Town A: 13308
@@ -52,10 +52,10 @@ using namespace std;
 class Town {
 public:
     int population;
-    double grothRate;
+    double growthRate;
 
     void grow() {
-        population = static_cast<int>( population * (1 + grothRate / 100.0) );
+        population = static_cast<int>( population * (1 + growthRate / 100.0) );
     }
 };
 
@@ -64,7 +64,7 @@ public:
  */
 bool isValidData(Town townA, Town townB) {
     return (townA.population < townB.population) &&
-           (townA.grothRate  > townB.grothRate);
+           (townA.growthRate  > townB.growthRate);
 }
 
 /**
@@ -79,7 +79,7 @@ int main() {
     bool finished = false;
     while (!finished) {
         cout << ">>>Enter population and growh rate(%) of Town A (Example: 5000 4): " << endl;
-        cin >> townA.population >> townA.grothRate;  // Read the input
+        cin >> townA.population >> townA.growthRate;  // Read the input
 
         // If cin is in a bad state, retry
         if (!cin) {
@@ -95,7 +95,7 @@ int main() {
     finished = false;
     while (!finished) {
         cout << ">>>Enter population and growh rate(%) of Town B (Example: 8000 2): " << endl;
-        cin >> townB.population >> townB.grothRate;  // Read the input
+        cin >> townB.population >> townB.growthRate;  // Read the input
 
         // If cin is in a bad state or inputted data is invalid, retry
         if (!cin || !isValidData(townA, townB)) {
