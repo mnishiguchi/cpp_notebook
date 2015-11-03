@@ -14,110 +14,162 @@ using namespace std;
 /*
  TODO
  - Overload comparison operators in order to make flavor the search key
- 
+
  */
 
-//*************************************
-
-///**
-// * Class that represents a node
-// */
-//class IntVal {
-//public:
-//    IntVal* left;
-//    IntVal* right;
-//
-//    string info;
-//
-//    // Constructors
-//    IntVal();
-//};
-//
-///** Default constructor */
-//IntVal::IntVal() {
-//    left  = NULL;
-//    right = NULL;
-//
-//    info = 0;
-//}
-
-//*************************************
 
 /**
  * Class that represents a node
  */
 class IceCreamNode {
 public:
+    string flavor;
     IceCreamNode* left;
     IceCreamNode* right;
-    
-    string flavor;
-    
+
+    string getInfo() {
+        return flavor;
+    }
+
+    void setInfo(string info) {
+        flavor = info;
+    }
+
     // Constructors
     IceCreamNode();
+    IceCreamNode(string);
 };
 
-/** Default constructor */
+/**
+ * Default constructor
+ */
 IceCreamNode::IceCreamNode() {
     left  = NULL;
     right = NULL;
-    
+
     flavor = "";
+}
+/**
+ * Constructor with its flavor
+ */
+IceCreamNode::IceCreamNode(string flav) {
+    left  = NULL;
+    right = NULL;
+
+    flavor = flav;
 }
 
 //*************************************
 
 /**
- *  Note: Nodes (data type) must have left and right pointers as their members
+ *  Reequirements: Nodes (data NodeType) must have left and right pointers
+ *  as their members
  */
-template <class T>
+template <class NodeType>
 class BSTree {
 public:
-    T* root;  // Root node of the tree
-    
-    void add(T* t);     // TODO
-    void remove(T* t); // TODO
-    
-    
-    BSTree() {
-        root = NULL;
-    }
-    
-    
+    // constructor and destructor
+    BSTree();
+    ~BSTree();
+
+    void insert(string key); // TODO
+    NodeType* search(NodeType* key); // TODO
+    void destroyTree(); // TODO
+
+private:
+    void destroyTree(NodeType* leaf);
+    void insert(int key, NodeType* leaf);
+    NodeType* search(int key, NodeType* leaf);
+
+    NodeType* root;
 };
 
+/**
+ *  Default constructor
+ */
+template <class NodeType>
+BSTree<NodeType>::BSTree() {
+    root = NULL;
+}
 
-//void BSTree::add(T* t) {
+template <class NodeType>
+void BSTree<NodeType>::insert(int key) {
+  if(root != NULL) {
+    insert(key, root);
+
+  } else {
+    root            = new NodeType;
+    root->setInfo(key);
+    root->left      = NULL;
+    root->right     = NULL;
+  }
+}
+
+
+
+
+
+
+/** TODO
+ *  Insert a node into the tree
+ */
+// template <class NodeType>
+// void BSTree<NodeType>::insert(NodeType* key) {
+//     NodeType* current = NULL;
+
 //    if (root == NULL) {
-//        root = t;
+//        root = key;
+
 //    } else {
-//
-//        T* curr = root;
-//        if (curr->left == NULL) {
-//            curr->left = t;
-//        } else if (curr->right == NULL) {
-//            curr->right = t;
+
+//        NodeType* trailCurrent = root;
+
+//        while (current != NULL) {
+//             trailCurrent = current;
+
+//             // Every node should be unique.
+//            if (trailCurrent->getInfo() == key) {
+//                cout << "The key to be inserted is already in the tree" << endl
+//                     << "Dupulicateds are not allowed" << endl;
+//                 return;
+
+//                 // Left child
+//            } else if (current->getInfo() > key) {
+//                 current = current->left;
+
+
+//                 // Right child
+//            } else if (current->getInfo() < key) {
+//                 current = current->left;
+//            }
+//        } // end while
+
+//        if (trailCurrent->getInfo() > key) {
+//             trailCurrent->left = key;
+//             cout << "Adding " << key->getInfo() << " to parent: "
+//                  << trailCurrent->getInfo() << " on the left " << endl;
+
+//        } else  {
+//             trailCurrent->right = key;
+//             cout << "Adding " << key->getInfo() << " to parent: "
+//                  << trailCurrent->getInfo() << " on the right " << endl;
 //        }
 //    }
-//}
-
-
-
+// }
 
 //*************************************
 
 int main() {
-    
-    BSTree<IceCreamNode> myFlavors;
-    
-    IceCreamNode* curr;
-    
-    curr = new IceCreamNode;
-    curr->flavor = "GMR";
-    myFlavors.add(curr);
-    
-    
-    
-    
+
+    BSTree<IceCreamNode> parlor;
+
+    IceCreamNode* iceCream;
+
+    iceCream = new IceCreamNode;
+    iceCream->flavor = "GMR";
+    parlor.insert(iceCream);
+
+
+
     return 0;
 }

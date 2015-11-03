@@ -86,3 +86,29 @@ void sortThis(bool (*sortFuncPtr)(VGameNode&,VGameNode&, bool), VGameNode* nodes
  
 }
 ```
+
+## Function name
+
+- A function name is actually a pointer to that function
+
+```cpp
+void bubbleSort(VGameNode* list, int listSize,
+    bool (*sortFncPtr)(VGameNode&, VGameNode&, bool)) {
+
+    for (...) {
+        if (sortFncPtr(list[index], list[index+1], true)) {
+            ...
+        }
+        ..
+    }
+    ...
+}
+
+bool sortByTitle(VGameNode& v1, VGameNode& v2, bool ascending) {
+    return v1.title > v2.title;
+
+    // What if they have the same title => secondary key can be added
+}
+```
+
+

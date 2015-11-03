@@ -33,7 +33,8 @@
     - May have to re-order nodes upon each insert and delete and hold and update height information
     - Have to rotate nodes
 
-
+## Some algorithms
+- **Non-recursive binary tree traversal algorithms**
 
 
 

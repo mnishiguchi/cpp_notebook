@@ -9,7 +9,8 @@
 
 using namespace std;
 
-struct ListNode {
+class ListNode {
+public:
     int val;
     ListNode *next;
     ListNode(int x) : val(x), next(NULL) {}
