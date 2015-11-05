@@ -1,7 +1,5 @@
 # Sorting project
 - Due Date: Saturday, November 7, 2015 11:00 PM
-- We will discuss in class.  This is not complete yet!
-
 
 ## Requirements
 - Implement at least two comparator functions. These must be stand-alone functions NOT methods.

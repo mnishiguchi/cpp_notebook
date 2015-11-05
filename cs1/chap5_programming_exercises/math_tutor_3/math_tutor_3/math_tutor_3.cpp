@@ -1,6 +1,5 @@
 /*
- main.cpp
- math_tutor_3
+ math_tutor_3.cpp
 
  Dispalys a menu allowing the user to select an adition, subtraction,
  multiplication or division problem. Also selection to quit.
@@ -11,10 +10,7 @@
  Pauses while the student works on the problem.
  When the student is ready to check the answer.
  The student can press a key and the problem will display the correnct solution.
-   247
- + 129
- -----
-   376
+
  If the answer is correct, prints a message of congratulations.
  If the answer is incorrect, prints the correct answer.
 
@@ -57,10 +53,11 @@ int main() {
 
     int nums[2];
     int code = -1;
-    bool isFinished = false;
+    bool isFinished;
 
     while (true) {
-
+        isFinished = false;
+        
         do {
             // Explanation
             cout << "1: adition problem" << endl;

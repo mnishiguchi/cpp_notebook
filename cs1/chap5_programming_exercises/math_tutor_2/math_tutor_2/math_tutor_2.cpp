@@ -1,6 +1,5 @@
 /*
- main.cpp
- math_tutor_2
+ math_tutor_2.cpp
 
  Displays two ramdom numbers to be added, such as:
    247
@@ -8,10 +7,7 @@
  Pauses while the student works on the problem.
  When the student is ready to check the answer.
  The student can press a key and the problem will display the correnct solution.
-   247
- + 129
- -----
-   376
+
  If the answer is correct, prints a message of congratulations.
  If the answer is incorrect, prints the correct answer.
 

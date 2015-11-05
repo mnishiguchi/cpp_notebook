@@ -1,7 +1,3 @@
-/*
-binary_search_tree_integer
-
-*/
 /*****************************************************************************
 
     Binary search tree
@@ -33,7 +29,6 @@ public:
     LeafNode* right;
 };
 
-
 /**
  *  Encapsulates the workings of the tree into a single area.
  */
@@ -60,7 +55,6 @@ private:
  */
 BinaryTree::BinaryTree() {
     root = NULL;
-
     cout << "A new binary tree was created" << endl;
 }
 

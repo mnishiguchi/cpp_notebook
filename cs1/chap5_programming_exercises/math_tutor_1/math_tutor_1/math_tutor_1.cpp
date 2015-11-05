@@ -1,6 +1,5 @@
 /*
-    main.cpp
-    math_tutor_1
+    math_tutor_1.cpp
 
     Displays two ramdom numbers to be added, such as:
       247
