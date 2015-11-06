@@ -66,6 +66,24 @@ string myLine;
 getline(cin, myLine);  // myLine: "    Hello, anybody there?"
 ```
 
+```cpp
+    // Output all uppercase letters
+    
+    cout << "\nEnter a sentence: ";
+
+    // Read a line
+    getline(cin, input);
+
+    // Iterate over the line and print all the uppercase letters
+    len = (int)input.length();
+    for (idx = 0; idx < len; idx++) {
+        if (input[idx] >= 'A' && input[idx] <= 'Z') {  // Uppercase
+            cout << input[idx] << " ";
+        }
+    }
+    cout << endl;
+```
+
 ### Reading a string
 - `getline(istream&  is, string& str, char delim)`
 - Extracts characters from istream and stores them into str until the delimitation character delim is found
