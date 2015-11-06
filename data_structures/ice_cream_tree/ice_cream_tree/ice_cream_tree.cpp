@@ -68,7 +68,7 @@ public:
 
     void insert(string insertItemName);
     void removeFromTree(NodeType*);  // TODO: remove node (See textbook 6th ed p1331)
-    NodeType* search(NodeType*);     // TODO: search node (See textbook 6th ed p1328)
+    NodeType* search(string searchKey);     // TODO: search node (See textbook 6th ed p1328)
     void destroyTree();              // TODO
 
 private:
@@ -81,6 +81,7 @@ private:
 template <class NodeType>
 BSTree<NodeType>::BSTree() {
     root = NULL;
+    cout << "BSTree created" << endl;
 }
 
 /**
@@ -110,7 +111,7 @@ void BSTree<NodeType>::insert(string insertItemName) {
 
             // Every node should be unique.
             if (current->getInfo() == insertItemName) {
-                cout << "[Dupulicateds are not allowed: " << insertItemName << "]" << endl;
+                cout << "[Error: Dupulicateds are not allowed: " << insertItemName << "]" << endl;
                 return;
 
                 // Left child
@@ -136,69 +137,116 @@ void BSTree<NodeType>::insert(string insertItemName) {
    } // end insert
 }
 
-/** TODO: search node (See textbook 6th ed p1328)
- *  Search a node into the tree
+/**
+ * Removes a node from the tree.
+ * The node to remove can be searched for ahead of time using the search function.
  */
-//template <class NodeType>
-//NodeType* BSTree<NodeType>::search(string searchKey) {
-//    return new NodeType*;
-//}
+template <class NodeType>
+void BSTree<NodeType>::removeFromTree(NodeType* itemToRemove) {
 
+    NodeType* current;
+    NodeType* trailCurrent;
+    NodeType* temp;
 
-//template <class NodeType>
-//void BSTree<NodeType>::removeFromTree(NodeType* itemToRemove) {
+    if (itemToRemove == NULL) {
+        cout << "[Error: The node to be deleted is NULL]" << endl;
 
-    // NodeType* current;
-    // NodeType* trailCurrent;
-    // NodeType* temp;
+    } else if (itemToRemove->left == NULL && itemToRemove->right == NULL) {
+        temp         = itemToRemove;
+        itemToRemove = NULL;
+        delete temp;
 
-    // if (itemToRemove == NULL) {
-    //     cout << "Error: The node to be deleted is NULL" << endl;
+    } else if (itemToRemove->left == NULL) { // If only has a right child
+        temp         = itemToRemove;
+        itemToRemove = temp->right;
+        delete temp;
 
-    // } else if (itemToRemove->left == NULL && itemToRemove->right == NULL) {
-    //     temp         = itemToRemove;
-    //     itemToRemove = NULL;
-    //     delete temp;
+    } else if (itemToRemove->right == NULL) { // If only has a left child
+        temp         = itemToRemove;
+        itemToRemove = temp->left;
+        delete temp;
 
-    // } else if (itemToRemove->left == NULL) { // If only has a right child
-    //     temp         = itemToRemove;
-    //     itemToRemove = temp->right;
-    //     delete temp;
+    } else {  // Node has both left and right subtrees
+        current      = itemToRemove->left;
+        trailCurrent = NULL;
 
-    // } else if (itemToRemove->right == NULL) { // If only has a left child
-    //     temp         = itemToRemove;
-    //     itemToRemove = temp->left;
-    //     delete temp;
+        // Go to the right all the way down to the rightmost grandchild
+        while (current->right != NULL) {
+            trailCurrent = current;
+            current      = current->right;
+        }
 
-    // } else {  // Node has both left and right subtrees
-    //     current      = itemToRemove->left;
-    //     trailCurrent = NULL;
+        // Replaca the itemToRemove with the rightmost grandchild
+        itemToRemove->setInfo( current->getInfo() );
 
-    //     // Go to the right all the way down to the rightmost grandchild
-    //     while (current->right != NULL) {
-    //         trailCurrent = current;
-    //         current      = current->right;
-    //     }
+        if (trailCurrent == NULL) {
+            trailCurrent->left = current->left;
+        } else {
+            trailCurrent->right = current->left;
+        }
 
-    //     // Replaca the itemToRemove with the rightmost grandchild
-    //     itemToRemove->setInfo( current->getInfo() );
+        // Finally delete the node
+        delete current;
+    }
+}
 
-    //     if (trailCurrent == NULL) {
-    //         trailCurrent->left = current->left;
-    //     } else {
-    //         trailCurrent->right = current->left;
-    //     }
+/**
+ * Searches a node with the specified search key in the tree.
+ * If found, returns a pointer to the node; else NULL.
+ */
+template <class NodeType>
+NodeType* BSTree<NodeType>::search(string searchKey) {
+    NodeType* current;
+    bool found = false;
 
-    //     // Finally delete the node
-    //     delete current;
-    // }
-//}
+    // Reject if the tree is empty
+    if (root == NULL) {
+        cout << "Cannot search an empty tree" << endl;
+        return NULL;
+    }
+
+    // Traverse down the tree from the root node
+    current = root;
+    while (current != NULL && !found) {
+
+        if (current->getInfo() == searchKey) {
+            found = true;
+
+        } else if (current->getInfo() > searchKey) {
+            current = current->left;
+
+        } else {
+            current = current->right;
+        }
+    }  // end while
+
+    // Report the result
+    cout << searchKey << " was ";
+    cout << ((found) ? "found :)" : "not found :(") << endl;
+
+    // Return the pointer to the node
+    return current;
+} // end search
+
+//*************************************
+
+/**
+ * Utility function to print the node the specified pointer points to.
+ */
+void printIceCream(IceCreamNode* node) {
+    cout << ((node) ? node->getInfo() : "[Error: This object is NULL]") << endl;
+}
 
 //*************************************
 
 int main() {
 
+    cout << "\n===>Creating a new tree...\n" << endl;
+
     BSTree<IceCreamNode> parlor;
+    IceCreamNode* temp;
+
+    cout << "\n===>Inserting nodes into the tree...\n" << endl;
 
     parlor.insert("vanilla");
     parlor.insert("chocolate");
@@ -207,7 +255,14 @@ int main() {
     parlor.insert("chocolate");
     parlor.insert("abcde");
 
-    // 1 search
+    cout << "\n===>Searching the specified nodes in the tree...\n" << endl;
+
+    temp = parlor.search("masa");
+    printIceCream(temp);
+
+    temp = parlor.search("maaaa");
+    printIceCream(temp);
+
     // 2 remove that node
 
     return 0;
