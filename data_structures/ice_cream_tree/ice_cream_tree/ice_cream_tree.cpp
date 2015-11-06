@@ -10,11 +10,6 @@
 #include <iomanip>
 using namespace std;
 
-
-/*
- TODO: Overload comparison operators in order to make flavor the search key
- */
-
 /**
  * Class that represents a node
  */
@@ -22,16 +17,25 @@ class IceCreamNode {
 public:
     IceCreamNode();
     IceCreamNode(string);
-    string getInfo() const { return flavor; }
-    void setInfo(string name) { flavor = name; }
+
+    string getInfo() const { return title; }
+    void setInfo(string title) { this->title = title; }
+
     IceCreamNode* left;
     IceCreamNode* right;
+
+    // bool operator==(IceCreamNode& rhs) const { return this->title == rhs.title; };
+    // bool operator<(IceCreamNode& rhs)  const { return this->title <  rhs.title; };
+    // bool operator>(IceCreamNode& rhs)  const { return this->title >  rhs.title; };
+    // bool operator<=(IceCreamNode& rhs) const { return this->title <= rhs.title; };
+    // bool operator>=(IceCreamNode& rhs) const { return this->title >= rhs.title; };
+
 private:
-    string flavor;
+    string title;
 };
 
 /**
- * default constructor
+ * Default constructor of IceCreamNode
  */
 IceCreamNode::IceCreamNode() {
     left  = NULL;
@@ -39,33 +43,35 @@ IceCreamNode::IceCreamNode() {
 }
 
 /**
- * Constructor with its flavor
+ * Constructs an IceCreamNode with its title
  */
-IceCreamNode::IceCreamNode(string flavor) {
+IceCreamNode::IceCreamNode(string title) {
     left  = NULL;
     right = NULL;
-    this->flavor = flavor;
+    this->title = title;
 }
 
-//*************************************
-
 /**
- * Reequirements: Nodes (data NodeType) must have left and right pointers
- * as their members
+ * Represents a binary search tree that accept generic NodeType that meets the
+ * following requirements:
+ *
+ * ---Requirements---
+ * - NodeType must have as members:
+ *   + left and right - pointers
+ *   + name/title     - a string that can be accessed by getInfo() and setInfo(string)
+ * - NodeType must override comparison operators in a way that they can be compared by name string
  */
 template <class NodeType>
 class BSTree {
 public:
     BSTree();
 
-
-
-
     void insert(string insertItemName);
     void removeFromTree(NodeType*);  // TODO: remove node (See textbook 6th ed p1331)
     NodeType* search(NodeType*);     // TODO: search node (See textbook 6th ed p1328)
     void destroyTree();              // TODO
 
+private:
     NodeType* root;
 };
 
@@ -87,7 +93,8 @@ void BSTree<NodeType>::insert(string insertItemName) {
     NodeType* newNode;
 
     // Create a new node with the specific name
-    newNode = new NodeType(insertItemName);
+    newNode = new NodeType();
+    newNode->setInfo(insertItemName);
 
     // If there is no root, this becomes the root.
    if (root == NULL) {
@@ -102,9 +109,8 @@ void BSTree<NodeType>::insert(string insertItemName) {
             trailCurrent = current;
 
             // Every node should be unique.
-           if (current->getInfo() == insertItemName) {
-               cout << "The newNode to be inserted is already in the tree" << endl
-                    << "Dupulicateds are not allowed" << endl;
+            if (current->getInfo() == insertItemName) {
+                cout << "[Dupulicateds are not allowed: " << insertItemName << "]" << endl;
                 return;
 
                 // Left child
@@ -113,18 +119,18 @@ void BSTree<NodeType>::insert(string insertItemName) {
 
                 // Right child
            } else {
-                current = current->left;
+                current = current->right;
            }
        } // end while
 
        if (trailCurrent->getInfo() > insertItemName) {
             trailCurrent->left = newNode;
-            cout << "Inserting " << left << setw(12) << insertItemName << " as "
+            cout << "Inserting " << setw(12) << insertItemName << " as "
                  << trailCurrent->getInfo() << "'s left child" << endl;
 
        } else  {
             trailCurrent->right = newNode;
-            cout << "Inserting " << left << setw(12) << insertItemName << " as "
+            cout << "Inserting " << setw(12) << insertItemName << " as "
                  << trailCurrent->getInfo() << "'s right child" << endl;
        }
    } // end insert
@@ -194,14 +200,15 @@ int main() {
 
     BSTree<IceCreamNode> parlor;
 
+    parlor.insert("vanilla");
+    parlor.insert("chocolate");
     parlor.insert("masa");
     parlor.insert("toshi");
-    parlor.insert("christine");
+    parlor.insert("chocolate");
     parlor.insert("abcde");
 
     // 1 search
     // 2 remove that node
-    // removeThis = parlor.search("caramel");
 
     return 0;
 }
