@@ -46,3 +46,12 @@ for (int row = 0; row < numRows; row++) {
     board[row] = new int[numColumns];
 }
 ```
+
+==
+
+## Initialiing an array to NULL
+- http://stackoverflow.com/questions/629017/how-does-array100-0-set-the-entire-array-to-0
+```cpp
+// C++ empty initializer
+char aArray[100] = {};
+```

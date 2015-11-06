@@ -1,6 +1,9 @@
 /**
  *  ice_cream_tree.cpp
  *
+ *  This program demonstrates a binary search tree of generic NodeType.
+ *
+ *
  *  Created by Masatoshi Nishiguchi on 10/28/15.
  *  Copyright (c) 2015 Masatoshi Nishiguchi. All rights reserved.
  */
@@ -24,12 +27,6 @@ public:
     IceCreamNode* left;
     IceCreamNode* right;
 
-    // bool operator==(IceCreamNode& rhs) const { return this->title == rhs.title; };
-    // bool operator<(IceCreamNode& rhs)  const { return this->title <  rhs.title; };
-    // bool operator>(IceCreamNode& rhs)  const { return this->title >  rhs.title; };
-    // bool operator<=(IceCreamNode& rhs) const { return this->title <= rhs.title; };
-    // bool operator>=(IceCreamNode& rhs) const { return this->title >= rhs.title; };
-
 private:
     string title;
 };
@@ -40,6 +37,7 @@ private:
 IceCreamNode::IceCreamNode() {
     left  = NULL;
     right = NULL;
+    this->title = "";
 }
 
 /**
@@ -65,11 +63,11 @@ template <class NodeType>
 class BSTree {
 public:
     BSTree();
+    ~BSTree();
 
     void insert(string insertItemName);
-    void removeFromTree(NodeType*);  // TODO: remove node (See textbook 6th ed p1331)
-    NodeType* search(string searchKey);     // TODO: search node (See textbook 6th ed p1328)
-    void destroyTree();              // TODO
+    void removeFromTree(NodeType*);
+    NodeType* search(string searchKey);
 
 private:
     NodeType* root;
@@ -83,6 +81,14 @@ BSTree<NodeType>::BSTree() {
     root = NULL;
     cout << "BSTree created" << endl;
 }
+
+/**
+ * Default destructor
+ */
+template <class NodeType>
+BSTree<NodeType>::~BSTree() {
+    cout << "BSTree destructed" << endl;
+};
 
 /**
  * Create a new node with the specified name and insert it into the tree.
@@ -148,25 +154,37 @@ void BSTree<NodeType>::removeFromTree(NodeType* itemToRemove) {
     NodeType* trailCurrent;
     NodeType* temp;
 
+    // Reject if the item to remove is empty
     if (itemToRemove == NULL) {
         cout << "[Error: The node to be deleted is NULL]" << endl;
+        return;
+    }
 
-    } else if (itemToRemove->left == NULL && itemToRemove->right == NULL) {
+    // There are four different cases...
+    cout << "Removing " << left << setfill('.')
+         << setw(16) << itemToRemove->getInfo()
+         << right << setfill(' ');
+
+    // Case 1 - has no child
+    if (itemToRemove->left == NULL && itemToRemove->right == NULL) {
         temp         = itemToRemove;
         itemToRemove = NULL;
         delete temp;
 
-    } else if (itemToRemove->left == NULL) { // If only has a right child
+    // Case 2 - only has a right child
+    } else if (itemToRemove->left == NULL) {
         temp         = itemToRemove;
         itemToRemove = temp->right;
         delete temp;
 
-    } else if (itemToRemove->right == NULL) { // If only has a left child
+    // Case 3 - only has a left child
+    } else if (itemToRemove->right == NULL) {
         temp         = itemToRemove;
         itemToRemove = temp->left;
         delete temp;
 
-    } else {  // Node has both left and right subtrees
+    // Case 4 - has both left and right subtrees
+    } else {
         current      = itemToRemove->left;
         trailCurrent = NULL;
 
@@ -176,11 +194,11 @@ void BSTree<NodeType>::removeFromTree(NodeType* itemToRemove) {
             current      = current->right;
         }
 
-        // Replaca the itemToRemove with the rightmost grandchild
+        // Replace the itemToRemove with the rightmost grandchild
         itemToRemove->setInfo( current->getInfo() );
 
         if (trailCurrent == NULL) {
-            trailCurrent->left = current->left;
+            itemToRemove->left = current->left;
         } else {
             trailCurrent->right = current->left;
         }
@@ -188,6 +206,8 @@ void BSTree<NodeType>::removeFromTree(NodeType* itemToRemove) {
         // Finally delete the node
         delete current;
     }
+
+    cout << "Removed!" << endl;
 }
 
 /**
@@ -205,6 +225,10 @@ NodeType* BSTree<NodeType>::search(string searchKey) {
         return NULL;
     }
 
+    cout << "Searching for " << left << setfill('.')
+         << setw(16) << searchKey
+         << right << setfill(' ');
+
     // Traverse down the tree from the root node
     current = root;
     while (current != NULL && !found) {
@@ -221,8 +245,7 @@ NodeType* BSTree<NodeType>::search(string searchKey) {
     }  // end while
 
     // Report the result
-    cout << searchKey << " was ";
-    cout << ((found) ? "found :)" : "not found :(") << endl;
+    cout << ( (found) ? "Found :)" : "Not found :(" ) << endl;
 
     // Return the pointer to the node
     return current;
@@ -237,6 +260,17 @@ void printIceCream(IceCreamNode* node) {
     cout << ((node) ? node->getInfo() : "[Error: This object is NULL]") << endl;
 }
 
+/**
+ * Utility function to print the node the specified pointer points to.
+ */
+void printIceCreamList(IceCreamNode* list[]) {
+    for (int i = 0; i < 10; i++) {
+        if (list[i] != NULL) {
+            printIceCream(list[i]);
+        }
+    }
+}
+
 //*************************************
 
 int main() {
@@ -244,26 +278,38 @@ int main() {
     cout << "\n===>Creating a new tree...\n" << endl;
 
     BSTree<IceCreamNode> parlor;
-    IceCreamNode* temp;
+    IceCreamNode* tempList[10] = {};  // Initially all elems are NULL
 
     cout << "\n===>Inserting nodes into the tree...\n" << endl;
 
+    parlor.insert("masatoshi");
+    parlor.insert("unagi");
     parlor.insert("vanilla");
     parlor.insert("chocolate");
-    parlor.insert("masa");
-    parlor.insert("toshi");
+    parlor.insert("soba");
+    parlor.insert("udon");
+    parlor.insert("peanut");
     parlor.insert("chocolate");
-    parlor.insert("abcde");
+    parlor.insert("sushi");
+    parlor.insert("donburi");
 
     cout << "\n===>Searching the specified nodes in the tree...\n" << endl;
 
-    temp = parlor.search("masa");
-    printIceCream(temp);
+    tempList[0] = parlor.search("masa");
+    tempList[1] = parlor.search("masatoshi");
+    tempList[2] = parlor.search("chocolate");
 
-    temp = parlor.search("maaaa");
-    printIceCream(temp);
+    cout << "\n===>Printing the items that were found above...\n" << endl;
+    printIceCreamList(tempList);
 
-    // 2 remove that node
+    cout << "\n===>Removing those nodes from the tree...\n" << endl;
 
+    for (int i = 0; i < 10; i++) {
+        if (tempList[i] != NULL) {
+            parlor.removeFromTree(tempList[i]);
+        }
+    }
+
+    cout << "\n===>End of the program...\n" << endl;
     return 0;
 }

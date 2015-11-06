@@ -78,5 +78,7 @@ cout << (amount1 > amount2 ? amount1 : amount2);
 
 ==
 
+## Calling constructor and destructor explicitly
+- http://www.geeksforgeeks.org/possible-call-constructor-destructor-explicitly/
 
 
