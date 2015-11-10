@@ -3,10 +3,49 @@
  *
  *  This program demonstrates a binary search tree of generic NodeType.
  *
- *
  *  Created by Masatoshi Nishiguchi on 10/28/15.
  *  Copyright (c) 2015 Masatoshi Nishiguchi. All rights reserved.
  */
+
+/* Actual output
+
+===>Creating a new tree...
+
+BSTree created
+
+===>Inserting nodes into the tree...
+
+Inserting masatoshi    as a root
+Inserting unagi        as masatoshi's right child
+Inserting vanilla      as unagi's right child
+Inserting chocolate    as masatoshi's left child
+Inserting soba         as unagi's left child
+Inserting udon         as soba's right child
+Inserting peanut       as soba's left child
+[Error: Dupulicateds are not allowed: chocolate]
+Inserting sushi        as udon's left child
+Inserting donburi      as chocolate's right child
+
+===>Searching the specified nodes in the tree...
+
+Searching for masa............Not found :(
+Searching for masatoshi.......Found :)
+Searching for chocolate.......Found :)
+
+===>Printing the items that were found above...
+
+masatoshi
+chocolate
+
+===>Removing those nodes from the tree...
+
+Removing masatoshi.......Removed!
+Removing chocolate.......Removed!
+
+===>End of the program...
+
+BSTree destructed
+*/
 
 #include <iostream>
 #include <string>
@@ -67,9 +106,8 @@ public:
 
     void insert(string insertItemName);
     void removeFromTree(NodeType*);
-    NodeType* search(string searchKey);
+    NodeType* search(string searchKey) const;
 
-private:
     NodeType* root;
 };
 
@@ -215,7 +253,7 @@ void BSTree<NodeType>::removeFromTree(NodeType* itemToRemove) {
  * If found, returns a pointer to the node; else NULL.
  */
 template <class NodeType>
-NodeType* BSTree<NodeType>::search(string searchKey) {
+NodeType* BSTree<NodeType>::search(string searchKey) const {
     NodeType* current;
     bool found = false;
 

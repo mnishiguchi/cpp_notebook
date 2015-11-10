@@ -28,7 +28,8 @@
 ## AVL trees
 - Ensures that binary search tree can process find and other operations no worse than O(log N)
 - Requirements
-    + Ensure that the height a nodes subtree differs by no more than noe. Balance condition.
+    + Everytime we add a node, we check the height of both left and right subtrees
+    + Ensure that the height of the left subtree differs from the right by no more than one. Balance condition.
 - Drawback
     - May have to re-order nodes upon each insert and delete and hold and update height information
     - Have to rotate nodes
@@ -36,5 +37,9 @@
 ## Some algorithms
 - **Non-recursive binary tree traversal algorithms**
 
+## Traveral of the tree (3 methods)
+- in order - L, node, R
+- pre-order - L, R, node
+- post-order - node, L, R
 
 

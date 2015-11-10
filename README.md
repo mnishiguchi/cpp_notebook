@@ -81,4 +81,10 @@ cout << (amount1 > amount2 ? amount1 : amount2);
 ## Calling constructor and destructor explicitly
 - http://www.geeksforgeeks.org/possible-call-constructor-destructor-explicitly/
 
+==
+
+## Standard Containers
+- array, vector, list, stack, queue, map, etc
+- http://www.cplusplus.com/reference/stl/
+- A container is a holder object that stores a collection of other objects (its elements). They are implemented as class templates, which allows a great flexibility in the types supported as elements.
 
