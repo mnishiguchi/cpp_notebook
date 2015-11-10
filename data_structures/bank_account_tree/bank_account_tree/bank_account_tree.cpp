@@ -28,6 +28,7 @@ the same account holder has once the user has accessed one account.
 2) Assume that you expect to get many requests for your BankAcct instances where only the name and account type is known.  Does your answer somehow change?  How so?  (5 pts)
 
 3) Assume your key is the account number.  What problems will you potentially face when retrieving the data from your BST (again, assume the data has been loaded in the order shown.)?  What could you do to fix the problem(s), if any?  Hint: you should pay attention to the actual values of the account numbers in the array.  (10 pts)
+
 */
 
 
@@ -57,13 +58,13 @@ class BankAcctBinaryTree;
 == validation ==
 
 # A single person (same name and gender)
-boolean BankAcctBinaryTree::exists(AcctHolder*);
+boolean BankAcctBinaryTree::isSamePerson(AcctHolder* acctHolder);
 
 # A single person can NOT have multiple accounts of the same type.
-boolean AcctHolder::exists(string acctType);
+boolean AcctHolder::existsAcctType(string acctType);
 
 # The account number is unique
-boolean BankAcct::isAvailableAcctId(int acctId);
+boolean BankAcct::isTakenAcctId(int acctId);
 
 */
 
@@ -72,6 +73,7 @@ public:
     AcctHolder(string acctHolder, string gender, BankAcct* account);
 
     void addAccount(BankAcct* account);
+    bool existsAcctType(string acctType);
 
     string acctHolder;
     string gender;
@@ -90,10 +92,22 @@ AcctHolder::AcctHolder(string acctHolder, string gender, BankAcct* account) {
     AcctHolder* right = NULL;
 }
 
+/**
+ *
+ */
 void AcctHolder::addAccount(BankAcct* account){
 
   //TODO
 
+}
+
+/**
+ *
+ */
+bool AcctHolder::existsAcctType(string acctType) {
+    // TODO
+
+    return true; // TODO
 }
 
 //=============================
@@ -113,6 +127,7 @@ public:
 
     // Keep track of the availabilities of account IDs
     static map<int, bool> acctIdAvailabilities;
+    static bool isTakenAcctId(int acctId);
     static void printIdAvailabilities();
 };
 
@@ -137,6 +152,16 @@ BankAcct::BankAcct(string name, string gender, string acctType,
 
     // Report the user about the accout that has been created
     cout << "Account created: #" << acctId << " " << name << endl;
+}
+
+/**
+ * A static function to check the availability of the specified account ID
+ * Returns true if the specified ID is available; false otherwise
+ */
+bool BankAcct::isTakenAcctId(int acctId) {
+    bool isTaken =  acctIdAvailabilities.find(acctId)->second;
+    cout << acctId << ((isTaken) ? ": Taken" : ": Available") << endl;
+    return isTaken;
 }
 
 /**
@@ -274,6 +299,11 @@ int main() {
     };
 
     BankAcct::printIdAvailabilities();
+
+
+    BankAcct::isTakenAcctId(67);
+    BankAcct::isTakenAcctId(55);
+    BankAcct::isTakenAcctId(112);
 
     return 0;
 }
