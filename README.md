@@ -88,3 +88,5 @@ cout << (amount1 > amount2 ? amount1 : amount2);
 - http://www.cplusplus.com/reference/stl/
 - A container is a holder object that stores a collection of other objects (its elements). They are implemented as class templates, which allows a great flexibility in the types supported as elements.
 
+==
+

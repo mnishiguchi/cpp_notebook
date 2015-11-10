@@ -36,10 +36,13 @@ the same account holder has once the user has accessed one account.
 #include <string>
 #include <iomanip>
 #include <vector>
+#include <map>
 using namespace std;
 
+// class declaration
 class BankAcct;
 class AcctHolder;
+class BankAcctBinaryTree;
 
 /**
  * Class that represents an account holder.
@@ -49,6 +52,21 @@ class AcctHolder;
  *     - E.g., Sally who is female may have a checking and a savings account.
  * - The account number is unique - No two account will ever share the same account number.
  */
+
+/*
+== validation ==
+
+# A single person (same name and gender)
+boolean BankAcctBinaryTree::exists(AcctHolder*);
+
+# A single person can NOT have multiple accounts of the same type.
+boolean AcctHolder::exists(string acctType);
+
+# The account number is unique
+boolean BankAcct::isAvailableAcctId(int acctId);
+
+*/
+
 class AcctHolder {
 public:
     AcctHolder(string acctHolder, string gender, BankAcct* account);
@@ -92,7 +110,14 @@ public:
     string acctType;
     double balance;
     int acctId;
+
+    // Keep track of the availabilities of account IDs
+    static map<int, bool> acctIdAvailabilities;
+    static void printIdAvailabilities();
 };
+
+// Initialize the static map to keep track of all the used IDs
+map<int, bool> BankAcct::acctIdAvailabilities;
 
 /**
  * @param Name of account holder
@@ -107,7 +132,20 @@ BankAcct::BankAcct(string name, string gender, string acctType,
     this->balance    = balance;
     this->acctId     = acctId;
 
+    // Keep track of the used ids
+    acctIdAvailabilities[ acctId ] = true;
+
+    // Report the user about the accout that has been created
     cout << "Account created: #" << acctId << " " << name << endl;
+}
+
+/**
+ * A static function to print all the currently issued IDs
+ */
+void BankAcct::printIdAvailabilities() {
+    for (auto it : acctIdAvailabilities) {
+        cout << it.first << " " << it.second << endl;
+    }
 }
 
 //=============================
@@ -235,7 +273,7 @@ int main() {
         BankAcct("","N","N",0,-1)  //sentinel
     };
 
-
+    BankAcct::printIdAvailabilities();
 
     return 0;
 }
