@@ -27,10 +27,13 @@ the same account holder has once the user has accessed one account.
 
 2) Assume that you expect to get many requests for your BankAcct instances where only the name and account type is known.  Does your answer somehow change?  How so?  (5 pts)
 
-3) Assume your key is the account number.  What problems will you potentially face when retrieving the data from your BST (again, assume the data has been loaded in the order shown.)?  What could you do to fix the problem(s), if any?  Hint: you should pay attention to the actual values of the account numbers in the array.  (10 pts)
+3) Assume your key is the account number.
+What problems will you potentially face when retrieving the data from your BST
+(again, assume the data has been loaded in the order shown.)?
+What could you do to fix the problem(s), if any?
 
+Hint: you should pay attention to the actual values of the account numbers in the array.  (10 pts)
 */
-
 
 #include <iostream>
 #include <fstream>
@@ -43,7 +46,7 @@ using namespace std;
 // class declaration
 class BankAcct;
 class AcctHolder;
-class BankAcctBinaryTree;
+class BankAcctBankAcctBinaryTree;
 
 /**
  * Class that represents an account holder.
@@ -58,7 +61,7 @@ class BankAcctBinaryTree;
 == Required validations ==
 
 # A single person (same name and gender)
-boolean BankAcctBinaryTree::isSamePerson(AcctHolder* acctHolder);
+boolean BankAcctBankAcctBinaryTree::isSamePerson(AcctHolder* acctHolder);
 
 # A single person can NOT have multiple accounts of the same type.
 boolean AcctHolder::existsAcctType(string acctType);
@@ -77,14 +80,15 @@ boolean BankAcct::isTakenAcctId(int acctId);
  */
 class AcctHolder {
 public:
-    AcctHolder(string holderName, string gender, BankAcct* account);
+    AcctHolder(BankAcct account);
+    AcctHolder(string holderName, string gender, BankAcct account);
 
-    bool addAccount(BankAcct* account);
+    bool addAccount(BankAcct account);
     bool existsAcctType(string acctType);
 
     string holderName;
     string gender;
-    vector<BankAcct*> accounts;
+    vector<BankAcct> accounts;
 
     AcctHolder* left;
     AcctHolder* right;
@@ -116,7 +120,19 @@ public:
 /**
  * Constructor of the AcctHolder class
  */
-AcctHolder::AcctHolder(string holderName, string gender, BankAcct* account) {
+AcctHolder::AcctHolder(BankAcct account) {
+    this->holderName = account.acctHolder->holderName;
+    this->gender     = account.acctHolder->gender;
+    this->accounts.push_back(account);
+
+    AcctHolder* left  = NULL;
+    AcctHolder* right = NULL;
+}
+
+/**
+ * Constructor of the AcctHolder class
+ */
+AcctHolder::AcctHolder(string holderName, string gender, BankAcct account) {
     this->holderName = holderName;
     this->gender     = gender;
     this->accounts.push_back(account);
@@ -129,22 +145,22 @@ AcctHolder::AcctHolder(string holderName, string gender, BankAcct* account) {
  * @param account
  * @return true if the adding is successful; else false
  */
-bool AcctHolder::addAccount(BankAcct* account) {
-  if (!existsAcctType(account->acctType)) {
+bool AcctHolder::addAccount(BankAcct account) {
+  if (!existsAcctType(account.acctType)) {
     accounts.push_back(account);
     return true;  // Success
   }
-  return false;  // Fail
+  return false;   // Fail
 }
 
 /**
- * @ param acctType
+ * @param acctType
  * @return true if this AcctHolder instance already has the specified account type
  */
 bool AcctHolder::existsAcctType(string acctType) {
     int len = (int)accounts.size();
     for (int i = 0; i < len; i++) {
-        if (accounts.at(i)->acctType == acctType) {
+        if (accounts.at(i).acctType == acctType) {
             cout << holderName << " already has "  << acctType << endl;
             return true;
         }
@@ -168,7 +184,7 @@ map<int, bool> BankAcct::acctIdAvailabilities;
  */
 BankAcct::BankAcct(string name, string gender, string acctType,
                    double balance, int acctId) {
-    this->acctHolder = new AcctHolder(name, gender, this);
+    this->acctHolder = new AcctHolder(name, gender, *this);
     this->acctType   = acctType;
     this->balance    = balance;
     this->acctId     = acctId;
@@ -206,6 +222,96 @@ void BankAcct::printIdAvailabilities() {
 
 // TODO - BankAcctBinaryTree
 
+/**
+ *  Encapsulates the workings of the tree into a single area.
+ */
+class BankAcctBinaryTree {
+public:
+    BankAcctBinaryTree();
+    //~BankAcctBinaryTree();
+
+    // Public methods
+    void insertAcct(BankAcct account);
+
+private:
+    void insert(AcctHolder* toBeInserted, AcctHolder *leaf);
+    AcctHolder* root;
+};
+
+/**
+ *  Constructor
+ */
+BankAcctBinaryTree::BankAcctBinaryTree() {
+    root = NULL;
+    cout << "A new binary tree was created" << endl;
+}
+
+
+//-----------------------------------------
+//  BankAcctBinaryTree's private methods
+//-----------------------------------------
+
+/** PRIVATE
+ *  Inserts a new leaf into the specified sub-tree.
+ *  @param toBeInserted an AcctHolder object to be inserted
+ *  @param leaf the root node of a subtree
+ */
+void BankAcctBinaryTree::insert(AcctHolder* toBeInserted, AcctHolder* leaf) {
+    // Go to the left child
+    if (toBeInserted->holderName < leaf->holderName) {
+
+        if(leaf->left != NULL) {
+            insert(toBeInserted, leaf->left);
+
+        } else {
+            cout << "Inserting " << left
+                 << setw(10) << toBeInserted->holderName << " under "
+                 << setw(10) << leaf->holderName << " on the left" << endl;
+            leaf->left = toBeInserted;
+        }
+    }
+    // Go to the right child
+    else if(toBeInserted->holderName >= leaf->holderName) {
+
+        if(leaf->right != NULL) {
+            insert(toBeInserted, leaf->right);
+
+        } else {
+            cout << "Inserting " << left
+                 << setw(10) << toBeInserted->holderName << " under "
+                 << setw(10) << leaf->holderName << " on the right" << endl;
+            leaf->right = toBeInserted;
+        }
+    }
+}
+
+//-----------------------------------------
+//  BankAcctBinaryTree's public methods
+//-----------------------------------------
+
+/** PUBLIC
+ * Inserts the specified data of BankAcct type into the tree.
+ * @param an instance of BankAcct class
+ * Note: The root is hidden.
+ */
+void BankAcctBinaryTree::insertAcct(BankAcct account) {
+
+    // 1. Search for the same holder (same name, same gender).
+    // TODO
+
+    // 2A. If the holder already exists -> push this account into it.
+    // TODO
+
+    // If the holder is new -> create a new node and insert it into the tree.
+    AcctHolder* toBeInserted = new AcctHolder(account);
+
+    if(root != NULL) {  // If root exists in the tree
+        insert(toBeInserted, root);
+    } else {            // If root does not exist in the tree
+        cout << "Setting " << account.acctHolder->holderName << " as a root of the tree" << endl;
+        root = toBeInserted;
+    }
+}
 
 /*================================================
   The main
@@ -330,10 +436,15 @@ int main() {
 
     BankAcct::printIdAvailabilities();
 
-
     BankAcct::isTakenAcctId(67);
     BankAcct::isTakenAcctId(55);
     BankAcct::isTakenAcctId(112);
+
+    BankAcctBinaryTree bst;
+
+    for (int i = 0; i < 50; i++) {
+        bst.insertAcct( accts[i] );
+    }
 
     return 0;
 }
