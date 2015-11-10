@@ -55,7 +55,7 @@ class BankAcctBinaryTree;
  */
 
 /*
-== validation ==
+== Required validations ==
 
 # A single person (same name and gender)
 boolean BankAcctBinaryTree::isSamePerson(AcctHolder* acctHolder);
@@ -68,49 +68,27 @@ boolean BankAcct::isTakenAcctId(int acctId);
 
 */
 
+/*================================================
+  Class declaration
+=================================================*/
+
+/**
+ * Class that represents an bank account.
+ */
 class AcctHolder {
 public:
-    AcctHolder(string acctHolder, string gender, BankAcct* account);
+    AcctHolder(string holderName, string gender, BankAcct* account);
 
-    void addAccount(BankAcct* account);
+    bool addAccount(BankAcct* account);
     bool existsAcctType(string acctType);
 
-    string acctHolder;
+    string holderName;
     string gender;
     vector<BankAcct*> accounts;
 
     AcctHolder* left;
     AcctHolder* right;
 };
-
-AcctHolder::AcctHolder(string acctHolder, string gender, BankAcct* account) {
-    this->acctHolder = acctHolder;
-    this->gender     = gender;
-    this->accounts.push_back(account);
-
-    AcctHolder* left  = NULL;
-    AcctHolder* right = NULL;
-}
-
-/**
- *
- */
-void AcctHolder::addAccount(BankAcct* account){
-
-  //TODO
-
-}
-
-/**
- *
- */
-bool AcctHolder::existsAcctType(string acctType) {
-    // TODO
-
-    return true; // TODO
-}
-
-//=============================
 
 /**
  * Class that represents an bank account.
@@ -131,10 +109,58 @@ public:
     static void printIdAvailabilities();
 };
 
+/*================================================
+  Implementation of class AcctHolder
+=================================================*/
+
+/**
+ * Constructor of the AcctHolder class
+ */
+AcctHolder::AcctHolder(string holderName, string gender, BankAcct* account) {
+    this->holderName = holderName;
+    this->gender     = gender;
+    this->accounts.push_back(account);
+
+    AcctHolder* left  = NULL;
+    AcctHolder* right = NULL;
+}
+
+/**
+ * @param account
+ * @return true if the adding is successful; else false
+ */
+bool AcctHolder::addAccount(BankAcct* account) {
+  if (!existsAcctType(account->acctType)) {
+    accounts.push_back(account);
+    return true;  // Success
+  }
+  return false;  // Fail
+}
+
+/**
+ * @ param acctType
+ * @return true if this AcctHolder instance already has the specified account type
+ */
+bool AcctHolder::existsAcctType(string acctType) {
+    int len = (int)accounts.size();
+    for (int i = 0; i < len; i++) {
+        if (accounts.at(i)->acctType == acctType) {
+            cout << holderName << " already has "  << acctType << endl;
+            return true;
+        }
+    }
+    return false;
+}
+
+/*================================================
+  Implementation of class BankAcct
+=================================================*/
+
 // Initialize the static map to keep track of all the used IDs
 map<int, bool> BankAcct::acctIdAvailabilities;
 
 /**
+ * Constructor of the BankAcct class
  * @param Name of account holder
  * @param gender(m or f)
  * @param account type (C=checking, S=savings, CD=certificate of deposit)
@@ -156,7 +182,8 @@ BankAcct::BankAcct(string name, string gender, string acctType,
 
 /**
  * A static function to check the availability of the specified account ID
- * Returns true if the specified ID is available; false otherwise
+ * @param acctId
+ * @return true if the specified ID is available; false otherwise
  */
 bool BankAcct::isTakenAcctId(int acctId) {
     bool isTaken =  acctIdAvailabilities.find(acctId)->second;
@@ -173,13 +200,16 @@ void BankAcct::printIdAvailabilities() {
     }
 }
 
-//=============================
-
+/*================================================
+  Implementation of class BankAcctBinaryTree
+=================================================*/
 
 // TODO - BankAcctBinaryTree
 
 
-//=============================
+/*================================================
+  The main
+=================================================*/
 
 int main() {
 
