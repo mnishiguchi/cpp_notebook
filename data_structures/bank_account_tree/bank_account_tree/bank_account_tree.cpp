@@ -9,7 +9,6 @@
  *****************************************************************************/
 
 /*
-
 Analysis
 
 1) What key would you use and why? (5 pts)
@@ -25,7 +24,9 @@ in constant time once the account holder has been found in the tree.
 - The user of the program is very likely to inspect different accounts that
 the same account holder has once the user has accessed one account.
 
-2) Assume that you expect to get many requests for your BankAcct instances where only the name and account type is known.  Does your answer somehow change?  How so?  (5 pts)
+2) Assume that you expect to get many requests for your BankAcct instances
+where only the name and account type is known.
+Does your answer somehow change?  How so?  (5 pts)
 
 3) Assume your key is the account number.
 What problems will you potentially face when retrieving the data from your BST
@@ -76,7 +77,7 @@ boolean BankAcct::isTakenAcctId(int acctId);
 =================================================*/
 
 /**
- * Class that represents an bank account.
+ *  Class that represents an bank account.
  */
 class AcctHolder {
 public:
@@ -90,16 +91,17 @@ public:
     string gender;
     vector<BankAcct> accounts;
 
-    AcctHolder* left;
-    AcctHolder* right;
+    AcctHolder* l_link;
+    AcctHolder* r_link;
 };
 
 /**
- * Class that represents an bank account.
+ *  Class that represents an bank account.
  */
 class BankAcct {
 public:
-    BankAcct(string name, string gender, string acctType, double balance, int acctId);
+    BankAcct(string name, string gender,
+             string acctType, double balance, int acctId);
 
     // Instance variables
     AcctHolder* acctHolder;
@@ -118,32 +120,32 @@ public:
 =================================================*/
 
 /**
- * Constructor of the AcctHolder class
+ *  Constructor of the AcctHolder class
  */
 AcctHolder::AcctHolder(BankAcct account) {
     this->holderName = account.acctHolder->holderName;
     this->gender     = account.acctHolder->gender;
     this->accounts.push_back(account);
 
-    AcctHolder* left  = NULL;
-    AcctHolder* right = NULL;
+    l_link = NULL;
+    r_link = NULL;
 }
 
 /**
- * Constructor of the AcctHolder class
+ *  Constructor of the AcctHolder class
  */
 AcctHolder::AcctHolder(string holderName, string gender, BankAcct account) {
     this->holderName = holderName;
     this->gender     = gender;
     this->accounts.push_back(account);
 
-    AcctHolder* left  = NULL;
-    AcctHolder* right = NULL;
+    l_link = NULL;
+    r_link = NULL;
 }
 
 /**
- * @param account
- * @return true if the adding is successful; else false
+ *  @param account
+ *  @return true if the adding is successful; else false
  */
 bool AcctHolder::addAccount(BankAcct account) {
   if (!existsAcctType(account.acctType)) {
@@ -154,8 +156,8 @@ bool AcctHolder::addAccount(BankAcct account) {
 }
 
 /**
- * @param acctType
- * @return true if this AcctHolder instance already has the specified account type
+ *  @param acctType
+ *  @return true if this AcctHolder instance already has the specified account type
  */
 bool AcctHolder::existsAcctType(string acctType) {
     int len = (int)accounts.size();
@@ -176,11 +178,11 @@ bool AcctHolder::existsAcctType(string acctType) {
 map<int, bool> BankAcct::acctIdAvailabilities;
 
 /**
- * Constructor of the BankAcct class
- * @param Name of account holder
- * @param gender(m or f)
- * @param account type (C=checking, S=savings, CD=certificate of deposit)
- * @param account balance, account number
+ *  Constructor of the BankAcct class
+ *  @param Name of account holder
+ *  @param gender(m or f)
+ *  @param account type (C=checking, S=savings, CD=certificate of deposit)
+ *  @param account balance, account number
  */
 BankAcct::BankAcct(string name, string gender, string acctType,
                    double balance, int acctId) {
@@ -197,9 +199,9 @@ BankAcct::BankAcct(string name, string gender, string acctType,
 }
 
 /**
- * A static function to check the availability of the specified account ID
- * @param acctId
- * @return true if the specified ID is available; false otherwise
+ *  A static function to check the availability of the specified account ID
+ *  @param acctId
+ *  @return true if the specified ID is available; false otherwise
  */
 bool BankAcct::isTakenAcctId(int acctId) {
     bool isTaken =  acctIdAvailabilities.find(acctId)->second;
@@ -208,7 +210,7 @@ bool BankAcct::isTakenAcctId(int acctId) {
 }
 
 /**
- * A static function to print all the currently issued IDs
+ *  A static function to print all the currently issued IDs
  */
 void BankAcct::printIdAvailabilities() {
     for (auto it : acctIdAvailabilities) {
@@ -232,9 +234,12 @@ public:
 
     // Public methods
     void insertAcct(BankAcct account);
+    AcctHolder* search(string key1, string key2);
 
 private:
-    void insert(AcctHolder* toBeInserted, AcctHolder *leaf);
+    void insert(AcctHolder* holderToInsert, AcctHolder *leaf);
+    AcctHolder* search(string key1, string key2, AcctHolder* leaf);
+
     AcctHolder* root;
 };
 
@@ -253,35 +258,62 @@ BankAcctBinaryTree::BankAcctBinaryTree() {
 
 /** PRIVATE
  *  Inserts a new leaf into the specified sub-tree.
- *  @param toBeInserted an AcctHolder object to be inserted
+ *  @param holderToInsert an AcctHolder object to be inserted
  *  @param leaf the root node of a subtree
  */
-void BankAcctBinaryTree::insert(AcctHolder* toBeInserted, AcctHolder* leaf) {
+void BankAcctBinaryTree::insert(AcctHolder* holderToInsert, AcctHolder* leaf) {
     // Go to the left child
-    if (toBeInserted->holderName < leaf->holderName) {
+    if (holderToInsert->holderName < leaf->holderName) {
 
-        if(leaf->left != NULL) {
-            insert(toBeInserted, leaf->left);
+        if(leaf->l_link != NULL) {
+            insert(holderToInsert, leaf->l_link);
 
         } else {
             cout << "Inserting " << left
-                 << setw(10) << toBeInserted->holderName << " under "
+                 << setw(10) << holderToInsert->holderName << " under "
                  << setw(10) << leaf->holderName << " on the left" << endl;
-            leaf->left = toBeInserted;
+            leaf->l_link = holderToInsert;
         }
     }
     // Go to the right child
-    else if(toBeInserted->holderName >= leaf->holderName) {
+    else if(holderToInsert->holderName >= leaf->holderName) {
 
-        if(leaf->right != NULL) {
-            insert(toBeInserted, leaf->right);
+        if(leaf->r_link != NULL) {
+            insert(holderToInsert, leaf->r_link);
 
         } else {
             cout << "Inserting " << left
-                 << setw(10) << toBeInserted->holderName << " under "
+                 << setw(10) << holderToInsert->holderName << " under "
                  << setw(10) << leaf->holderName << " on the right" << endl;
-            leaf->right = toBeInserted;
+            leaf->r_link = holderToInsert;
         }
+    }
+}
+
+/** PRIVATE
+ *  Searches for the node with the specified key in the specified sub-tree.
+ *  key:  the key to be searched for.
+ *  leaf: the root node of a subtree.
+ */
+AcctHolder* BankAcctBinaryTree::search(string holderName, string gender,
+                                       AcctHolder* leaf) {
+
+    if (leaf == NULL) {  // Deadend
+        cout << holderName << " was not found" << endl;
+        return NULL;
+    }
+
+    // Base case: If found, return the pointer to that leaf.
+    if(holderName == leaf->holderName && gender == leaf->gender) {
+        cout << holderName << " was found" << endl;
+        return leaf;
+    }
+
+    // Recursively go down the tree and check each node in the path.
+    if (holderName < leaf->holderName) {
+        return search(holderName, gender, leaf->l_link);
+    } else {
+        return search(holderName, gender, leaf->r_link);
     }
 }
 
@@ -290,28 +322,41 @@ void BankAcctBinaryTree::insert(AcctHolder* toBeInserted, AcctHolder* leaf) {
 //-----------------------------------------
 
 /** PUBLIC
- * Inserts the specified data of BankAcct type into the tree.
- * @param an instance of BankAcct class
- * Note: The root is hidden.
+ *  Inserts the specified data of BankAcct type into the tree.
+ *  @param an instance of BankAcct class
  */
 void BankAcctBinaryTree::insertAcct(BankAcct account) {
 
-    // 1. Search for the same holder (same name, same gender).
-    // TODO
+    // Search for the same holder (same name, same gender).
+    string holderName      = account.acctHolder->holderName;
+    string gender          = account.acctHolder->gender;
+    AcctHolder* acctHolder = search(holderName, gender);
 
-    // 2A. If the holder already exists -> push this account into it.
-    // TODO
+    // If the holder already exists -> push this account into it.
+    if (acctHolder != NULL) {
+        acctHolder->accounts.push_back(account);
+    }
 
     // If the holder is new -> create a new node and insert it into the tree.
-    AcctHolder* toBeInserted = new AcctHolder(account);
+    AcctHolder* holderToInsert = new AcctHolder(account);
 
     if(root != NULL) {  // If root exists in the tree
-        insert(toBeInserted, root);
+        insert(holderToInsert, root);
     } else {            // If root does not exist in the tree
-        cout << "Setting " << account.acctHolder->holderName << " as a root of the tree" << endl;
-        root = toBeInserted;
+        cout << "Setting " << account.acctHolder->holderName
+             << " as a root of the tree" << endl;
+        root = holderToInsert;
     }
 }
+
+/** PUBLIC
+ *  Public method to search for the specified key in the tree.
+ *  @param key an account holder's name that is used as a search key
+ */
+AcctHolder* BankAcctBinaryTree::search(string holderName, string gender) {
+  return search(holderName, gender, root);
+}
+
 
 /*================================================
   The main
@@ -445,6 +490,9 @@ int main() {
     for (int i = 0; i < 50; i++) {
         bst.insertAcct( accts[i] );
     }
+
+    bst.search("Francis", "m");
+    bst.search("Enid", "m");
 
     return 0;
 }
