@@ -26,10 +26,11 @@
     +  Move that node to take the place of the deleted node
 
 ## AVL trees
-- Ensures that binary search tree can process find and other operations no worse than O(log N)
+- Ensures that binary search tree can process find and other operations no worse than O(log N) like binery search
 - Requirements
     + Everytime we add a node, we check the height of both left and right subtrees
-    + Ensure that the height of the left subtree differs from the right by no more than one. Balance condition.
+    + Ensure that the height of the left subtree differs from the right by no more than one.
+    + Balance condition by rotating positions when necessary.
 - Drawback
     - May have to re-order nodes upon each insert and delete and hold and update height information
     - Have to rotate nodes
