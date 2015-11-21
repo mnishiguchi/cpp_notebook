@@ -6,55 +6,104 @@
  */
 
 #include <iostream>
-#include <ctime>
 #include <iomanip>
 #include <string>
 using namespace std;
 
 // Function prototypes
-int    inputDaysSpent();
-void   times(double&, double&);
-bool   isValidTime(double);
-double airFare();
-double carRental();
-double vehicle();
-double parking(int);
-double taxi(int);
-double registration();
-double hotel(int);
-double meals(int, double, double);
-double getBreakfast();
-double getLunch();
-double getDinner();
+int  inputDaysSpent();
+void inputDepartureTime(int* dataArray);
+void inputReturnTime(int* dataArray);
+bool isValidTime(int*);
+// double airfare();
+// double carRental();
+// double vehicle();
+// double parking(int);
+// double taxi(int);
+// double registration();
+// double hotel(int);
+// double meals(int, double, double);
+// double getBreakfast();
+// double getLunch();
+// double getDinner();
+void restoreInputStream();
 
-// Global variable to hold total expenses of employee
-double totalExpenses = 0;
+/**
+ * Holds all the business trip related information.
+ */
+class BusinessTrip {
+public:
+    // Constructor.
+    BusinessTrip() {
+        totalAllowable = 0.0;
+        totalTripDays  = 0;
+        departureTime  = new int[2];  // Departure time (first day)
+        returnTime     = new int[2];  // Arrival home time (last day)
+        airFare        = 0.0;
+        carRental      = 0.0;
+        vehicle        = 0.0;
+        parking        = 0.0;
+        taxi           = 0.0;
+        registration   = 0.0;
+        hotel          = 0.0;
+        meals          = 0.0;
+    }
 
+    double totalAllowable = 0.0; // Total allowable expenses
+    int totalTripDays ;
+    int* departureTime;  // Departure time (first day)
+    int* returnTime;     // Arrival home time (last day)
+    double airFare;
+    double carRental;
+    double vehicle;
+    double parking;
+    double taxi;
+    double registration;
+    double hotel;
+    double meals;
+
+    double getTotalExpenses() {
+        return (
+            airFare +
+            carRental +
+            vehicle +
+            parking +
+            taxi +
+            registration +
+            hotel +
+            meals
+        );
+    }
+
+    void print() {
+
+        // TODO
+
+    }
+};
 
 // ----------------------------------------------------------------------------- //
 // ----------------------------------------------------------------------------- //
+
+
 
 
 int main() {
-    // Total allowable expenses
-    //double totalAllowable = 0.0;
 
-    // Departure time (first day)
-    //double timeDeparture;
-
-    // Arrival home time (last day)
-    //double timeReturnHome;
+    BusinessTrip trip;
 
     // Get the total number of days for the trip.
-    int totalTripDays = inputDaysSpent();
-    cout << totalTripDays <<endl;
-
+    trip.totalTripDays = inputDaysSpent();
+    //cout << "totalTripDays: " << trip.totalTripDays <<endl;
 
     // Get the arrival and departure times.
-    //times(timeDeparture, timeReturnHome);
+    inputDepartureTime( trip.departureTime );
+    inputReturnTime( trip.returnTime );
+    cout << "departureTime: " << trip.departureTime[0] << trip.departureTime[1]  << endl;
+    cout << "returnTime: "    << trip.returnTime[0]    << trip.returnTime[1]  << endl;
 
     // // Get the allowable airfare expenses.
-    // allowable = airFare();
+    // allowable = airfare();
 
     // // Get the allowable car rental expenses.
     // allowable += carRental();
@@ -77,7 +126,7 @@ int main() {
     //     allowable += hotel(totalTripDays);
 
     // // Get allowable meal expenses.
-    // allowable += meals(totalTripDays, timeDeparture, timeReturnHome);
+    // allowable += meals(totalTripDays, timeDeparture, timeReturn);
 
     // // Display Totals.
     // cout << fixed << showpoint << setprecision(2);
@@ -115,14 +164,17 @@ int inputDaysSpent() {
     while ( !isFinished ) {
 
         // Prompt the user fot the total days spent.
-        cout << "How many days did you spent on this trip? ";
+        cout << "\nHow many days did you spent on this trip? " << endl;
+        cout << ">>> ";
         cin >> totalTripDays;
+        cout << endl;
 
         // Validation.
         // 1. Reject if input stream is in the fail state.
         // 2. Reject if the days are less than one.
         if ( !cin || totalTripDays < 1 ) {
-            cout << "Invalid: Minimum number of trip days is 1" << endl;
+            cout << "Invalid trip days : Must be 1 or more" << endl;
+            restoreInputStream();
 
         } else {
             // Exit the loop.
@@ -134,45 +186,84 @@ int inputDaysSpent() {
 }
 
 
-// TODO: Standardize on the time format
 /**
- * Asks for the time of departure and the time of return.
- * The times are validated and stored in the reference parameter variables.
- * @param departureTime  A reference parameter variable
- * @param returnTime     A reference parameter variable
+ * Asks for the time of departure.
+ * @param dataArray An array of two integers to be used as a container to hold data.
+ * [0]: hours, [1]: minutes.
  */
-// void times(long& departureTime, long& endTime) {
+void inputDepartureTime(int* dataArray) {
 
-//     // the time of departure
-//     cout << "the time of departure: ";
-//     do {
-//         cin >> departureTime;
+    bool isFinished = false;
+    while ( !isFinished ) {
 
-//     } while ( !cin && isValidTime(departureTime) );
+        // Prompt the user fot the total days spent.
+        cout << "\nEnter the departure time, in 24-hour time (e.g., 07:30, 22:10): " << endl;
+        cout << ">>> ";
+        cin >> dataArray[0];  // hours
+        cin.ignore(1, ':');
+        cin >> dataArray[1];  // minutes
+        cout << endl;
 
-//     // the time of return
-//     cout << "the time of return: ";
-//     do {
-//         cin >> returnTime;
+        // Validation.
+        // 1. Reject if input stream is in the fail state.
+        // 2. Reject if the time is invalid.
+        if ( !cin || !isValidTime(dataArray) ) {
+            cout << "Invalid time : Must be in 24-hour time" << endl;
+            restoreInputStream();
 
-//     } while ( !cin && isValidTime(returnTime) );
-// }
+        } else {
+            // Exit the loop.
+            isFinished = true;
+        }
+    }
+}
 
-
-// TODO: Assumed to be a time in the 24 hour format of HH.MM.
 
 /**
- * Assumed to be a time in the 24 hour format of HH.MM.
- * The value is tested, and if it is valid the function.
- * @param time
- * @return true. Otherwise it returns false.
+ * Asks for the time of arrival.
+ * @param dataArray An array of two integers to be used as a container to hold data.
+ * [0]: hours, [1]: minutes.
  */
-// bool isValidTime(long time) {
+void inputReturnTime(int* dataArray) {
 
-//     // TODO
+    bool isFinished = false;
+    while ( !isFinished ) {
 
-//     return true; // TODO
-// }
+        // Prompt the user fot the total days spent.
+        cout << "\nEnter the return time, in 24-hour time (e.g., 07:30, 22:10): " << endl;
+        cout << ">>> ";
+        cin >> dataArray[0];  // hours
+        cin.ignore(1, ':');
+        cin >> dataArray[1];  // minutes
+        cout << endl;
+
+        // Validation.
+        // 1. Reject if input stream is in the fail state.
+        // 2. Reject if the time is invalid.
+        if ( !cin || !isValidTime(dataArray) ) {
+            cout << "Invalid time : Must be in 24-hour time" << endl;
+            restoreInputStream();
+
+        } else {
+            // Exit the loop.
+            isFinished = true;
+        }
+    }
+}
+
+
+/**
+ * Ensure that a time is in the 24 hour format of HH.MM.
+ * @param time  An array of integer, [0]: hours, [1]: minutes.
+ * @return true if the time format is valid. Otherwise false.
+ */
+bool isValidTime(int time[]) {
+
+    int hours   = time[0];
+    int minutes = time[1];
+
+    return (hours >= 0 && hours < 24) && (minutes >= 0 && minutes < 60);
+}
 
 
 /**
@@ -180,7 +271,7 @@ int inputDaysSpent() {
  * adds the value to the totalExpenses.
  * @return the airfare amount
  */
-// double airFare() {
+// double airfare() {
 
 //     double amount = 0.0;
 
@@ -350,3 +441,11 @@ int inputDaysSpent() {
 
 //     return 0.0; // TODO
 // }
+
+/**
+ *
+ */
+void restoreInputStream() {
+    cin.clear();            // Restore input stream
+    cin.ignore(100, '\n');  // Clear the buffer
+}
