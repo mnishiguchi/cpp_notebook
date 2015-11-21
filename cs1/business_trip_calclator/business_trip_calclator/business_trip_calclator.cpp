@@ -11,13 +11,15 @@
 using namespace std;
 
 // Function prototypes
-int  inputDaysSpent();
-void inputDepartureTime(int* dataArray);
-void inputReturnTime(int* dataArray);
+void inputDaysSpent(int& totalTripDays);
+void inputDepartureTime(int* timeArray);
+void inputReturnTime(int* timeArray);
 bool isValidTime(int*);
-// double airfare();
-// double carRental();
-// double vehicle();
+void inputAirfare(double& airfare);
+bool isValidAirfair(double airfare);
+double inputCarRental();
+bool isValidCarRental(double carRental);
+double inputVehicle();
 // double parking(int);
 // double taxi(int);
 // double registration();
@@ -27,6 +29,7 @@ bool isValidTime(int*);
 // double getLunch();
 // double getDinner();
 void restoreInputStream();
+template <typename dataType> void input(dataType& data, string msg);
 
 /**
  * Holds all the business trip related information.
@@ -34,11 +37,12 @@ void restoreInputStream();
 class BusinessTrip {
 public:
     // Constructor.
+    // Initilaizes the members when created.
     BusinessTrip() {
         totalAllowable = 0.0;
         totalTripDays  = 0;
-        departureTime  = new int[2];  // Departure time (first day)
-        returnTime     = new int[2];  // Arrival home time (last day)
+        departureTime  = new int[2];
+        returnTime     = new int[2];
         airFare        = 0.0;
         carRental      = 0.0;
         vehicle        = 0.0;
@@ -49,10 +53,14 @@ public:
         meals          = 0.0;
     }
 
-    double totalAllowable = 0.0; // Total allowable expenses
-    int totalTripDays ;
-    int* departureTime;  // Departure time (first day)
-    int* returnTime;     // Arrival home time (last day)
+    // Constant for per mile allowance.
+    const double MILAGE_ALLOWANCE = 0.27;
+
+    // Expenses.
+    double totalAllowable; // Total allowable expenses
+    int totalTripDays;
+    int* departureTime;   // Departure time (first day)
+    int* returnTime;      // Arrival home time (last day)
     double airFare;
     double carRental;
     double vehicle;
@@ -62,6 +70,7 @@ public:
     double hotel;
     double meals;
 
+    // Computes the total expenses.
     double getTotalExpenses() {
         return (
             airFare +
@@ -75,6 +84,7 @@ public:
         );
     }
 
+    // Prints the information on this business trip.
     void print() {
 
         // TODO
@@ -82,28 +92,30 @@ public:
     }
 };
 
+
 // ----------------------------------------------------------------------------- //
 // ----------------------------------------------------------------------------- //
-
-
 
 
 int main() {
 
     BusinessTrip trip;
 
-    // Get the total number of days for the trip.
-    trip.totalTripDays = inputDaysSpent();
-    //cout << "totalTripDays: " << trip.totalTripDays <<endl;
+    // Get the total trip days.
+    inputDaysSpent( trip.totalTripDays );
+    cout << "totalTripDays: " << trip.totalTripDays << endl;
 
-    // Get the arrival and departure times.
+    // Get the departure time and the return time.
     inputDepartureTime( trip.departureTime );
     inputReturnTime( trip.returnTime );
-    cout << "departureTime: " << trip.departureTime[0] << trip.departureTime[1]  << endl;
-    cout << "returnTime: "    << trip.returnTime[0]    << trip.returnTime[1]  << endl;
+    // cout << "departureTime: " << trip.departureTime[0]
+    //                           << trip.departureTime[1] << endl;
+    // cout << "returnTime:    " << trip.returnTime[0]
+    //                           << trip.returnTime[1] << endl;
 
-    // // Get the allowable airfare expenses.
-    // allowable = airfare();
+    // Get the allowable airfare expenses.
+    inputAirfare( trip.airFare );
+    cout << "airFare: " << trip.airFare << endl;
 
     // // Get the allowable car rental expenses.
     // allowable += carRental();
@@ -156,20 +168,15 @@ int main() {
  * Asks for the number of days spent on the trip.
  * @return The number of days spent on the trip as an integer
  */
-int inputDaysSpent() {
+void inputDaysSpent(int& totalTripDays) {
 
-    int totalTripDays = 0;
     bool isFinished = false;
-
     while ( !isFinished ) {
 
         // Prompt the user fot the total days spent.
-        cout << "\nHow many days did you spent on this trip? " << endl;
-        cout << ">>> ";
-        cin >> totalTripDays;
-        cout << endl;
+        input<int>( totalTripDays, "\nHow many days did you spent on this trip? " );
 
-        // Validation.
+        // VALIDATION
         // 1. Reject if input stream is in the fail state.
         // 2. Reject if the days are less than one.
         if ( !cin || totalTripDays < 1 ) {
@@ -177,21 +184,18 @@ int inputDaysSpent() {
             restoreInputStream();
 
         } else {
-            // Exit the loop.
-            isFinished = true;
+            isFinished = true;  // Exit the loop.
         }
     }
-
-    return totalTripDays;
 }
 
 
 /**
  * Asks for the time of departure.
- * @param dataArray An array of two integers to be used as a container to hold data.
+ * @param timeArray An array of two integers to be used as a container to hold data.
  * [0]: hours, [1]: minutes.
  */
-void inputDepartureTime(int* dataArray) {
+void inputDepartureTime(int* timeArray) {
 
     bool isFinished = false;
     while ( !isFinished ) {
@@ -199,21 +203,20 @@ void inputDepartureTime(int* dataArray) {
         // Prompt the user fot the total days spent.
         cout << "\nEnter the departure time, in 24-hour time (e.g., 07:30, 22:10): " << endl;
         cout << ">>> ";
-        cin >> dataArray[0];  // hours
+        cin >> timeArray[0];  // hours
         cin.ignore(1, ':');
-        cin >> dataArray[1];  // minutes
+        cin >> timeArray[1];  // minutes
         cout << endl;
 
-        // Validation.
+        // VALIDATION
         // 1. Reject if input stream is in the fail state.
         // 2. Reject if the time is invalid.
-        if ( !cin || !isValidTime(dataArray) ) {
+        if ( !cin || !isValidTime(timeArray) ) {
             cout << "Invalid time : Must be in 24-hour time" << endl;
             restoreInputStream();
 
         } else {
-            // Exit the loop.
-            isFinished = true;
+            isFinished = true;  // Exit the loop.
         }
     }
 }
@@ -221,10 +224,10 @@ void inputDepartureTime(int* dataArray) {
 
 /**
  * Asks for the time of arrival.
- * @param dataArray An array of two integers to be used as a container to hold data.
+ * @param timeArray An array of two integers to be used as a container to hold data.
  * [0]: hours, [1]: minutes.
  */
-void inputReturnTime(int* dataArray) {
+void inputReturnTime(int* timeArray) {
 
     bool isFinished = false;
     while ( !isFinished ) {
@@ -232,21 +235,20 @@ void inputReturnTime(int* dataArray) {
         // Prompt the user fot the total days spent.
         cout << "\nEnter the return time, in 24-hour time (e.g., 07:30, 22:10): " << endl;
         cout << ">>> ";
-        cin >> dataArray[0];  // hours
+        cin >> timeArray[0];  // hours
         cin.ignore(1, ':');
-        cin >> dataArray[1];  // minutes
+        cin >> timeArray[1];  // minutes
         cout << endl;
 
-        // Validation.
+        // VALIDATION
         // 1. Reject if input stream is in the fail state.
         // 2. Reject if the time is invalid.
-        if ( !cin || !isValidTime(dataArray) ) {
+        if ( !cin || !isValidTime(timeArray) ) {
             cout << "Invalid time : Must be in 24-hour time" << endl;
             restoreInputStream();
 
         } else {
-            // Exit the loop.
-            isFinished = true;
+            isFinished = true;  // Exit the loop.
         }
     }
 }
@@ -271,45 +273,113 @@ bool isValidTime(int time[]) {
  * adds the value to the totalExpenses.
  * @return the airfare amount
  */
-// double airfare() {
+void inputAirfare(double& airfare) {
 
-//     double amount = 0.0;
+    bool isFinished = false;
+    while ( !isFinished ) {
 
-//     cout << "Enter the amount of any airfare: ";
-//     cin >> amount;
+        input<double>( airfare, "\nEnter the amount of airfare: " );
 
-//     // Adds the value to the totalExpenses.
-//     totalExpenses += amount;
+        // VALIDATION
+        // 1. Reject if input stream is in the fail state.
+        // 2. Reject if the airfail is invalid.
+        if ( !cin || !isValidAirfair(airfare) ) {
+            cout << "Invalid airfare : Must be 0 or greater" << endl;
+            restoreInputStream();
 
-//     // Return the value.
-//     return amount;
-// }
+        } else {
+            isFinished = true;  // Exit the loop.
+        }
+    }
+}
+
+/**
+ * @return true if the airfare is valid, otherwise false.
+ */
+bool isValidAirfair(double airfare) {
+    return airfare >= 0;
+}
 
 
 /**
- * The carRental function asks the user to enter the
- * amount of car rental fees the employee incurred, adds
- * the value to the totalExpenses, and returns the amount
- * of car rental fees as a double.
+ * Asks the user to enter the amount of car rental fees the employee incurred,
+ * returns the amount of car rental fees as a double.
  * @return
  */
-// double carRental() {
+double carRental() {
 
-//     return 0.0; // TODO
-// }
+    double carRentalFees = 0.0;
+
+    bool isFinished = false;
+    while ( !isFinished ) {
+
+        // Prompt the user
+        cout << "\nEnter the amount of car rental fees: " << endl;
+        cout << ">>> ";
+        cin  >> carRentalFees;
+        cout << endl;
+
+        // VALIDATION
+        // 1. Reject if input stream is in the fail state.
+        // 2. Reject if the car rental is invalid.
+        if ( !cin || !isValidCarRental(carRentalFees) ) {
+            cout << "Invalid carRentalFees : Must be 0 or greater" << endl;
+            restoreInputStream();
+
+        } else {
+            isFinished = true;  // Exit the loop.
+        }
+    }
+
+    // Return the value.
+    return carRentalFees;
+}
 
 
 /**
- * The vehicle function asks the user to enter the number
- * of miles a private vehicle was driven.The expenses are
- * added to the totalExpenses global variable. Allowable
- * expenses are returned as a double.
+ * @return true if the car rental is valid, otherwise false.
+ */
+bool isValidCarRental(double carRental) {
+    return carRental < 0;
+}
+
+/**
+ * Asks the user to enter the number of miles a private vehicle was driven.
+ * Allowable expenses are returned as a double.
  * @return
  */
-// double vehicle() {
+double inputVehicle() {
 
-//     return 0.0; // TODO
-// }
+
+
+//    int miles;      // To hold the miles driven
+//    double expense; // To hold the amount spent
+//
+//    // Get the number of miles driven.
+//    cout << "Enter the miles driven by a "
+//    << "private vehicle: ";
+//    cin >> miles;
+//
+//    // Validate the number of miles driven.
+//    while(miles < 0)
+//    {
+//        cout << "Miles driven must be 0 or greater.\n"
+//        << "Enter the miles driven by a "
+//        << "private vehicle: ";
+//        cin  >> miles;
+//    }
+//
+//    // Calculate the amount spent.
+//    expense = miles * MILAGE_ALLOWANCE;
+//
+//    // Add amount spent to totalExpenses.
+//    totalExpenses += expense;
+//
+//    // Return the amount spent.
+//    return expense;
+
+    return 0.0;
+}
 
 
 /**
@@ -448,4 +518,15 @@ bool isValidTime(int time[]) {
 void restoreInputStream() {
     cin.clear();            // Restore input stream
     cin.ignore(100, '\n');  // Clear the buffer
+}
+
+/**
+ *
+ */
+template <typename dataType>
+void input(dataType& data, string msg) {
+    cout << msg << endl;
+    cout << ">>> ";
+    cin  >> data;
+    cout << endl;
 }
