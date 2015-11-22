@@ -145,7 +145,17 @@ void inputDinner(BusinessTrip&);
 void inputMeals(BusinessTrip&);
 
 void fixInputStream();
-template <typename dataType> void promptUser(dataType& data, string msg);
+
+void promptUserTime(int[], string, string, bool (*conditionFun)(int[]));
+
+template <typename dataType>
+void promptUser(dataType&, string, string, bool (*conditionFun)(dataType));
+
+template <typename dataType>
+bool zeroOrGreater(dataType);
+
+template <typename dataType>
+bool oneOrGreater(dataType);
 
 
 // ----------------------------------------------------------------------------- //
@@ -187,19 +197,10 @@ int main() {
  */
 void inputDaysSpent(BusinessTrip& trip) {
 
-    bool isFinished = false;
-    while ( !isFinished ) {
-
-        promptUser<int>(trip.totalTripDays, "How many days did you spent on this trip? " );
-
-        // VALIDATION: 1. Input failure, 2. Invalid input.
-        if ( !cin || trip.totalTripDays < 1 ) {
-            cout << "Invalid trip days : Must be 1 or more" << endl;
-            fixInputStream();
-        } else {
-            isFinished = true;  // Exit the loop.
-        }
-    }
+    promptUser<int>(trip.totalTripDays,
+        "How many days did you spent on this trip? ",
+        "Invalid trip days : Must be 1 or more",
+        oneOrGreater<int>);
 }
 
 
@@ -209,25 +210,10 @@ void inputDaysSpent(BusinessTrip& trip) {
  */
 void inputDepartureTime(BusinessTrip& trip) {
 
-    bool isFinished = false;
-    while ( !isFinished ) {
-
-        // Prompt the user fot the total days spent.
-        cout << "Enter the departure time, in 24-hour time: " << endl;
-        cout << ">>> ";
-        cin >> trip.departureTime[0];  // hours
-        cin.ignore(1, ':');
-        cin >> trip.departureTime[1];  // minutes
-        cout << endl;
-
-        // VALIDATION: 1. Input failure, 2. Invalid input.
-        if ( !cin || !isValidTime(trip.departureTime) ) {
-            cout << "Invalid time : e.g., 07:30, 22:10" << endl;
-            fixInputStream();
-        } else {
-            isFinished = true;  // Exit the loop.
-        }
-    }
+    promptUserTime(trip.departureTime,
+        "Enter the departure time, in 24-hour time: ",
+        "Invalid time : e.g., 07:30, 22:10",
+        isValidTime);
 }
 
 
@@ -237,25 +223,10 @@ void inputDepartureTime(BusinessTrip& trip) {
  */
 void inputReturnTime(BusinessTrip& trip) {
 
-    bool isFinished = false;
-    while ( !isFinished ) {
-
-        // Prompt the user fot the total days spent.
-        cout << "Enter the return time, in 24-hour time: " << endl;
-        cout << ">>> ";
-        cin >> trip.returnTime[0];  // hours
-        cin.ignore(1, ':');
-        cin >> trip.returnTime[1];  // minutes
-        cout << endl;
-
-        // VALIDATION: 1. Input failure, 2. Invalid input.
-        if ( !cin || !isValidTime(trip.returnTime) ) {
-            cout << "Invalid time : e.g., 07:30, 22:10" << endl;
-            fixInputStream();
-        } else {
-            isFinished = true;  // Exit the loop.
-        }
-    }
+    promptUserTime(trip.returnTime,
+        "Enter the return time, in 24-hour time: ",
+        "Invalid time : e.g., 07:30, 22:10",
+        isValidTime);
 }
 
 
@@ -281,19 +252,10 @@ void inputAirfair(BusinessTrip& trip) {
 
     double expenses = 0.0;
 
-    bool isFinished = false;
-    while ( !isFinished ) {
-
-        promptUser<double>(expenses, "Enter the amount of airfair: ");
-
-        // VALIDATION: 1. Input failure, 2. Invalid input.
-        if ( !cin || expenses < 0 ) {
-            cout << "Invalid airfair : Must be 0 or greater" << endl;
-            fixInputStream();
-        } else {
-            isFinished = true;  // Exit the loop.
-        }
-    }
+    promptUser<double>(expenses,
+        "Enter the amount of airfair: ",
+        "Invalid airfair : Must be 0 or greater",
+        zeroOrGreater<double>);
 
     trip.updateTotalExpenses(expenses);
 
@@ -310,19 +272,10 @@ void inputCarRental(BusinessTrip& trip) {
 
     double expenses = 0.0;
 
-    bool isFinished = false;
-    while ( !isFinished ) {
-
-        promptUser<double>(expenses, "Enter the amount of car rental fees: ");
-
-        // VALIDATION: 1. Input failure, 2. Invalid input.
-        if ( !cin || expenses < 0 ) {
-            cout << "Invalid carRental : Must be 0 or greater" << endl;
-            fixInputStream();
-        } else {
-            isFinished = true;  // Exit the loop.
-        }
-    }
+    promptUser<double>(expenses,
+        "Enter the amount of car rental fees: ",
+        "Invalid airfair : Must be 0 or greater",
+        zeroOrGreater<double>);
 
     trip.updateTotalExpenses(expenses);
 
@@ -340,19 +293,10 @@ void inputPrivateVehicle(BusinessTrip& trip) {
     double expenses    = 0.0;
     double milesDriven = 0.0;
 
-    bool isFinished = false;
-    while ( !isFinished ) {
-
-        promptUser<double>(milesDriven, "Enter the miles driven by a private vehicle: ");
-
-        // VALIDATION: 1. Input failure, 2. Invalid input.
-        if ( !cin || milesDriven < 0 ) {
-            cout << "Invalid MilesDriven : Must be 0 or greater" << endl;
-            fixInputStream();
-        } else {
-            isFinished = true;  // Exit the loop.
-        }
-    }
+    promptUser<double>(milesDriven,
+        "Enter the miles driven by a private vehicle: ",
+        "Invalid MilesDriven : Must be 0 or greater",
+        zeroOrGreater<double>);
 
     // Calculate the amount spent.
     expenses = milesDriven * BusinessTrip::PRIVATE_CAR_MILAGE_ALLOWANCE;
@@ -375,19 +319,10 @@ void inputParking(BusinessTrip& trip) {
     // Calculate the maximum allowance for parking fees.
     double maxParking = BusinessTrip::MAX_DAILY_PARKING_FEE * trip.totalTripDays;
 
-    bool isFinished = false;
-    while ( !isFinished ) {
-
-        promptUser<double>(expenses, "Enter the amount of total parking fees: ");
-
-        // VALIDATION: 1. Input failure, 2. Invalid input.
-        if ( !cin || expenses < 0 ) {
-            cout << "Invalid value : Must be 0 or greater" << endl;
-            fixInputStream();
-        } else {
-            isFinished = true;  // Exit the loop.
-        }
-    }
+    promptUser<double>(expenses,
+        "Enter the amount of total parking fees: ",
+        "Invalid value : Must be 0 or greater",
+        zeroOrGreater<double>);
 
     trip.updateTotalExpenses(expenses);
 
@@ -412,19 +347,10 @@ void inputTaxi(BusinessTrip& trip) {
     // Calculate the maximum allowance for parking fees.
     double maxTaxi = BusinessTrip::MAX_DAILY_TAXI_FEE * trip.totalTripDays;
 
-    bool isFinished = false;
-    while ( !isFinished ) {
-
-        promptUser<double>(expenses, "Enter the amount of total taxi fees: ");
-
-        // VALIDATION: 1. Input failure, 2. Invalid input.
-        if ( !cin || expenses < 0 ) {
-            cout << "Invalid value : Must be 0 or greater" << endl;
-            fixInputStream();
-        } else {
-            isFinished = true;  // Exit the loop.
-        }
-    }
+    promptUser<double>(expenses,
+        "Enter the amount of total taxi fees: ",
+        "Invalid value : Must be 0 or greater",
+        zeroOrGreater<double>);
 
     trip.updateTotalExpenses(expenses);
 
@@ -446,19 +372,10 @@ void inputRegistration(BusinessTrip& trip) {
 
     double expenses   = 0.0;
 
-    bool isFinished = false;
-    while ( !isFinished ) {
-
-        promptUser<double>(expenses, "Enter the amount of registration fees: ");
-
-        // VALIDATION: 1. Input failure, 2. Invalid input.
-        if ( !cin || expenses < 1 ) {
-            cout << "Invalid value : Must be 1 or more" << endl;
-            fixInputStream();
-        } else {
-            isFinished = true;  // Exit the loop.
-        }
-    }
+    promptUser<double>(expenses,
+        "Enter the amount of registration fees: ",
+        "Invalid value : Must be 1 or more",
+        oneOrGreater<double>);
 
     trip.updateTotalExpenses(expenses);
 
@@ -476,7 +393,6 @@ void inputHotel(BusinessTrip& trip) {
     double expenses    = 0.0;
     double nightlyRate = 0.0;
 
-    // VALIDATION:
     // The travel must be more than one day to get allowable hotel expenses.
     if (trip.totalTripDays <= 1) {
         cout << "No hotel allowable for one-day trip" << endl;
@@ -488,19 +404,10 @@ void inputHotel(BusinessTrip& trip) {
     double maxHotelExpenses =
         BusinessTrip::MAX_HOTEL_RATE_PER_NIGHT * (trip.totalTripDays - 1);
 
-    bool isFinished = false;
-    while ( !isFinished ) {
-
-        promptUser<double>(nightlyRate, "Enter the nightly hotel room rate: ");
-
-        // VALIDATION: 1. Input failure, 2. Invalid input.
-        if ( !cin || nightlyRate < 1 ) {
-            cout << "Invalid value : Must be 1 or more" << endl;
-            fixInputStream();
-        } else {
-            isFinished = true;  // Exit the loop.
-        }
-    }
+    promptUser<double>(nightlyRate,
+        "Enter the nightly hotel room rate: ",
+        "Invalid value : Must be 1 or more",
+        oneOrGreater<double>);
 
     // Compute the total hotel expenses.
     expenses = nightlyRate * (trip.totalTripDays - 1);
@@ -526,19 +433,10 @@ void inputBreakfast(BusinessTrip& trip) {
     double expenses = 0.0;
     double dailyMax = BusinessTrip::MAX_DAILY_BREAKFAST;
 
-    bool isFinished = false;
-    while ( !isFinished ) {
-
-        promptUser(expenses, "Enter the amount spent for breakfast: ");
-
-        // VALIDATION: 1. Input failure, 2. Invalid input.
-        if ( !cin || expenses < 0 ) {
-            cout << "Invalid value : Must be 0 or greater." << endl;
-            fixInputStream();
-        } else {
-            isFinished = true;  // Exit the loop.
-        }
-    }
+    promptUser<double>(expenses,
+        "Enter the amount spent for breakfast: ",
+        "Invalid value : Must be 0 or greater.",
+        zeroOrGreater<double>);
 
     trip.updateTotalExpenses(expenses);
 
@@ -561,19 +459,10 @@ void inputLunch(BusinessTrip& trip) {
     double expenses = 0.0;
     double dailyMax = BusinessTrip::MAX_DAILY_LUNCH;
 
-    bool isFinished = false;
-    while ( !isFinished ) {
-
-        promptUser(expenses, "Enter the amount spent for lunch: ");
-
-        // VALIDATION: 1. Input failure, 2. Invalid input.
-        if ( !cin || expenses < 0 ) {
-            cout << "Invalid value : Must be 0 or greater." << endl;
-            fixInputStream();
-        } else {
-            isFinished = true;  // Exit the loop.
-        }
-    }
+    promptUser<double>(expenses,
+        "Enter the amount spent for lunch: ",
+        "Invalid value : Must be 0 or greater.",
+        zeroOrGreater<double>);
 
     trip.updateTotalExpenses(expenses);
 
@@ -596,19 +485,10 @@ void inputDinner(BusinessTrip& trip) {
     double expenses = 0.0;
     double dailyMax = BusinessTrip::MAX_DAILY_DINNER;
 
-    bool isFinished = false;
-    while ( !isFinished ) {
-
-        promptUser(expenses, "Enter the amount spent for dinner: ");
-
-        // VALIDATION: 1. Input failure, 2. Invalid input.
-        if ( !cin || expenses < 0 ) {
-            cout << "Invalid value : Must be 0 or greater." << endl;
-            fixInputStream();
-        } else {
-            isFinished = true;  // Exit the loop.
-        }
-    }
+    promptUser<double>(expenses,
+        "Enter the amount spent for dinner: ",
+        "Invalid value : Must be 0 or greater.",
+        zeroOrGreater<double>);
 
     trip.updateTotalExpenses(expenses);
 
@@ -707,12 +587,80 @@ void fixInputStream() {
 /**
  * Prompts the user for data with the specified message and stores the data
  * in the passed-in variable.
- * @param data  A variable in which the data will be stored.
- * @param msg   A prompt message.
+ * @param data           A variable in which the data will be stored.
+ * @param promtMsg       A prompt message.
+ * @param errorMsg       An error message.
+ * @param conditionFun   A pointer to a function that returns bool.
  */
 template <typename dataType>
-void promptUser(dataType& data, string msg) {
-    cout << msg << endl;
-    cout << ">>> ";
-    cin  >> data;
+void promptUser(dataType& data, string promtMsg, string errorMsg,
+                bool (*conditionFun)(dataType value)) {
+
+    bool isFinished = false;
+    while ( !isFinished ) {
+
+        cout << promtMsg << endl;
+        cout << ">>> ";
+        cin  >> data;
+
+        // VALIDATION: 1. Input failure, 2. Invalid input.
+        if ( !cin || !conditionFun(data) ) {
+            cout << errorMsg << endl;
+            fixInputStream();
+        } else {
+            isFinished = true;  // Exit the loop.
+        }
+    }
+}
+
+
+/**
+ * Prompts the user for time (hours and minutes, 24-hour time) with the specified
+ * message and stores the data into the passed-in int array of size 2.
+ * @param data           An int array in which the data will be stored.
+ * @param promtMsg       A prompt message.
+ * @param errorMsg       An error message.
+ * @param conditionFun   A pointer to a function that returns bool.
+ */
+void promptUserTime(int data[], string promtMsg, string errorMsg,
+                    bool (*conditionFun)(int value[])) {
+
+    bool isFinished = false;
+    while ( !isFinished ) {
+
+        // Prompt the user fot the total days spent.
+        cout << promtMsg << endl;
+        cout << ">>> ";
+        cin >> data[0];  // hours
+        cin.ignore(1, ':');
+        cin >> data[1];  // minutes
+
+        // VALIDATION: 1. Input failure, 2. Invalid input.
+        if ( !cin || !conditionFun(data) ) {
+            cout << errorMsg << endl;
+            fixInputStream();
+        } else {
+            isFinished = true;  // Exit the loop.
+        }
+    }
+}
+
+
+/**
+ * @param value
+ * @return true if the value is zero or greater.
+ */
+template <typename dataType>
+bool zeroOrGreater(dataType value) {
+    return value >= 0;
+}
+
+
+/**
+ * @param value
+ * @return true if the value is one or greater.
+ */
+template <typename dataType>
+bool oneOrGreater(dataType value) {
+    return value >= 1;
 }
