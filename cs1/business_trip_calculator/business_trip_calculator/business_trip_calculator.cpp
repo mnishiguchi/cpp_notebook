@@ -44,6 +44,7 @@ public:
         departureTime  = new int[2];
         returnTime     = new int[2];
 
+        // The total expenses incurred by the businessperson.
         totalExpenses  = 0.0;
 
         // The allowable.
@@ -73,25 +74,30 @@ public:
         totalExpenses += expenses;
     }
 
-    // Computes the total expenses.
+    // Computes the total amount that the businessperson needs to reimburse.
     void payOutOfPocket(double expenses) {
         outOfPocket += expenses;
     }
 
     // Prints the information on this business trip.
     void print() {
+
         // Display duration, departure time and return time.
         cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+
         cout << "Total days:    " << setfill('0')
              << setw(2) << totalTripDays << endl;
+
         cout << "departureTime: " << setfill('0')
              << setw(2) << departureTime[0] << ":"
              << setw(2) << departureTime[1]
              << setfill(' ') << endl;
+
         cout << "returnTime:    " << setfill('0')
              << setw(2) << returnTime[0] << ":"
              << setw(2) << returnTime[1]
              << setfill(' ') << endl;
+
         cout << endl;
 
         double allowable = getTotalAllowable();
@@ -105,9 +111,10 @@ public:
         // Display amount to be reimbursed.
         if (outOfPocket > 0.0) {
             cout << "Amount to be reimbursed: " << "$" << setw(8) << outOfPocket << endl;
+        }
 
         // Display amount saved.
-        } else if (totalExpenses < allowable) {
+        if (totalExpenses < allowable) {
             cout << "Amount saved:            " << "$" << setw(8) << saved << endl;
         }
 
@@ -253,7 +260,7 @@ void inputReturnTime(BusinessTrip& trip) {
 
 
 /**
- * Ensure that a time is in the 24 hour format of HH.MM.
+ * Ensure that a time is in the 24 hour format of HH:MM.
  * @param time  An array of integer, [0]: hours, [1]: minutes.
  * @return true if the time format is valid. Otherwise false.
  */
@@ -277,11 +284,11 @@ void inputAirfair(BusinessTrip& trip) {
     bool isFinished = false;
     while ( !isFinished ) {
 
-        promptUser<double>(expenses, "Enter the amount of Airfair: ");
+        promptUser<double>(expenses, "Enter the amount of airfair: ");
 
         // VALIDATION: 1. Input failure, 2. Invalid input.
         if ( !cin || expenses < 0 ) {
-            cout << "Invalid Airfair : Must be 0 or greater" << endl;
+            cout << "Invalid airfair : Must be 0 or greater" << endl;
             fixInputStream();
         } else {
             isFinished = true;  // Exit the loop.
@@ -621,42 +628,37 @@ void inputDinner(BusinessTrip& trip) {
  */
 void inputMeals(BusinessTrip& trip) {
 
-    // Handle special case of a one day trip.
+    // One day trip.
     if (trip.totalTripDays == 1) {
 
-        if (trip.departureTime[0] < 7 &&
-            trip.returnTime[0]   >= 8) {
+        if (trip.departureTime[0] < 7 && trip.returnTime[0] >= 8) {
             inputBreakfast(trip);
         }
 
-        if (trip.departureTime[0] < 12 &&
-            trip.returnTime[0]   >= 13) {
+        if (trip.departureTime[0] < 12 && trip.returnTime[0] >= 13) {
             inputLunch(trip);
         }
 
-        if (trip.departureTime[0] < 18 &&
-            trip.returnTime[0]   >= 19) {
+        if (trip.departureTime[0] < 18 && trip.returnTime[0] >= 19) {
             inputDinner(trip);
         }
 
-        // Get meal amounts allowed for the first day.
     } else {
 
         // First day
         cout << "[Day 1]" << endl;
 
-        // Determine if departure is at 6pm or later.
+        // No dinner allowed if departure is at 6pm or later.
         if (trip.departureTime[0] >= 18) {
-            cout << "No meals allowed due to departure after 6:00pm\n";
+            cout << "No meals allowed due to departure after 6pm" << endl;
 
         } else {
-            // Get breakfast if departure is at 7am or ealier.
-            if (trip.departureTime[0] < 7) {
-                inputBreakfast(trip);
 
-                // Get lunch if departure is at 12pm or later.
+            if (trip.departureTime[0] < 7) {
+                inputBreakfast(trip);  // Get breakfast if departure is at 7am or ealier.
+
             } else if (trip.departureTime[0] < 12) {
-                inputLunch(trip);
+                inputLunch(trip);      // Get lunch if departure is at 12pm or later.
 
             } else {
                 inputDinner(trip);
@@ -676,19 +678,17 @@ void inputMeals(BusinessTrip& trip) {
         cout << "[Day " << trip.totalTripDays << "]" << endl;
 
         if (trip.returnTime[0] < 8) {
-            cout << "No meals allowed due to return before 8:00am" << endl;
+            cout << "No meals allowed due to return before 8am" << endl;
 
         } else {
             inputBreakfast( trip );
 
-            // Get lunch if arrival is 1pm or later.
             if (trip.returnTime[0] >= 13) {
-                inputLunch(trip);
+                inputLunch(trip);   // Get lunch if arrival is 1pm or later.
             }
 
-            // Get dinner if arrival is 7pm or later.
             if (trip.returnTime[0] >= 19) {
-                inputDinner(trip);
+                inputDinner(trip);  // Get dinner if arrival is 7pm or later.
             }
         }
     }
@@ -715,5 +715,4 @@ void promptUser(dataType& data, string msg) {
     cout << msg << endl;
     cout << ">>> ";
     cin  >> data;
-    cout << endl;
 }
