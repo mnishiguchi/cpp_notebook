@@ -51,9 +51,18 @@ int main() {
 |float x;   |  32 bits |-3.4x1038 to 3.4*1038  |
 |double x;  |  64 bits |-1.7x10308 to 1.7*10308|
 
-### Unsigned
+### unsigned vs signed
 
-Sometimes a programmer knows that a variable's numbers will always be positive (0 or greater), such as when the variable stores a person's age or weight. The programmer can prepend the word "unsigned" to inform the compiler that the integers will always be positive. Because the integer's sign needs not be stored, the integer range reaches slightly higher numbers.
+- Sometimes a programmer knows that a variable's numbers will always be positive (0 or greater), such as when the variable stores a person's age or weight.
+- The programmer can prepend the word "unsigned" to inform the compiler that the integers will always be positive.
+- Because the integer's sign needs not be stored, the integer range reaches slightly higher numbers.
+
+**unsigned vs signed int**
+```
+1 byte: 0..255
+  |--> unsigned 0..255
+  |--> signed   -128..127
+```
 
 ==
 
