@@ -38,9 +38,9 @@ trip.airfair += expenses;
 ```
 
 ### The main function
-For example, we can write the main like this.
+For example, we can write the main as simple as this.
 
-1. Create a variable to store all the trip-related data (of BusinessTrip type).
+1. Create a variable (of BusinessTrip type) that will store all the trip-related data.
 2. Pass the BusinessTrip variable to each function **by reference**. (NOTE: & required in the parameter list)
 3. Inside of each function, we prompt the user for required data, process it and write information into appropriate variables of the BusinessTrip.
 4. Print all the information.
