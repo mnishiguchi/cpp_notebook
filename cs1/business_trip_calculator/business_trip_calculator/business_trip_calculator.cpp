@@ -18,14 +18,14 @@ using namespace std;
  */
 struct BusinessTrip {
 
-    // Static constant.
-    constexpr static const double PRIVATE_CAR_MILAGE_ALLOWANCE =  0.27;
-    constexpr static const double MAX_DAILY_PARKING_FEE        =  6.00;
-    constexpr static const double MAX_DAILY_TAXI_FEE           = 10.00;
-    constexpr static const double MAX_HOTEL_RATE_PER_NIGHT     = 90.00;
-    constexpr static const double MAX_DAILY_BREAKFAST          =  9.00;
-    constexpr static const double MAX_DAILY_LUNCH              = 12.00;
-    constexpr static const double MAX_DAILY_DINNER             = 16.00;
+    // Static constants.
+    static const double PRIVATE_CAR_MILAGE_ALLOWANCE;
+    static const double MAX_DAILY_PARKING_FEE;
+    static const double MAX_DAILY_TAXI_FEE;
+    static const double MAX_HOTEL_RATE_PER_NIGHT;
+    static const double MAX_DAILY_BREAKFAST;
+    static const double MAX_DAILY_LUNCH;
+    static const double MAX_DAILY_DINNER;
 
     // Member variables.
     int totalTripDays;
@@ -79,6 +79,15 @@ struct BusinessTrip {
         outOfPocket += expenses;
     }
 };
+
+// Initialize the static constants.
+const double BusinessTrip::PRIVATE_CAR_MILAGE_ALLOWANCE =  0.27;
+const double BusinessTrip::MAX_DAILY_PARKING_FEE        =  6.00;
+const double BusinessTrip::MAX_DAILY_TAXI_FEE           = 10.00;
+const double BusinessTrip::MAX_HOTEL_RATE_PER_NIGHT     = 90.00;
+const double BusinessTrip::MAX_DAILY_BREAKFAST          =  9.00;
+const double BusinessTrip::MAX_DAILY_LUNCH              = 12.00;
+const double BusinessTrip::MAX_DAILY_DINNER             = 16.00;
 
 
 // ----------------------------------------------------------------------------- //
