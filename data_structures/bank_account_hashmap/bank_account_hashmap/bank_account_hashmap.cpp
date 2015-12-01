@@ -36,6 +36,7 @@ public:
              string acctType,
              double acctBalance,
              int acctId);
+
     ~BankAcct();
 
     // Accessers.
@@ -78,17 +79,15 @@ BankAcct::BankAcct(string custName,
     this->acctId      = acctId;
 
     // DEBUG
-    // Ensure that the accout creation was successful.
-    cout << "Account created: #" << this->acctId   << " "
-                                 << this->custName << endl;
+    // cout << "Account created: #" << this->acctId   << " "
+    //                              << this->custName << endl;
 }
 
 
 BankAcct::~BankAcct() {
     // DEBUG
-    // Ensure that the accout destruction was successful.
-    cout << "Account destructed: #" << this->acctId   << " "
-                                 << this->custName << endl;
+    // cout << "Account destructed: #" << this->acctId   << " "
+    //                              << this->custName << endl;
 }
 
 
@@ -126,6 +125,9 @@ private:
 BankAcctStack::BankAcctStack() {
     top  = NULL;
     size = 0;
+
+    // DEBUG
+    // cout << "BankAcctStack created." << endl;
 }
 
 /**
@@ -133,8 +135,7 @@ BankAcctStack::BankAcctStack() {
  */
 BankAcctStack::~BankAcctStack() {
     // DEBUG
-    // Ensure that the accout destruction was performed.
-    cout << "BankAcctStack is about to be destructed." << endl;
+    // cout << "BankAcctStack is about to be destructed." << endl;
 
     removeAll();
 }
@@ -196,10 +197,10 @@ void BankAcctStack::removeAll() {
  */
 void BankAcctStack::removeFirst() {
 
+    // Ensure that an empty stack was rejected.
     if ( isEmpty() ) {
         // DEBUG
-        // Ensure that an empty stack was rejected.
-        cout << "The stack is empty." << endl;
+        // cout << "The stack is empty." << endl;
 
         return;
     }
@@ -208,8 +209,7 @@ void BankAcctStack::removeFirst() {
     top            = top->next;  // Next node becomes top.
 
     // DEBUG
-    // Ensure that the accout destruction was performed.
-    cout << temp->getCustName() << "is about to be destructed." << endl;
+    // cout << temp->getCustName() << "is about to be destructed." << endl;
 
     delete temp;
 
@@ -220,6 +220,7 @@ void BankAcctStack::removeFirst() {
  * Prints the information on all the BankAcct instances to the console.
  */
 void BankAcctStack::printAll() const {
+
     // Return if the stack is empty.
     if (isEmpty()) {
         cout << "The stack is empty." << endl;
@@ -227,7 +228,7 @@ void BankAcctStack::printAll() const {
     }
 
     // Print the stack size.
-    cout << "Stack size: " << size << endl;
+    cout << "Size: " << size << endl;
     cout << endl;
 
     // Print the attributes names.
@@ -269,9 +270,11 @@ public:
     BankHashMap();
 
     // Instance methods.
-    void addAcct(BankAcct* account);
-    void getCollisionList(int* collisionList);
-    int getHash(BankAcct* account);
+    void addAcct(BankAcct& account) const;
+    void addAccts(BankAcct* accounts) const;
+    void getCollisionData(int* collisionList);
+    int getHash(BankAcct account) const;
+    int getNumAccounts() const;
     void printAccts() const;
 
     // Instance variables.
@@ -284,13 +287,17 @@ public:
  */
 BankHashMap::BankHashMap() {
 
-    // Initialize the account array.
+    // NOTE: The array accountBuckets must be initialized.
     for (int i = 0; i < NUM_BUCKETS; i++) {
-        accountBuckets[i] = NULL;
+        accountBuckets[i] = new BankAcctStack;
     }
 }
 
-void BankHashMap::getCollisionList(int* collisionList) {
+
+/**
+ * @param collisionList an int array on which the data will be written.
+ */
+void BankHashMap::getCollisionData(int* collisionList) {
 
     // Map the size of each stack to the collisionList.
     for (int i = 0; i < NUM_BUCKETS; i++) {
@@ -313,12 +320,12 @@ void BankHashMap::getCollisionList(int* collisionList) {
  * @param
  * @return
  */
-int BankHashMap::getHash(BankAcct* account) {
+int BankHashMap::getHash(BankAcct account) const {
 
     int hash = 0;
 
     // Get the key that is to be used for hashing.
-    string key = account->getCustName();
+    string key = to_string( account.getAcctId() );
 
     // Get the key length.
     int len  = (int)key.length();
@@ -335,19 +342,52 @@ int BankHashMap::getHash(BankAcct* account) {
 
 
 /**
+ * @return a total number of the account in the BankHashMap.
+ */
+int BankHashMap::getNumAccounts() const {
+    int count = 0;
+    for (int i = 0; i < NUM_BUCKETS; i++) {
+        count += accountBuckets[i]->getSize();
+    }
+
+    return count;
+}
+
+
+/**
  * @param account
  */
-void BankHashMap::addAcct(BankAcct* account) {
+void BankHashMap::addAcct(BankAcct& account) const {
 
-    // Get the hash.
-    int hash = getHash(account);
+    // Allocate the index.
+    int hash = getHash(account) % NUM_BUCKETS;
 
-    // Get the index.
-    hash %= NUM_BUCKETS;
+    // DEBUG
+    // cout << "hash: " << hash << endl;
 
     // Add the item to the appropriate element of the list.
-    BankAcctStack* top = accountBuckets[ hash ];
-    top->push(account);
+    BankAcctStack* stack = accountBuckets[ hash ];
+
+    stack->push(&account);
+}
+
+
+/**
+ * @param accounts
+ */
+void BankHashMap::addAccts(BankAcct* accounts) const {
+
+    // NOTE: the sentinel record of `BankAcct("","N","N",0,-1)` indicates that
+    // the end of the list has been reached.
+    int i = 0;
+    while (accounts[i].getCustName() != ""
+        && accounts[i].getAcctType() != "N"
+        && accounts[i].getAcctId()   != -1 ) {
+
+        addAcct( accounts[i] );
+
+        i++;  // Update the counter.
+    }
 }
 
 
@@ -357,6 +397,7 @@ void BankHashMap::addAcct(BankAcct* account) {
 void BankHashMap::printAccts() const {
 
     for (int i = 0; i < NUM_BUCKETS; i++) {
+        cout << "\nStack#" << i << endl;
         accountBuckets[i]->printAll();
     }
 }
@@ -368,11 +409,10 @@ void BankHashMap::printAccts() const {
 
 int main() {
 
-    cout << "\n===Creating an array of BankAccts===\n" << endl;
+    // Data to be processed.
 
-    // NOTE: the sentinel record  - `BankAcct("","N","N",0,-1)`
+    cout << "\n1. Reading account data................";
     BankAcct accts[] = {
-
         BankAcct("Nancy","f","C",8.20,72),
         BankAcct("Melvin","m","C",78.23,73),
         BankAcct("Verna","f","CD",8277.00,74),
@@ -485,11 +525,42 @@ int main() {
         BankAcct("Enid","f","C",432.10,71),
         BankAcct("","N","N",0,-1)  //sentinel
     };
+    cout << "done." << endl;
+    cout << endl;
 
-    
-    
-    
+    // Create a map to store accounts.
 
+    cout << "\n2. Creating a BankHashMap..............";
+    BankHashMap map;
+    cout << "done." << endl;
+    cout << endl;
+
+    // Add accounts to the map.
+
+    cout << "\n3. Adding accounts to the map..........";
+    map.addAccts( accts );
+    cout << map.getNumAccounts() << " accounts added." << endl;
+    cout << endl;
+
+    // Print collisions.
+
+    cout << "\n4. Printing collision counts..........." << endl;
+    int collisionList[ NUM_BUCKETS ];
+    map.getCollisionData( collisionList );
+
+    for (int i = 0; i < NUM_BUCKETS; i++) {
+        cout << "  " << setw(2) << i << ": "
+                     << setw(2) << collisionList[i] << endl;
+    }
+    cout << ".......................................done." << endl;
+    cout << endl;
+
+    // Print all the accounts in the BankHashMap.
+
+    cout << "\n5. Printing accounts in each stack....." << endl;
+    map.printAccts();
+    cout << ".......................................done." << endl;
+    cout << endl;
 
     return 0;
 }
