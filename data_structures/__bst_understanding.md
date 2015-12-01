@@ -1,4 +1,3 @@
-
 # Binary search tree understanding  
 **Thursday, November 12, 2015**
 
