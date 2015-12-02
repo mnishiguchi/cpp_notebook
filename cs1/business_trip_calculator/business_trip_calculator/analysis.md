@@ -13,7 +13,7 @@ MAX_DAILY_LUNCH              = 12.00;
 MAX_DAILY_DINNER             = 16.00;
 ```
 
-### Assume that the trip's duration, departure time and return time are as follows:
+### Assume that the duration, departure time and return time are as follows:
 ```
 total trip days:           3
 departure time:         8:00
@@ -139,10 +139,10 @@ Dinner:    16
 ```
 ----[Day 1]----
          totalSpent  totalAllowed  outOfPocket   saved
-Lunch:     10         10                0           2 
+Lunch:     10         12                0           2 
 Dinner:    20         16                4           0
 ----[Day 2]----
-Breakfast:  8          8                0           1 
+Breakfast:  8          9                0           1 
 Lunch:     12         12                0           0 
 Dinner:    23         16                7           0 
 ----[Day 3]----
@@ -153,7 +153,7 @@ Dinner:    16         16                0           0
 
 ```
 Total expenses:          $  112
-Allowable expenses:      $   99
+Allowable expenses:      $  102
 Out out pocket:          $   13
 Saved                    $    3
 ```
