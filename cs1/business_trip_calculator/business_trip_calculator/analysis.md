@@ -4,20 +4,20 @@
 
 ### Assume that the company's rules are as follows:
 ```
-    PRIVATE_CAR_MILAGE_ALLOWANCE =  0.27;
-    MAX_DAILY_PARKING_FEE        =  6.00;
-    MAX_DAILY_TAXI_FEE           = 10.00;
-    MAX_HOTEL_RATE_PER_NIGHT     = 90.00;
-    MAX_DAILY_BREAKFAST          =  9.00;
-    MAX_DAILY_LUNCH              = 12.00;
-    MAX_DAILY_DINNER             = 16.00;
+PRIVATE_CAR_MILAGE_ALLOWANCE =  0.27;
+MAX_DAILY_PARKING_FEE        =  6.00;
+MAX_DAILY_TAXI_FEE           = 10.00;
+MAX_HOTEL_RATE_PER_NIGHT     = 90.00;
+MAX_DAILY_BREAKFAST          =  9.00;
+MAX_DAILY_LUNCH              = 12.00;
+MAX_DAILY_DINNER             = 16.00;
 ```
 
 ### Assume that the trip's duration, departure time and return time were as follows:
 ```
-    total trip days:           3
-    departure time:         8:00
-    return time:           21:00
+total trip days:           3
+departure time:         8:00
+return time:           21:00
 ```
 
 ### Airfair                
@@ -93,7 +93,7 @@ Allowed meals
 - dinner:     Yes
 
 [Day 2]
-- breakfast:  No
+- breakfast:  Yes
 - lunch:      Yes
 - dinner:     Yes
 
