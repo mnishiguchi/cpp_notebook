@@ -13,7 +13,7 @@ MAX_DAILY_LUNCH              = 12.00;
 MAX_DAILY_DINNER             = 16.00;
 ```
 
-### Assume that the trip's duration, departure time and return time were as follows:
+### Assume that the trip's duration, departure time and return time are as follows:
 ```
 total trip days:           3
 departure time:         8:00
@@ -81,17 +81,31 @@ Saved                    $  ???
 ```
 
 ### hotel 
-If user enter 100 for nightly hotel room rate
+If user enter 100 for nightly hotel room rate:
+
+- since the duration is longer than one day, hotel stay is allowed;
+- number of hotel stay: 3 - 1 = 2 nights;
+- totalSpent   = 100 * 2 = 200;
+- companyMax   =  90;
+- totalAllowed =  90 * 2 = 180;
+
 ```
-**TODO**
-Total expenses:          $  ???
-Allowable expenses:      $  ???
-Out out pocket:          $  ???
-Saved                    $  ???
+Total expenses:          $  200
+Allowable expenses:      $  180
+Out out pocket:          $   20
+Saved                    $    0
 ```
 
 ### meals
-Allowed meals
+
+Company max
+```
+MAX_DAILY_BREAKFAST =  9.00;
+MAX_DAILY_LUNCH     = 12.00;
+MAX_DAILY_DINNER    = 16.00;
+```
+
+Meals allowed
 ```
 ----[Day 1]----
 - breakfast:  No   // breakfast not allowed due to departuer after 7am
@@ -122,14 +136,6 @@ Lunch:     13
 Dinner:    16
 ```
 
-Company rules
-```
-MAX_DAILY_BREAKFAST =  9.00;
-MAX_DAILY_LUNCH     = 12.00;
-MAX_DAILY_DINNER    = 16.00;
-```
-
-If user enter the following values for the meals:
 ```
 ----[Day 1]----
          totalSpent  totalAllowed  outOfPocket   saved
@@ -146,14 +152,15 @@ Dinner:    16         16                0           0
 ```
 
 ```
-**TODO**
-Total expenses:          $  ???
-Allowable expenses:      $  ???
-Out out pocket:          $  ???
-Saved                    $  ???
+Total expenses:          $  112
+Allowable expenses:      $   99
+Out out pocket:          $   13
+Saved                    $    3
 ```
 
 ### totals
+We put together all the values above.
+
 ```
 **TODO**
 Total expenses:          $  ???
