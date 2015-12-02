@@ -31,8 +31,7 @@ struct BusinessTrip {
     int totalTripDays;
     int* departureTime;
     int* returnTime;
-    double airfair, carRental, privateVehicle, parking, taxi, registration,
-           hotel, breakfast, lunch, dinner, outOfPocket, totalExpenses;
+    double totalSpent, totalAllowed, outOfPocket, saved;
 
     // Constructor. Initilaizes the members when created.
     BusinessTrip() {
@@ -44,39 +43,35 @@ struct BusinessTrip {
         departureTime  = new int[2];
         returnTime     = new int[2];
 
-        // The total expenses incurred by the businessperson.
-        totalExpenses  = 0.0;
+        // The total amount incurred by the businessperson.
+        totalSpent   = 0.0;
 
-        // The allowable.
-        airfair        = 0.0;
-        carRental      = 0.0;
-        privateVehicle = 0.0;
-        parking        = 0.0;
-        taxi           = 0.0;
-        registration   = 0.0;
-        hotel          = 0.0;
-        breakfast      = 0.0;
-        lunch          = 0.0;
-        dinner         = 0.0;
+        // The total amount the company allow.
+        totalAllowed = 0.0;
 
-        // The amount to be reimbursed by the businessperson.
-        outOfPocket    = 0.0;
+        // The total amount out-of-pocket by the businessperson.
+        outOfPocket  = 0.0;
+
+        // The total amount under the allowable.
+        saved        = 0.0;
     }
 
-    // Computes the total amount of the allowable.
-    double getTotalAllowable() {
-        return airfair + carRental + privateVehicle + parking + taxi +
-               registration + hotel + breakfast + lunch + dinner;
-    }
+    /**
+     * Update the record of the expenses.
+     * @param totalSpent
+     * @param totalAllowed
+     */
+    void updateRecord(double totalSpent, double totalAllowed) {
 
-    // Computes the total expenses.
-    void updateTotalExpenses(double expenses) {
-        totalExpenses += expenses;
-    }
+        this->totalSpent   += totalSpent;
+        this->totalAllowed += totalAllowed;
 
-    // Computes the total amount that the businessperson needs to reimburse.
-    void payOutOfPocket(double expenses) {
-        outOfPocket += expenses;
+        if (totalSpent > totalAllowed) {
+            this->outOfPocket += (totalSpent - totalAllowed);
+
+        } else {
+            this->saved += (totalAllowed - totalSpent);
+        }
     }
 };
 
@@ -218,38 +213,40 @@ bool isValidTime(int time[]) {
  */
 void inputAirfair(BusinessTrip& trip) {
 
-    double expenses = 0.0;
+    double totalSpent   = 0.0;
+    double totalAllowed = 0.0;
 
-    promptUser<double>(expenses,
+    promptUser<double>(totalSpent,
         "Total amount of airfair: ",
         "Invalid airfair : Must be 0 or greater",
         zeroOrGreater<double>);
 
-    trip.updateTotalExpenses(expenses);
+    // Whole amount is allowable.
+    totalAllowed = totalSpent;
 
-    // Add it to the allowable.
-    trip.airfair += expenses;
+    trip.updateRecord(totalSpent, totalAllowed);
 }
 
 
-/**
- * Asks the user to enter the total car rental fees the employee incurred.
- * @param &trip  A BusinessTrip object to which we write data.
- */
-void inputCarRental(BusinessTrip& trip) {
+ /**
+  * Asks the user to enter the total car rental fees the employee incurred.
+  * @param &trip  A BusinessTrip object to which we write data.
+  */
+ void inputCarRental(BusinessTrip& trip) {
 
-    double expenses = 0.0;
+    double totalSpent   = 0.0;
+    double totalAllowed = 0.0;
 
-    promptUser<double>(expenses,
-        "Total amount of car rental fees: ",
-        "Invalid airfair : Must be 0 or greater",
-        zeroOrGreater<double>);
+    promptUser<double>(totalSpent,
+         "Total amount of car rental fees: ",
+         "Invalid airfair : Must be 0 or greater",
+         zeroOrGreater<double>);
 
-    trip.updateTotalExpenses(expenses);
+     // Whole amount is allowable.
+    totalAllowed = totalSpent;
 
-    // Add it to the allowable.
-    trip.carRental += expenses;
-}
+    trip.updateRecord(totalSpent, totalAllowed);
+ }
 
 
 /**
@@ -258,8 +255,10 @@ void inputCarRental(BusinessTrip& trip) {
  */
 void inputPrivateVehicle(BusinessTrip& trip) {
 
-    double expenses    = 0.0;
-    double milesDriven = 0.0;
+    double totalSpent   = 0.0;
+    double totalAllowed = 0.0;
+
+    double milesDriven  = 0.0;
 
     promptUser<double>(milesDriven,
         "Total miles driven by a private vehicle: ",
@@ -267,12 +266,12 @@ void inputPrivateVehicle(BusinessTrip& trip) {
         zeroOrGreater<double>);
 
     // Calculate the amount spent.
-    expenses = milesDriven * BusinessTrip::PRIVATE_CAR_MILAGE_ALLOWANCE;
+    totalSpent = milesDriven * BusinessTrip::PRIVATE_CAR_MILAGE_ALLOWANCE;
 
-    trip.updateTotalExpenses(expenses);
+     // Whole amount is allowable.
+    totalAllowed = totalSpent;
 
-    // Add it to the allowable.
-    trip.privateVehicle += expenses;
+    trip.updateRecord(totalSpent, totalAllowed);
 }
 
 
@@ -282,25 +281,18 @@ void inputPrivateVehicle(BusinessTrip& trip) {
  */
 void inputParking(BusinessTrip& trip) {
 
-    double expenses   = 0.0;
+    double totalSpent   = 0.0;
+    double totalAllowed = 0.0;
 
-    // Calculate the maximum allowance for parking fees.
-    double maxParking = BusinessTrip::MAX_DAILY_PARKING_FEE * trip.totalTripDays;
-
-    promptUser<double>(expenses,
+    promptUser<double>(totalSpent,
         "Total amount of parking fees: ",
         "Invalid value : Must be 0 or greater",
         zeroOrGreater<double>);
 
-    trip.updateTotalExpenses(expenses);
+    // Calculate the maximum allowance for parking fees.
+    totalAllowed = BusinessTrip::MAX_DAILY_PARKING_FEE * trip.totalTripDays;
 
-    // If the expenses exceed the allowance, the businessperson must pay out of pocket.
-    if (expenses > maxParking) {
-        trip.payOutOfPocket( expenses - maxParking );
-        trip.parking += maxParking;
-    } else {
-        trip.parking += expenses;
-    }
+    trip.updateRecord(totalSpent, totalAllowed);
 }
 
 
@@ -310,25 +302,18 @@ void inputParking(BusinessTrip& trip) {
  */
 void inputTaxi(BusinessTrip& trip) {
 
-    double expenses   = 0.0;
+    double totalSpent   = 0.0;
+    double totalAllowed = 0.0;
 
-    // Calculate the maximum allowance for parking fees.
-    double maxTaxi = BusinessTrip::MAX_DAILY_TAXI_FEE * trip.totalTripDays;
-
-    promptUser<double>(expenses,
+    promptUser<double>(totalSpent,
         "Total amount of taxi fees: ",
         "Invalid value : Must be 0 or greater",
         zeroOrGreater<double>);
 
-    trip.updateTotalExpenses(expenses);
+    // Calculate the maximum allowance for parking fees.
+    totalAllowed = BusinessTrip::MAX_DAILY_TAXI_FEE * trip.totalTripDays;
 
-    // If the expenses exceed the allowance, the businessperson must pay out of pocket.
-    if (expenses > maxTaxi) {
-        trip.payOutOfPocket( expenses - maxTaxi );
-        trip.taxi += maxTaxi;
-    } else {
-        trip.taxi += expenses;
-    }
+    trip.updateRecord(totalSpent, totalAllowed);
 }
 
 
@@ -338,17 +323,18 @@ void inputTaxi(BusinessTrip& trip) {
  */
 void inputRegistration(BusinessTrip& trip) {
 
-    double expenses   = 0.0;
+    double totalSpent   = 0.0;
+    double totalAllowed = 0.0;
 
-    promptUser<double>(expenses,
+    promptUser<double>(totalSpent,
         "Total amount of registration fees: ",
         "Invalid value : Must be 1 or more",
         oneOrGreater<double>);
 
-    trip.updateTotalExpenses(expenses);
+     // Whole amount is allowable.
+    totalAllowed = totalSpent;
 
-    // Add it to the allowable.
-    trip.registration += expenses;
+    trip.updateRecord(totalSpent, totalAllowed);
 }
 
 
@@ -358,8 +344,10 @@ void inputRegistration(BusinessTrip& trip) {
  */
 void inputHotel(BusinessTrip& trip) {
 
-    double expenses    = 0.0;
-    double nightlyRate = 0.0;
+    double totalSpent   = 0.0;
+    double totalAllowed = 0.0;
+
+    double nightlyRate  = 0.0;
 
     // The travel must be more than one day to get allowable hotel expenses.
     if (trip.totalTripDays <= 1) {
@@ -367,28 +355,19 @@ void inputHotel(BusinessTrip& trip) {
         return;
     }
 
-    // Calculate the maximum allowance for hotel expenses.
-    // No hotel is used on return day.
-    double maxHotelExpenses =
-        BusinessTrip::MAX_HOTEL_RATE_PER_NIGHT * (trip.totalTripDays - 1);
-
     promptUser<double>(nightlyRate,
         "Nightly hotel rate: ",
         "Invalid value : Must be 1 or more",
         oneOrGreater<double>);
 
     // Compute the total hotel expenses.
-    expenses = nightlyRate * (trip.totalTripDays - 1);
+    totalSpent = nightlyRate * (trip.totalTripDays - 1);
 
-    trip.updateTotalExpenses(expenses);
+    // Calculate the maximum allowance for hotel expenses.
+    // No hotel is used on return day.
+    totalAllowed = BusinessTrip::MAX_HOTEL_RATE_PER_NIGHT * (trip.totalTripDays - 1);
 
-    // If the expenses exceed the allowance, the businessperson must pay out of pocket.
-    if (expenses > maxHotelExpenses) {
-        trip.payOutOfPocket(expenses - maxHotelExpenses);
-        trip.hotel += maxHotelExpenses;
-    } else {
-        trip.hotel += expenses;
-    }
+    trip.updateRecord(totalSpent, totalAllowed);
 }
 
 
@@ -398,23 +377,17 @@ void inputHotel(BusinessTrip& trip) {
  */
 void inputBreakfast(BusinessTrip& trip) {
 
-    double expenses = 0.0;
-    double dailyMax = BusinessTrip::MAX_DAILY_BREAKFAST;
+    double totalSpent   = 0.0;
+    double totalAllowed = 0.0;
 
-    promptUser<double>(expenses,
+    promptUser<double>(totalSpent,
         "Breakfast: ",
         "Invalid value : Must be 0 or greater.",
         zeroOrGreater<double>);
 
-    trip.updateTotalExpenses(expenses);
+    totalAllowed = BusinessTrip::MAX_DAILY_BREAKFAST;
 
-    // If the expenses exceed the allowance, the businessperson must pay out of pocket.
-    if (expenses > dailyMax) {
-        trip.payOutOfPocket( expenses - dailyMax );
-        trip.breakfast += dailyMax;
-    } else {
-        trip.breakfast += expenses;
-    }
+    trip.updateRecord(totalSpent, totalAllowed);
 }
 
 
@@ -424,23 +397,17 @@ void inputBreakfast(BusinessTrip& trip) {
  */
 void inputLunch(BusinessTrip& trip) {
 
-    double expenses = 0.0;
-    double dailyMax = BusinessTrip::MAX_DAILY_LUNCH;
+    double totalSpent   = 0.0;
+    double totalAllowed = 0.0;
 
-    promptUser<double>(expenses,
+    promptUser<double>(totalSpent,
         "Lunch: ",
         "Invalid value : Must be 0 or greater.",
         zeroOrGreater<double>);
 
-    trip.updateTotalExpenses(expenses);
+    totalAllowed = BusinessTrip::MAX_DAILY_LUNCH;
 
-    // If the expenses exceed the allowance, the businessperson must pay out of pocket.
-    if (expenses > dailyMax) {
-        trip.payOutOfPocket( expenses - dailyMax );
-        trip.lunch += dailyMax;
-    } else {
-        trip.lunch += expenses;
-    }
+    trip.updateRecord(totalSpent, totalAllowed);
 }
 
 
@@ -450,23 +417,17 @@ void inputLunch(BusinessTrip& trip) {
  */
 void inputDinner(BusinessTrip& trip) {
 
-    double expenses = 0.0;
-    double dailyMax = BusinessTrip::MAX_DAILY_DINNER;
+    double totalSpent   = 0.0;
+    double totalAllowed = 0.0;
 
-    promptUser<double>(expenses,
+    promptUser<double>(totalSpent,
         "Dinner: ",
         "Invalid value : Must be 0 or greater.",
         zeroOrGreater<double>);
 
-    trip.updateTotalExpenses(expenses);
+    totalAllowed = BusinessTrip::MAX_DAILY_DINNER;
 
-    // If the expenses exceed the allowance, the businessperson must pay out of pocket.
-    if (expenses > dailyMax) {
-        trip.payOutOfPocket( expenses - dailyMax );
-        trip.dinner += dailyMax;
-    } else {
-        trip.dinner += expenses;
-    }
+    trip.updateRecord(totalSpent, totalAllowed);
 }
 
 
@@ -505,12 +466,12 @@ void inputMeals(BusinessTrip& trip) {
             if (trip.departureTime[0] < 7) {
                 inputBreakfast(trip);  // Get breakfast if departure is at 7am or ealier.
             }
-            
+
             if (trip.departureTime[0] < 12) {
                 inputLunch(trip);      // Get lunch if departure is at 12pm or later.
 
             }
-            
+
             inputDinner(trip);
         }
 
@@ -568,25 +529,19 @@ void output(BusinessTrip& trip) {
 
     cout << endl;
 
-    // Get amount for each category.
-    double totalExpenses = trip.totalExpenses;
-    double allowable     = trip.getTotalAllowable();
-    double saved         = allowable - totalExpenses;
-    double outOfPocket   = trip.outOfPocket;
-
     // Display totals.
     cout << fixed << showpoint << setprecision(2);
-        cout << "Total expenses:          " << "$" << setw(8) << totalExpenses << endl;
-        cout << "Allowable expenses:      " << "$" << setw(8) << allowable << endl;
+        cout << "Total expenses:     " << "$" << setw(8) << trip.totalSpent << endl;
+        cout << "Allowable expenses: " << "$" << setw(8) << trip.totalAllowed << endl;
 
-    // Display amount to be reimbursed.
-    if (outOfPocket > 0.0) {
-        cout << "Out of pocket:           " << "$" << setw(8) << outOfPocket << endl;
+    // Display amount paid out-of-pocket.
+    if (trip.outOfPocket > 0.0) {
+        cout << "Out of pocket:      " << "$" << setw(8) << trip.outOfPocket << endl;
     }
 
     // Display amount saved.
-    if (totalExpenses < allowable) {
-        cout << "Amount saved:            " << "$" << setw(8) << saved << endl;
+    if (trip.saved > 0.0) {
+        cout << "Amount saved:       " << "$" << setw(8) << trip.saved << endl;
     }
 
     cout << endl;
