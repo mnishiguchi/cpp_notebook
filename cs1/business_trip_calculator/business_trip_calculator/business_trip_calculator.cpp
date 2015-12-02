@@ -504,13 +504,14 @@ void inputMeals(BusinessTrip& trip) {
 
             if (trip.departureTime[0] < 7) {
                 inputBreakfast(trip);  // Get breakfast if departure is at 7am or ealier.
-
-            } else if (trip.departureTime[0] < 12) {
+            }
+            
+            if (trip.departureTime[0] < 12) {
                 inputLunch(trip);      // Get lunch if departure is at 12pm or later.
 
-            } else {
-                inputDinner(trip);
             }
+            
+            inputDinner(trip);
         }
 
         // 2nd day through the day before last.

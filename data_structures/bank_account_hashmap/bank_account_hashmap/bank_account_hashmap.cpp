@@ -9,15 +9,70 @@
  *******************************************************************************/
 
 /*
-- Assume that there is a list of BankAccts with centinnel node to indicate the end of the list.
+DESCRIPTION
+
+- Assume that there is a list of BankAccts with centinel node that indicates
+ the end of the list.
+    + `BankAcct("","N","N",0,-1)`
 
 - 1. Load them into a HashMap keyed by account number.
-- 2. Use the hash function in class (Use 11 buckets)
+- 2. Use the hash function in class (11 buckets).
 - 3. At the end of the load,
     + go back through the buckets and
     + report how many collisions there were and how many empty buckets there are.
-    + What do your results show about the hash function?
+- 4. Finally, allow a user to find an account given the account's account number.
  */
+
+/*
+THE RESULT OF MY HASH FUNCTION
+
+- I implemented my hash function adopting Java implementaion's algorithm.
+The result was as follows:
+   0: 11
+   1: 10
+   2: 11
+   3: 10
+   4: 22
+   5: 11
+   6: 11
+   7:  1
+   8:  1
+   9: 11
+  10: 11
+
+OBSERVATION / ANALYSIS
+
+- Although there was no emply bucket as a result, the range between the highest and
+lowest in the collision occurrence was considerably large. (High 22, low 1).
+- We cannot say that the hashed values were evenly distributed.
+- We cannot say that the hashing was effective in this particular case.
+
+MY THOUGHTS
+
+- The uneven distribution that the hash function yielded were very likely due to
+the linearly distributed account number that were used as keys. All the account
+numbers are contiguous in the first place.
+- I hypothesize that if keys are linearly distributed in the first place,
+it would be more efficient to simply perform the modulus operation directly on the keys.
+
+THE RESULT OF SIMPLE MODULUS OPERATION ON THE KEYS
+   0: 10
+   1: 11
+   2: 10
+   3: 10
+   4: 10
+   5: 10
+   6: 10
+   7: 10
+   8:  9
+   9: 10
+  10: 10
+ */
+
+
+// ----------------------------------------------------------------------------- //
+// ----------------------------------------------------------------------------- //
+
 
 #include <iostream>
 #include <string>
@@ -46,6 +101,7 @@ public:
     double getAcctBalance() const { return acctBalance; }
     int getAcctId() const { return acctId; }
 
+    // Instance variables.
     BankAcct* next;
 
 private:
@@ -111,10 +167,12 @@ public:
     void removeAll();
     void removeFirst();
     void printAll() const;
+    BankAcct* search(int acctId) const;
     void incrementSize() { size++; }
     void decrementSize() { size--; }
 
 private:
+    // Instance variables.
     int size;
     BankAcct* top;  // First node
 };
@@ -151,7 +209,7 @@ int BankAcctStack::getSize() const {
  * @return true if the stack is empty.
  */
 bool BankAcctStack::isEmpty() const {
-    return top == NULL;  // return !top; works also.
+    return top == NULL;
 }
 
 /**
@@ -222,7 +280,7 @@ void BankAcctStack::removeFirst() {
 void BankAcctStack::printAll() const {
 
     // Return if the stack is empty.
-    if (isEmpty()) {
+    if ( isEmpty() ) {
         cout << "The stack is empty." << endl;
         return;
     }
@@ -231,12 +289,10 @@ void BankAcctStack::printAll() const {
     cout << "Size: " << size << endl;
     cout << endl;
 
-    // Print the attributes names.
+    // Print the attributes names and horizontal line.
     cout << left  << setw(12) << "acctName"
          << right << setw(12) << "acctType"
                   << setw(12) << "acctBal" << endl;
-
-    // Draw a horizonal line.
     cout << setfill('-') << setw(36) << "" << setfill(' ') << endl;
 
     // Formatting for floating-point numbers.
@@ -252,6 +308,39 @@ void BankAcctStack::printAll() const {
         curr = curr->next;  // Move the cursor to next.
     }
 }
+
+
+/**
+ * Searches for a BankAcct by the passed-in acctId.
+ * @param acctId
+ * @return the pointer to a BankAcctStack object if found, else NULL.
+ */
+BankAcct* BankAcctStack::search(int acctId) const {
+
+    bool found;
+
+    // Return if the stack is empty.
+    if ( isEmpty() ) {
+        cout << "The stack was empty." << endl;
+        return NULL;
+    }
+
+    // Traverse the list and print each node.
+    BankAcct* curr = top;
+    found = false;
+    while (curr != NULL) {
+
+        if (curr->getAcctId() == acctId) {
+            found = true;
+            return curr;
+        }
+
+        curr = curr->next;  // Move the cursor to next.
+    }
+
+    return NULL;
+}
+
 
 
 // ----------------------------------------------------------------------------- //
@@ -274,7 +363,9 @@ public:
     void addAccts(BankAcct* accounts) const;
     void getCollisionData(int* collisionList);
     int getHash(BankAcct account) const;
+    int getHash(int acctId) const;
     int getNumAccounts() const;
+    void printAcct(int acctId) const;
     void printAccts() const;
 
     // Instance variables.
@@ -283,15 +374,18 @@ public:
 
 
 /**
- * Constructor to create a node with a specific set of data
+ * Constructor.
  */
 BankHashMap::BankHashMap() {
 
-    // NOTE: The array accountBuckets must be initialized.
+    // Initialize the array accountBuckets with new instances of BankAcctStack.
     for (int i = 0; i < NUM_BUCKETS; i++) {
         accountBuckets[i] = new BankAcctStack;
     }
 }
+
+// NOTE: Destruction of the elements of the array accountBuckets will be handled
+// by each BankAcctStack instance itself internally by removeAll() method.
 
 
 /**
@@ -312,33 +406,43 @@ void BankHashMap::getCollisionData(int* collisionList) {
  * h(s) = s[0]   * 31^(n-1)
  *      + s[1]   * 31^(n-2)
  *      + ...
- *      + s[n-1] * 31^(n-n)
+ *      + s[n-1] * 31
  *   # s[i] denotes the ith character of the string
  *   # n is the length of s
- * https://en.wikipedia.org/wiki/Java_hashCode()
- * @param
- * @param
- * @return
+ * @param account
+ * @return hash
  */
 int BankHashMap::getHash(BankAcct account) const {
 
-    int hash = 0;
+    return getHash( account.getAcctId() );
+}
+
+
+/**
+ * Hash function based on the algorithm used in Java.
+ * @param acctId
+ * @return hash
+ */
+int BankHashMap::getHash(int acctId) const {
+
+    int hash        = 0;
+    double exponent = 0.0;
 
     // Get the key that is to be used for hashing.
-    string key = to_string( account.getAcctId() );
+    string key = to_string( acctId );
 
     // Get the key length.
-    int len  = (int)key.length();
+    int len  = static_cast<int>( key.length() );
 
     // Compute the hash.
     for (int i = 0; i < len; i++) {
-
-        hash += key[0] * pow( 31.0, double(len - i) );
-
+        exponent = static_cast<double>( len - ( i + 1 ) );
+        hash    += key[0] * pow( 31.0, exponent );
     }
 
     return hash;
 }
+
 
 
 /**
@@ -359,8 +463,11 @@ int BankHashMap::getNumAccounts() const {
  */
 void BankHashMap::addAcct(BankAcct& account) const {
 
-    // Allocate the index.
+    // Allocate the index based on the hashing result.
     int hash = getHash(account) % NUM_BUCKETS;
+
+    // TEST
+    // int hash = account.getAcctId() % NUM_BUCKETS;
 
     // DEBUG
     // cout << "hash: " << hash << endl;
@@ -392,6 +499,43 @@ void BankHashMap::addAccts(BankAcct* accounts) const {
 
 
 /**
+ * Find an account.
+ * @param acctId
+ */
+void BankHashMap::printAcct(int acctId) const {
+
+    // Get the index.
+    int hash = getHash(acctId) % NUM_BUCKETS;
+
+    // Determine the target stack and access it.
+    BankAcctStack* stack = accountBuckets[ hash ];
+
+    // Search for the item in that stack.
+    BankAcct* account = stack->search(acctId);
+
+    if (account == NULL ) {
+        cout << "Not found." << endl;
+
+    } else {
+        // Print the attributes names.
+        cout << left  << setw(12) << "acctName"
+             << right << setw(12) << "acctType"
+                      << setw(12) << "acctBal" << endl;
+
+        // Draw a horizonal line.
+        cout << setfill('-') << setw(36) << "" << setfill(' ') << endl;
+
+        // Formatting for floating-point numbers.
+        cout << fixed << showpoint << setprecision(2);
+
+        cout << left  << setw(12) << account->getCustName()
+             << right << setw(12) << account->getAcctType()
+                      << setw(12) << account->getAcctBalance() << endl;
+    }
+}
+
+
+/**
  *  Prints the information on all the BankAcct instances in the BankHashMap.
  */
 void BankHashMap::printAccts() const {
@@ -411,7 +555,7 @@ int main() {
 
     // Data to be processed.
 
-    cout << "\n1. Reading account data................";
+    cout << "\n1. Reading account data..." << endl;
     BankAcct accts[] = {
         BankAcct("Nancy","f","C",8.20,72),
         BankAcct("Melvin","m","C",78.23,73),
@@ -525,26 +669,30 @@ int main() {
         BankAcct("Enid","f","C",432.10,71),
         BankAcct("","N","N",0,-1)  //sentinel
     };
-    cout << "done." << endl;
+    cout << "\ndone." << endl;
     cout << endl;
+
 
     // Create a map to store accounts.
 
-    cout << "\n2. Creating a BankHashMap..............";
+    cout << "\n2. Creating a BankHashMap..." << endl;
     BankHashMap map;
-    cout << "done." << endl;
+    cout << "\ndone." << endl;
     cout << endl;
+
 
     // Add accounts to the map.
 
-    cout << "\n3. Adding accounts to the map..........";
+    cout << "\n3. Adding accounts to the map..." << endl;
     map.addAccts( accts );
+    cout << endl;
     cout << map.getNumAccounts() << " accounts added." << endl;
     cout << endl;
 
+
     // Print collisions.
 
-    cout << "\n4. Printing collision counts..........." << endl;
+    cout << "\n4. Printing collision counts..." << endl;
     int collisionList[ NUM_BUCKETS ];
     map.getCollisionData( collisionList );
 
@@ -552,15 +700,45 @@ int main() {
         cout << "  " << setw(2) << i << ": "
                      << setw(2) << collisionList[i] << endl;
     }
-    cout << ".......................................done." << endl;
+    cout << "\ndone." << endl;
     cout << endl;
+
+
+    // Search for an account in the BankHashMap.
+    cout << "\n5. Allowing user to search..." << endl;
+    int acctId = 0;
+    bool finished = false;
+
+    while ( !finished ) {
+
+        cout << "\nEnter an account ID (q: quit)" << endl;
+        cout << ">>> ";
+        cin  >> acctId;
+
+        // VALIDATION: 1. Input failure, 2. Invalid input.
+        if ( cin.fail() ) {
+            finished = true;  // Exit the loop.
+
+        } else if (acctId < 1) {
+            cout << "Invalid account number: Must be 1 or greater" << endl;
+
+        } else {
+            map.printAcct(acctId);
+            cout << endl;
+        }
+    }
+
+    cout << "\nHave a great day!" << endl;
+    cout << endl;
+
 
     // Print all the accounts in the BankHashMap.
 
-    cout << "\n5. Printing accounts in each stack....." << endl;
-    map.printAccts();
-    cout << ".......................................done." << endl;
-    cout << endl;
+    // cout << "\n6. Printing accounts in each stack....." << endl;
+    // map.printAccts();
+    // cout << "\ndone." << endl;
+    // cout << endl;
 
     return 0;
 }
+
