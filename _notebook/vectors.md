@@ -153,3 +153,6 @@ int main ()
   return 0;
 }
 ```
+
+### Random shuffle
+- http://www.cplusplus.com/reference/algorithm/random_shuffle/
