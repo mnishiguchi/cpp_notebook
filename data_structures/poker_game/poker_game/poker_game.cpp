@@ -48,7 +48,7 @@ public:
 
     // Static constants.
     static const string suits[4];
-    static const string ranks[13];
+    static const string ranks[14]; // [0] is not used.
 
     // Static methods.
     // static string suitAsString(int);
@@ -74,8 +74,8 @@ private:
 const string Card::suits[4] = {
     "Hearts", "Spades", "Diamonds", "Clubs"
 };
-const string Card::ranks[13] = {
-    "A","2","3","4","5","6","7","8","9","10","J","Q","K"
+const string Card::ranks[14] = {
+    "#", "A","2","3","4","5","6","7","8","9","10","J","Q","K"
 };
 
 
@@ -97,6 +97,11 @@ Card::Card(short suit, short rank) {
 }
 
 
+//--
+// Static methods
+//--
+
+
 // /**
 //  * @param
 //  * @return
@@ -115,6 +120,11 @@ Card::Card(short suit, short rank) {
 
 //     return ranks[rank];
 // }
+
+
+//--
+// Instance methods
+//--
 
 
 /**
@@ -154,7 +164,7 @@ Deck::Deck() {
     // Create the deck.
     for (int suit = 0; suit < 4; suit++) {
 
-        for (int rank = 0; rank < 13; rank++) {
+        for (int rank = 1; rank <= 13; rank++) {
 
             this->cards.push_back( Card( suit, rank ) );
         }
@@ -199,12 +209,19 @@ void Deck::printAll() const {
  */
 class Hand {
 public:
+    // Static methods.
+    static void countEachRank(Card*, int ranks[14]);
+    static bool isStraight(Card);
+    static bool isFlush(Card);
+    static bool isFourOfAKind(Card);
+    static bool isThreeOfAKind(Card);
+    static bool isOnePair(Card);
 
     Hand(Deck);
     void printAll() const;
+    Card cards[5]; // represent the 5 cards.
 
 private:
-    Card cards[5]; // represent the 5 cards.
     int value[6];  // represent the value of the hand.
 };
 
@@ -222,6 +239,85 @@ Hand::Hand(Deck deck) {
         cards[i] = deck.drawCard();
     }
 }
+
+
+//--
+// Static methods
+//--
+
+
+/**
+ *
+ */
+void Hand::countEachRank(Card* cards, int rankOccurrences[14]) {
+
+    // Initialize the contents of the array.
+    for (int x = 0; x <= 13; x++) {
+
+        rankOccurrences[x] = 0;
+    }
+
+    // Increment occurrence array at the index of each card's rank.
+    for (int idx = 0; idx < 4; idx++) {
+
+        rankOccurrences[ cards[idx].getRank() ] += 1;
+    }
+}
+
+
+/**
+ *
+ */
+bool Hand::isStraight(Card) {
+    // TODO
+
+    return false;
+}
+
+
+/**
+ *
+ */
+bool Hand::isFlush(Card) {
+    // TODO
+
+    return false;
+}
+
+
+/**
+ *
+ */
+bool Hand::isFourOfAKind(Card) {
+    // TODO
+
+    return false;
+}
+
+
+/**
+ *
+ */
+bool Hand::isThreeOfAKind(Card) {
+    // TODO
+
+    return false;
+}
+
+
+/**
+ *
+ */
+bool Hand::isOnePair(Card) {
+    // TODO
+
+    return false;
+}
+
+
+//--
+// Instance methods
+//--
 
 
 /**
@@ -246,11 +342,22 @@ int main() {
     // Seed the random.
     std::srand ( unsigned ( std::time(0) ) );
 
+    // Create a deck.
     Deck aDeck;
     // aDeck.printAll();
 
+    // Create a hand by drawing five cards from the deck.
     Hand aHand = Hand(aDeck);
     aHand.printAll();
+
+    int rankOccurrences[14];
+    Hand::countEachRank(aHand.cards, rankOccurrences);
+
+    for (int i = 0; i < 14; i++) {
+        cout << rankOccurrences[i] << " ";
+    }
+
+    cout << endl;
 
     return 0;
 }

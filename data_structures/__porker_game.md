@@ -7,22 +7,24 @@ Monday, December 7, 2015
 - Hands can be as high as a straight flush.  For sake of this exercise, you only need to look for the following hands:
 
     - **Straight flush:**
-        - This is the highest hand and occurs when all five cards can be arranged in contiguous order of rank and are of the same suit.  The highest straight flush goes from the rank of 10 to ace.  The lowest is ace to 5.
+        - the highest hand.
+        - all five cards are arranged in contiguous order of rank and are of the same suit.
+        - The highest straight flush goes from the rank of 10 to ace.  The lowest is ace to 5.
 
     - **Four of a kind:**
-        - When all four cards of a particular suit are in a hand.
+        - all four cards of a particular suit.
 
     - **Flush:**
-        - When all the cards of a hand are of the same suit.
+        - all the cards of a hand are of the same suit.
 
     - **Three of a kind:**
-        - When cards can be arranged so that three cards share the same rank.
+        - three cards share the same rank.
 
     - **One pair:**
-        - If a hand can be arranged so that two cards share the same rank.
+        - two cards share the same rank.
 
     - **High card:**
-        - This is the lowest hand and should only apply when none of the above hands exist.  The highest card is the rank of Ace.
+        - none of the above hands exist.  The highest card is the rank of Ace.
 
  
 ## A function that will somehow accept the five cards of a hand
