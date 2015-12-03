@@ -210,19 +210,22 @@ void Deck::printAll() const {
 class Hand {
 public:
     // Static methods.
-    static void countEachRank(Card*, int ranks[14]);
-    static bool isStraight(Card);
-    static bool isFlush(Card);
-    static bool isFourOfAKind(Card);
-    static bool isThreeOfAKind(Card);
-    static bool isOnePair(Card);
+    static void countEachSuit(Card*, int*);
+    static void countEachRank(Card*, int*);
+    static bool isStraightFlush(int suitOccurrences[4], int rankOccurrences[14]);
+    static bool isFlush(int suitOccurrences[4]);
+    static bool isFourOfAKind(int rankOccurrences[14]);
+    static bool isThreeOfAKind(int rankOccurrences[14]);
+    static bool isOnePair(int rankOccurrences[14]);
 
+    // Constructors.
     Hand(Deck);
-    void printAll() const;
-    Card cards[5]; // represent the 5 cards.
 
-private:
-    int value[6];  // represent the value of the hand.
+    // Instance methods.
+    void printAll() const;
+
+    // Instance variables.
+    Card cards[5]; // represent the 5 cards.
 };
 
 
@@ -231,10 +234,7 @@ private:
  */
 Hand::Hand(Deck deck) {
 
-    for (int i = 0; i < 6; i++) {
-        value[i] = 0;
-    }
-
+    // Draw five cards from the deck.
     for (int i = 0; i < 5; i++) {
         cards[i] = deck.drawCard();
     }
@@ -247,69 +247,144 @@ Hand::Hand(Deck deck) {
 
 
 /**
- *
+ * @param cards
+ * @param suitOccurrences
+ */
+ void Hand::countEachSuit(Card* cards, int suitOccurrences[4]) {
+
+    // Initialize the contents of the array.
+    for (int x = 0; x < 4; x++) {
+        suitOccurrences[x] = 0;
+    }
+
+    // Increment occurrence array at the index of each card's suit.
+    for (int idx = 0; idx < 4; idx++) {
+        suitOccurrences[ cards[idx].getSuit() ] += 1;
+    }
+ }
+
+
+/**
+ * @param cards
+ * @param rankOccurrences
  */
 void Hand::countEachRank(Card* cards, int rankOccurrences[14]) {
 
     // Initialize the contents of the array.
-    for (int x = 0; x <= 13; x++) {
-
+    for (int x = 0; x < 14; x++) {
         rankOccurrences[x] = 0;
     }
 
     // Increment occurrence array at the index of each card's rank.
     for (int idx = 0; idx < 4; idx++) {
-
         rankOccurrences[ cards[idx].getRank() ] += 1;
     }
 }
 
 
 /**
- *
+ * All five cards are arranged in contiguous order of rank and are of the same suit.
+ * @param suitOccurrences
+ * @param rankOccurrences
+ * @return true if the hand is straight flush.
  */
-bool Hand::isStraight(Card) {
-    // TODO
+bool Hand::isStraightFlush( int suitOccurrences[4], int rankOccurrences[14] ) {
+
+    // All the five cards must have the same suit.
+    if ( ! Hand::isFlush( suitOccurrences ) ) {
+        return false;
+    }
+
+    // All five cards must be arranged in contiguous order of rank.
+    int counter = 0;
+    for ( int i = 1; i < 14; i++ ) {
+
+        if ( rankOccurrences[i - 1] == 1 && rankOccurrences[i] == 1 ) {
+            counter += 1;
+        } else {
+            counter = 0;
+        }
+
+        if ( counter == 5 ) {
+            return true;
+        }
+    }
 
     return false;
 }
 
 
 /**
- *
+ * All the cards of a hand are of the same suit.
+ * @param suitOccurrences
+ * @return true if the hand is flush.
  */
-bool Hand::isFlush(Card) {
-    // TODO
+bool Hand::isFlush( int suitOccurrences[4] ) {
+
+    // All the five cards must have the same suit.
+    for ( int i = 0; i < 4; i++ ) {
+
+        if ( suitOccurrences[ i ] == 5 ) {
+            return true;
+        }
+    }
 
     return false;
 }
 
 
 /**
- *
+ * Four cards are of a particular rank.
+ * @param rankOccurrences
+ * @return true if the hand is flush.
  */
-bool Hand::isFourOfAKind(Card) {
-    // TODO
+bool Hand::isFourOfAKind( int rankOccurrences[4] ) {
+
+    // Four cards must have the same rank.
+    for ( int i = 0; i < 14; i++ ) {
+
+        if ( rankOccurrences[ i ] == 4 ) {
+            return true;
+        }
+    }
 
     return false;
 }
 
 
 /**
- *
+ * Three cards are of a particular rank.
+ * @param rankOccurrences
+ * @return true if the hand is three of a kind.
  */
-bool Hand::isThreeOfAKind(Card) {
-    // TODO
+bool Hand::isThreeOfAKind( int rankOccurrences[4] ) {
+
+    // Four cards must have the same rank.
+    for ( int i = 0; i < 14; i++ ) {
+
+        if ( rankOccurrences[ i ] == 3 ) {
+            return true;
+        }
+    }
 
     return false;
 }
 
 
 /**
- *
+ * Two cards shares the same rank.
+ * @param rankOccurrences
+ * @return true if the hand is one pair.
  */
-bool Hand::isOnePair(Card) {
-    // TODO
+bool Hand::isOnePair( int rankOccurrences[4] ) {
+
+    // Four cards must have the same rank.
+    for ( int i = 0; i < 14; i++ ) {
+
+        if ( rankOccurrences[ i ] == 2 ) {
+            return true;
+        }
+    }
 
     return false;
 }
@@ -350,11 +425,40 @@ int main() {
     Hand aHand = Hand(aDeck);
     aHand.printAll();
 
+    // Check the rankOccurrences.
     int rankOccurrences[14];
     Hand::countEachRank(aHand.cards, rankOccurrences);
-
     for (int i = 0; i < 14; i++) {
         cout << rankOccurrences[i] << " ";
+    }
+    cout << endl;
+
+    // Check the suitOccurrences.
+    int suitOccurrences[4];
+    Hand::countEachSuit(aHand.cards, suitOccurrences);
+    for (int i = 0; i < 4; i++) {
+        cout << suitOccurrences[i] << " ";
+    }
+    cout << endl;
+
+    // Determine the result.
+    if ( Hand::isStraightFlush(suitOccurrences, rankOccurrences) ) {
+        cout << "isStraightFlush" << endl;
+
+    } else if ( Hand::isFlush(suitOccurrences) ) {
+        cout << "isFlush" << endl;
+
+    } else if ( Hand::isFourOfAKind(rankOccurrences) ) {
+        cout << "isFourOfAKind" << endl;
+
+    } else if ( Hand::isThreeOfAKind(rankOccurrences) ) {
+        cout << "isThreeOfAKind" << endl;
+
+    } else if ( Hand::isOnePair(rankOccurrences) ) {
+        cout << "isOnePair" << endl;
+
+    } else {
+        cout << "High card" << endl;
     }
 
     cout << endl;
