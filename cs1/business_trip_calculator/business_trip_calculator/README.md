@@ -36,7 +36,18 @@ expenses = milesDriven * BusinessTrip::PRIVATE_CAR_MILAGE_ALLOWANCE;
 trip.totalTripDays
 ```
 
-### The main function
+### The updateRecord(...) method
+- Accepts the amount spent and the amount of the allowable.
+- Add those values to our in-memory data storage.
+
+```cpp
+// Add totalSpent and totalAllowable to our data storage.
+trip.updateRecord(totalSpent, totalAllowable);
+```
+
+==
+
+## The main function
 For example, we can write the main as simple as this.
 
 1. Create a variable (of BusinessTrip type) that will store all the trip-related data.
