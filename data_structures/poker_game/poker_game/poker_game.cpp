@@ -299,6 +299,7 @@ bool Hand::isStraightFlush( int suitOccurrences[4], int rankOccurrences[14] ) {
     int counter = 0;
     for ( int i = 1; i < 14; i++ ) {
 
+        // Count the contiguous succession of ranks.
         if ( rankOccurrences[i - 1] == 1 && rankOccurrences[i] == 1 ) {
             counter += 1;
         } else {
