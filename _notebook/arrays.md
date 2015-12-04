@@ -55,3 +55,8 @@ for (int row = 0; row < numRows; row++) {
 // C++ empty initializer
 char aArray[100] = {};
 ```
+
+==
+
+## Passing a 2D array to a C++ function
+- http://stackoverflow.com/questions/8767166/passing-a-2d-array-to-a-c-function

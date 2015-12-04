@@ -13,13 +13,15 @@ using namespace std;
 /*
 ANALYSIS
 
+analysis and test data: 778, 472, 147, 106, 82
+
 a) Computing mean of five numbers
 
     Formula: x = ( x1 + x2 + x3 + x4 + x5 ) / 5;
 
-    If the numbers are 12, 34, 55, 23 and 11, mean(average) is:
+    If the numbers are 778, 472, 147, 106, 82 , mean(average) is:
 
-      x = ( 12 + 34 + 55 + 23 + 11 ) / 5 = 135 / 5 = 27
+      x = ( 778 + 472 + 147 + 106 + 82 ) / 5 = 1585 / 5 = 317
 
 
 b) Computing standard deviation of five numbers
@@ -27,9 +29,9 @@ b) Computing standard deviation of five numbers
     Formula:
 
       s = square_root_of
-           [ (x_1 - x)^2 + (x_2 - x)^2 + (x_3 - x)^2 + (x_4 - x)^2 + (x_5 - x)^2 ]
-           -----------------------------------------------------------------------
-              5
+         [ (x_1 - x)^2 + (x_2 - x)^2 + (x_3 - x)^2 + (x_4 - x)^2 + (x_5 - x)^2 ]
+         -----------------------------------------------------------------------
+            5
 
       where x_1..x_5 are the five numbers and x is their average.
 
@@ -37,17 +39,13 @@ b) Computing standard deviation of five numbers
     If the numbers are 12, 34, 55, 23 and 11, standard deviation is:
 
       s = square_root_of
-           [ (12 - 27)^2 + (34 - 27)^2 + (55 - 27)^2 + (23 - 27)^2 + (11 - 27)^2 ]
-           -----------------------------------------------------------------------
-              5
+         [ (778 - 317)^2 + (472 - 317)^2 + (147 - 317)^2 + (106 - 317)^2 + (82 - 317)^2 ]
+         -----------------------------------------------------------------------
+            5
 
-        = square_root_of
-           [ 225 + 49 + 784 + 16 + 256 ]
-           -----------------------------------------------------------------------
-              5
-
-        = square_root_of 266
-        = 16.30950643030009
+        = square_root_of 365192 / 5
+        = square_root_of 73038
+        = 270.25543
  */
 
 
@@ -55,12 +53,11 @@ b) Computing standard deviation of five numbers
 // ----------------------------------------------------------------------------- //
 
 
-// Function prototyping.
-double computeMean(double* nums, int size);
-double computeStandardDeviation(double* nums, int size);
-void promptNumbers(double* numbers, int& count, const int MAX_NUMBERS);
-void drawLine();
-void printStandardDeviation(double* numbers, int count);
+// Function prototypes.
+void promptNumbers(double* numbers, int& count, const int MAX_COUNT);
+double calcMean(double* numbers, int count);
+double calcStandardDeviation(double* numbers, int count, double mean);
+void printMeanAndStandardDeviation(double* numbers, int count);
 
 
 /**
@@ -68,13 +65,18 @@ void printStandardDeviation(double* numbers, int count);
  */
 int main() {
 
-    const int MAX_NUMBERS = 100;
-    double numbers[ MAX_NUMBERS ];
+    // Configuration.
+    const int MAX_COUNT = 100;
+
+    // Data stores for user's input.
+    double numbers[ MAX_COUNT ];
     int count = 0;
 
-    promptNumbers(numbers, count, MAX_NUMBERS);
-    drawLine();
-    printStandardDeviation(numbers, count);
+    // Input.
+    promptNumbers(numbers, count, MAX_COUNT);
+
+    // Output.
+    printMeanAndStandardDeviation(numbers, count);
 
     return 0;
 }
@@ -85,39 +87,72 @@ int main() {
 
 
 /**
- * @param nums  an array of numbers of double-type
- * @param size  the size of the array
- * @return the average value of the specified numbers.
+ * Prompts the user for numbers up to the specified maximum count.
+ * @param numbers    An array of double-type numbers in which user's inputted
+ *                   numbers are to be stored.
+ * @param count      An variable in which we record how many numbers the user enter.
+ * @param MAX_COUNT  The maximum count of the numbers we can accept as input.
  */
-double computeMean(double* nums, int size) {
+void promptNumbers(double* numbers, int& count, const int MAX_COUNT) {
 
-    double sum = 0.0;
+    // The prompt message.
+    cout << "Enter numbers (Max: " << MAX_COUNT << ", q: quit)" << endl;
 
-    // Get the sum of all the numbers.
-    for (int i = 0; i < size; i++) {
+    // Accept numbers until max 100 is reached or cin enters fail state.
+    count = 0;
 
-        sum += nums[ i ];
+    for ( int i = 0; i < MAX_COUNT; i++ ) {
+
+        cout << ">>>";
+        cin >> numbers[ i ];
+
+        // If input is valid, increment the counter.
+        if ( cin.fail() || count == MAX_COUNT - 1 ) {
+            break;
+
+        } else {
+            count += 1;
+        }
     }
 
-    return sum / size;
+    cout << setfill('-') << setw(32) << "" << setfill(' ') << endl;
 }
 
 
 /**
- * @param nums  an array of numbers of double-type
- * @param size  the size of the array
+ * @param nums   An array of double-type numbers.
+ * @param count  How many numbers are to be used for this computation?
+ * @return the average value of the specified numbers.
+ */
+double calcMean(double* nums, int count) {
+
+    double sum = 0.0;
+
+    // Get the sum of all the numbers.
+    for (int i = 0; i < count; i++) {
+
+        sum += nums[ i ];
+    }
+
+    return sum / count;
+}
+
+
+/**
+ * @param nums   An array of double-type numbers.
+ * @param count  How many numbers are to be used for this computation?
+ * @param mean   The average of the numbers.
  * @return the standard deviation of the specified numbers.
  */
-double computeStandardDeviation(double* nums, int size) {
-
-    double x = computeMean(nums, size);
+double calcStandardDeviation(double* nums, int count, double mean) {
 
     double numerator = 0.0;
 
-    // Get the numerator of the fraction inside the sqrt.
-    for (int i = 0; i < size; i++) {
+    // Prepare the numerator of the fraction inside the sqrt.
+    // (x_1 - x)^2 + (x_2 - x)^2 + (x_3 - x)^2 + ...
+    for (int i = 0; i < count; i++) {
 
-        numerator += pow( nums[ i ] - x , 2.0 );
+        numerator += pow( nums[ i ] - mean , 2.0 );
     }
 
     return sqrt( numerator / 5 );
@@ -125,52 +160,21 @@ double computeStandardDeviation(double* nums, int size) {
 
 
 /**
- * @param
- */
-void promptNumbers(double* numbers, int& count, const int MAX_NUMBERS) {
-
-    // Prompt the user for five numbers.
-    cout << "Enter numbers (Max: 100, q: quit)" << endl;
-
-    // Accept numbers until max 100 is reached or cin enters fail state.
-    count = 0;
-    for ( int i = 0; i < MAX_NUMBERS; i++ ) {
-
-        cout << ">>>";
-        cin >> numbers[ i ];
-
-        // If input is valid, increment the counter.
-        if ( cin.fail() ) {
-            break;
-
-        } else {
-            count += 1;
-        }
-    }
-}
-
-
-/**
- * Draw a separator line.
- */
-void drawLine() {
-
-    cout << setfill('-') << setw(32) << "" << setfill(' ') << endl;
-}
-
-
-/**
  * Output the mean and standard deviation.
- * @param numbers
- * @param count
+ * @param numbers  A double-type array which contains user's inputted numbers.
+ * @param count    How many numbers are to be used for this computation?
  */
-void printStandardDeviation(double* numbers, int count) {
+void printMeanAndStandardDeviation(double* numbers, int count) {
+
+    double mean = calcMean(numbers, count);
+    double sd   = calcStandardDeviation(numbers, count, mean);
 
     cout << fixed << showpoint << setprecision(2);
-    cout << "Mean (Average):     " << computeMean(numbers, count) << endl;
-    cout << "Standard deviation: " << computeStandardDeviation(numbers, count) << endl;
+    cout << "Mean (Average):     " << mean << endl;
+    cout << "Standard deviation: " << sd << endl;
     cout << endl;
 }
+
 
 // ----------------------------------------------------------------------------- //
 // ----------------------------------------------------------------------------- //
@@ -179,8 +183,16 @@ void printStandardDeviation(double* numbers, int count) {
 /*
 OUTPUT
 
-  Enter five numbers: 12 34 55 23 11
-  --------------------------------
-  Mean (Average):     27.00
-  Standard deviation: 16.31
+Enter numbers (Max: 100, q: quit)
+>>>778
+>>>472
+>>>147
+>>>106
+>>>82
+>>>q
+--------------------------------
+Mean (Average):     317.00
+Standard deviation: 270.26
+
+Program ended with exit code: 0
  */
