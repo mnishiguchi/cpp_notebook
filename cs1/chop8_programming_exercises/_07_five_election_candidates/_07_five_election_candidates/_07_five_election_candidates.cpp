@@ -1,5 +1,5 @@
 /**
- * Chapter 8 Programming exerciese
+ * Chapter 8 Programming exercise
  * _07_five_election_candidates
  *
  *
