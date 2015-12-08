@@ -30,6 +30,27 @@ int main() {
 }
 ```
 
+```cpp
+#include <ctime>        // std::time
+#include <cstdlib>      // std::rand, std::srand
+
+//...
+
+std::srand ( unsigned ( std::time(0) ) );
+
+for (int i = 0; i < ARRAY_SIZE; i++) {
+
+  // Generate an index randomly
+  int index = rand() % ARRAY_SIZE;
+  double temp = myList[i];
+  aList[i] = aList[index]; 
+  aList[index] = temp;
+}
+
+
+```
+
+
 http://www.cplusplus.com/reference/algorithm/random_shuffle/
 ```cpp
 // random_shuffle example

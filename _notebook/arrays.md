@@ -60,3 +60,31 @@ char aArray[100] = {};
 
 ## Passing a 2D array to a C++ function
 - http://stackoverflow.com/questions/8767166/passing-a-2d-array-to-a-c-function
+- When passing an array to a function, it is common to pass array size so that function knows how many elements to process. 
+
+```cpp
+void showScores(int [], int);          // function prototype
+void showScores(int tests[], int size) // function header
+```
+
+## const Parameters
+- Put the const keyword before the array parameter to tell the compiler that the array cannot be changed.
+The compiler will report errors if the code in the function attempts to modify the array.
+```cpp
+void p(const int list[], int arraySize)
+```
+
+## Returning an Array from a Function 
+- Not allowed in C++
+
+```cpp
+// Bad example.
+int[] reverse(const int list[], int size)               // NG
+
+// Good example.
+void reverse(const int list[], int newList[], int size) // GOOD
+```
+
+
+
+
