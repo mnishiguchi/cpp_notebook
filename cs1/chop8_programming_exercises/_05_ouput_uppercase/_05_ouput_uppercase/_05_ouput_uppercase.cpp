@@ -26,12 +26,16 @@ void promptCharArray(char* aStr) {
 
         // VALIDATION: 1. Input failure, 2. Invalid input.
         if ( !cin ) {
+
             cout << "Error : Try again" << endl;
 
             cin.clear();            // Restore input stream
             cin.ignore(100, '\n');  // Clear the buffer
+
         } else {
+
             isFinished = true;  // Exit the loop.
+
         }
     }
 }
@@ -57,6 +61,10 @@ void charArrayToUpper(char* aStr, int length) {
 void print(char* aStr) {
     cout << aStr << endl;
 }
+
+
+//------------------------------------------------------------------------------ //
+//------------------------------------------------------------------------------ //
 
 
 /**

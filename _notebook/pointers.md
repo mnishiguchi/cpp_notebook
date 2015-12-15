@@ -55,6 +55,45 @@ a->b   // Equivalent to (*a).b
 delete pointerVariable;
 ```
 
+==
+
+## Deep copy v Shallow copy
+
+```cpp
+// We have two instances of Bus.
+Bus bolt;
+Bus metro;
+
+// Create a passenger to metro.
+metro.pas = new Passenger;
+
+// Shallow copy - Both pointing to the same object.
+bolt = metro;
+```
+
+==
+
+## Misc.
+
+```cpp
+Bus busses[10];  // Array is a constant pointer.
+Bus* d13;
+
+// We can assign an array to a pointer.
+d13 = busses;  // OK
+
+busses = d13;  // NG - busses is a constant pointer.
+
+// These are synonymous.
+d13[5]    = new Passenger;
+busses[5] = new Passenger;
+
+//-------------------------------------------
+
+Passenger* folks[12];  // An array of pointers.
+
+//-------------------------------------------
+```
 
 
 

@@ -121,6 +121,44 @@ cin.ignore(100, '\n');
 cin.ignore(100, 'A');
 ```
 
+### Prompt the user for an arbitrary number of elements
+
+```cpp
+/**
+ * Prompts the user for numbers up to the specified maximum count.
+ * @param numbers    An array of double-type numbers in which user's inputted
+ *                   numbers are to be stored.
+ * @param itemCount  An variable in which we record how many numbers the user enter.
+ * @param MAX_COUNT  The maximum count of the numbers we can accept as input.
+ */
+void inputNumbers(double* numbers, int& itemCount, const int MAX_COUNT) {
+
+    // The prompt message.
+    cout << "Enter numbers (Max: " << MAX_COUNT << ", q: quit)" << endl;
+
+    // Accept numbers until max 100 is reached or cin enters fail state.
+    itemCount = 0;
+
+    for ( int i = 0; i < MAX_COUNT; i++ ) {
+
+        cout << ">>> ";
+        cin >> numbers[ i ];
+
+        // If input is valid, increment the counter.
+        if ( cin.fail() || itemCount == MAX_COUNT - 1 ) {
+
+            break;
+
+        } else {
+
+            itemCount += 1;
+
+        }
+    }
+}
+```
+
+
 ==
 
 ## The putback and peek functions

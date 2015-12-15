@@ -3,6 +3,8 @@
 - https://web.stanford.edu/class/cs97si/06-basic-graph-algorithms.pdf
 - A set of vertices and edges.
 
+**Undirected graph**
+- No restriction on directions. Can move two ways.
 ```
 1 --------- 2
 ```
@@ -24,15 +26,18 @@
 
 - Deadlock may occur.
 ```
-1 --------> 2 ---> 5
+1 --> 8---> 2 ---> 5
       |     ^     /
       |     |    /
       V     |  L
 6 --> 3 <-- 4 ---> 7
 ```
 
+==
+
 ## Minimum spanning tree
-- Unique path one vertex to another that is the shortest.
+- Unique path connecting all the nodes connected at minimum cost.
+- Often used for directed weighted graph.
 
 ==
 
@@ -41,15 +46,15 @@
 
 ### Adjacency matrix
 - Often wastes memory space.
-- 
+
 ```
-0 0 1 0 0 1 1 0 
-1 0 0 0 1 0 0 0 
-0 0 1 0 1 0 1 0 
-0 0 1 0 0 1 1 0 
-1 0 0 0 1 0 0 0 
-0 0 1 0 1 0 1 0 
-0 0 1 0 0 1 1 0 
+0  0  1  0  0  1  1  0  
+1  0  0  0  1  0  0  0  
+0  0  1  0  1  0  1  0  
+0  0  1  0  0  1  1  0  
+1  0  0  0  1  0  0  0  
+0  0  1  0  1  0  1  0  
+0  0  1  0  0  1  1  0  
 ```
 
 ### Adjacency list
@@ -62,6 +67,12 @@
 [3] -> node -> ...
 ```
 
+==
 
+## Depth First Traversal
+- Visit all the verteces
+- similar to the preorder traversal of a binary tree
 
-
+1. Start from the lowest index.
+2. Find the lowest connected node, move to it and as far as possible.
+3. Move to the next lowest and repeat.

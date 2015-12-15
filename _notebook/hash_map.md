@@ -22,6 +22,8 @@
 
 ## Collision
 - Can affect our O(1) performance
+- Different keys get the same index.
+- Good hash functions minimize collisions.
 
 ==
 
@@ -41,7 +43,3 @@
 - [Difference between Space utilization and Load factor in hashtable](http://stackoverflow.com/questions/17228376/difference-between-space-utilization-and-load-factor-in-hashtable)
 
 ==
-
-
-
-

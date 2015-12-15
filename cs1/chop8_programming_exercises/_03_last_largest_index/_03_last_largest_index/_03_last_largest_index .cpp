@@ -1,13 +1,13 @@
 /**
  * Chapter 8 Programming exerciese
- * _02_smallest_index
+ * _03_last_largest_index
  */
 #include <iostream>
 using namespace std;
 
 
 // Function prototypes.
-int smallestIndex(double[], int);
+int lastLargestIndex(double[], int);
 void inputNumbers(double[], int& , const int);
 
 
@@ -26,11 +26,12 @@ int main() {
     // Prompt the user to enter numbers.
     inputNumbers(numbers, itemCount, MAX_COUNT);
 
-    // Output the smallest index.
-    cout << "The smallest index: " << smallestIndex(numbers, itemCount) << endl;
+    // Output the largest index.
+    cout << "The last largest index: " << lastLargestIndex(numbers, itemCount) << endl;
 
     return 0;
 }
+
 
 
 // ----------------------------------------------------------------------------- //
@@ -40,28 +41,27 @@ int main() {
 /**
  * @param  aArray     An int array
  * @param  arraySize  The size of the array
- * @return the index of the first occurrence of the smallest element in the array.
+ * @return the index of the last occurrence of the largest element in the array.
  */
-int smallestIndex(double aArray[], int arraySize) {
+int lastLargestIndex(double aArray[], int arraySize) {
 
     // Store for the index of the smallest element.
-    int smallestIndex = 0;
+    int largestIndex = 0;
 
     // Iterate over the array.
     for (int i = 1; i < arraySize; i++) {
 
         // If the element is currently the smallest, remember the index.
-        // Ignore the second occurrence of the same number.
-        if ( aArray[ i ]  < aArray[ smallestIndex ] ) {
+        if ( aArray[ i ] >= aArray[ largestIndex ] ) {
 
-            smallestIndex = i;
+            largestIndex = i;
 
         }
 
     }
 
     // Finally, return the index.
-    return smallestIndex;
+    return largestIndex;
 }
 
 
@@ -101,14 +101,14 @@ void inputNumbers(double numbers[], int& itemCount, const int MAX_COUNT) {
 /* OUTPUT
 
 Enter numbers (Max: 32, q: quit)
->>> 3
+>>> 1
 >>> 2
->>> 1
->>> 1
->>> 1
->>> 1
->>> 1
+>>> 3
+>>> 3
+>>> 3
+>>> 3
+>>> 3
 >>> q
-The smallest index: 2
+The last largest index: 6
 Program ended with exit code: 0
  */
