@@ -35,12 +35,6 @@
 
 ==
 
-## Minimum spanning tree
-- Unique path connecting all the nodes connected at minimum cost.
-- Often used for directed weighted graph.
-
-==
-
 ## Graph Representation
 - Two commonly used methods: adjacency matrices and adjacency lists.
 
@@ -69,10 +63,25 @@
 
 ==
 
-## Depth First Traversal
+## Traversal
 - Visit all the verteces
-- similar to the preorder traversal of a binary tree
+
+### Depth First Traversal
+
+- Similar to the preorder traversal of a binary tree
 
 1. Start from the lowest index.
 2. Find the lowest connected node, move to it and as far as possible.
 3. Move to the next lowest and repeat.
+
+### Breadth First Traversal
+- Similar to traversing a binary tree level by level
+- (the nodes at each level are visited from left to right)
+- visit the vertices that are directly connected to the current vertex
+
+==
+
+## Minimal spanning tree
+- Unique path connecting all the nodes connected at minimum cost.
+- Often used for directed weighted graph.
+

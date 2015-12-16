@@ -1,4 +1,5 @@
 # Pointers
+- [Why should I use a pointer rather than the object itself?](http://stackoverflow.com/questions/22146094/why-should-i-use-a-pointer-rather-than-the-object-itself)
 
 ## Variables and Memory
 

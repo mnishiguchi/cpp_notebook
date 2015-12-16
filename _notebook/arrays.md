@@ -231,4 +231,28 @@ void inputNumbers(double* numbers, int& itemCount, const int MAX_COUNT) {
 }
 ```
 
+==
 
+## Library arrays
+- http://www.cplusplus.com/doc/tutorial/arrays/
+- both kinds of arrays use the same syntax to access its elements: myarray[i]. Other than that, the main differences lay on the declaration of the array, and the inclusion of an additional header for the library array. Notice also how it is easy to access the size of the library array.
+
+```cpp
+#include <iostream>
+#include <array>
+using namespace std;
+
+int main() {
+
+  array<int,3> myarray { 10, 20 ,30 };
+
+  for (int i = 0; i < myarray.size(); ++i) {
+    ++myarray[i];
+  }
+
+  for (int elem : myarray) {
+    cout << elem << '\n';
+  }
+
+}
+```

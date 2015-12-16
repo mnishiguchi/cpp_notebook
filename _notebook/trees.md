@@ -39,6 +39,6 @@
 - **Non-recursive binary tree traversal algorithms**
 
 ## Traveral of the tree (3 methods)
-- in order - L, node, R
-- pre-order - L, R, node
-- post-order - node, L, R
+- in order   - L, node, R
+- pre-order  - node, L, R
+- post-order - L, R, node
