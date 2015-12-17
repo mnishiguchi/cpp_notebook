@@ -93,15 +93,16 @@ void initialize(int list[], int listSize) {
 - Greatly enhance a program’s readability.
 
 ```cpp
-enum paintType { GREEN, RED, BLUE, BROWN, WHITE, ORANGE, YELLOW };
+enum paintType { GREEN, RED, BLUE, BROWN, WHITE, ORANGE, YELLOW };   // { 0, 1, 2, ... 6 }
 
 double paintSale[7];
-paintType paint;
+
+paintType paint;  // The loop-counter that is of paintType type.
 
 // initializes each component of the array paintSale to 0:
-for (paint = GREEN;
-     paint <= YELLOW;
-     paint = static_cast<paintType>( paint + 1 ) ) {
+for (paint = GREEN;    // Counter initially set to GREEN, which is equivalent to 0
+     paint <= YELLOW;  // Treat the paintType as if it is int.
+     paint = static_cast<paintType>( paint + 1 ) ) {  // Increment the counter then cast to paintType
 
     paintSale[ paint ] = 0.0;
 }
