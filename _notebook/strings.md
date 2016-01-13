@@ -1,4 +1,5 @@
 # strings
+- [C-strings vs. strings](http://www.cs.fsu.edu/~myers/cop3330/notes/strings.html)
 
 ##  String info functions
 
