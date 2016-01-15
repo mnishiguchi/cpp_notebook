@@ -1,8 +1,7 @@
 # vidual studio
 
-- Create empty project
-- C++ file
-- Add new file to source folder
+1. New project -> Create empty project -> C++ file(cpp)
+2. Then, add new file to source folder
 
 ==
 

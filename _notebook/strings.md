@@ -1,6 +1,13 @@
 # strings
 - [C-strings vs. strings](http://www.cs.fsu.edu/~myers/cop3330/notes/strings.html)
 
+```cpp
+char name[] = "hungry"; // h,u,n,g,r,y,\0 ==> 7 characters
+
+```
+
+==
+
 ##  String info functions
 
 |   |   |   |
