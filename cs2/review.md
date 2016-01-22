@@ -27,8 +27,9 @@ ANS.
 ```cpp
 cout << ( 23 - 87 * 45 ) << endl; // -3892
 ```    
-    
+ 
 ==
+
 ## QUESTION 4
 Output (without quotes) "The square root of 87 is:xx", where xx is the actual square root of 87.  Have the program calculate the square root value.
 
@@ -214,27 +215,27 @@ If the number matches none of the above criteria, output, "I'm not sure what you
 
 ANS.
 ```cpp
-    // Input an integer from a user.
-    int userInt;
-    cout << "Enter an integer: ";
-    cin >> userInt;
+// Input an integer from a user.
+int userInt;
+cout << "Enter an integer: ";
+cin >> userInt;
 
-    switch ( userInt ) {
-        case 0:
-            cout << "Nothing here" << endl;
-            break;
-        case 1:
-            cout << "You have one" << endl;
-            break;
-        case 2:
-        case 3:
-        case 4:
-            cout << "You have multiple things" << endl;
-            break;
-        case -1:
-            cout << "You owe me." << endl;
-            break;
-        default:
-            cout << "I'm not sure what you have." << endl;
-    }
+switch ( userInt ) {
+    case 0:
+        cout << "Nothing here" << endl;
+        break;
+    case 1:
+        cout << "You have one" << endl;
+        break;
+    case 2:
+    case 3:
+    case 4:
+        cout << "You have multiple things" << endl;
+        break;
+    case -1:
+        cout << "You owe me." << endl;
+        break;
+    default:
+        cout << "I'm not sure what you have." << endl;
+}
 ```  
