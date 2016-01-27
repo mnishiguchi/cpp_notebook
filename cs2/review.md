@@ -2,6 +2,7 @@
 January 23, 2016
 
 ==
+
 ## QUESTION 1
 Declare an int variable called aNumber and assign it a value of 24.
 
@@ -11,6 +12,7 @@ int aNumber = 24;
 ```
     
 ==
+
 ## QUESTION 2
 Declare 2 double variables, myMoney and yourMoney on the same line.  Do NOT give them initial values.
 
@@ -20,11 +22,13 @@ double myMoney, yourMoney;
 ```    
     
 ==
+
 ## QUESTION 3
 Output to the screen the result of the math problem 23 - 87 X 45. Have the program calculate the result.
 
 ANS.
 ```cpp
+// Assuming that `using namespace std;` is placed earlier in the code.
 cout << ( 23 - 87 * 45 ) << endl; // -3892
 ```    
  
@@ -40,35 +44,39 @@ cout << "The square root of 87 is:" << sqrt( 87 ) << endl;
 ```
 
 ==
+
 ## QUESTION 5
 Get a char from the user.  If the value of the char is 'U', output, "It's You.", if the value is 'I', output, "I did it.", otherwise, output, "I don't know who did it."
 
 ANS.
 ```cpp
-    // Get a char from the user.
-    char userChar;
-    cout << "Enter a character: ";
-    cin >> userChar;
+// Get a char from the user.
+char userChar;
+cout << "Enter a character: ";
+cin >> userChar;
 
-    // If the value of the char is 'U', output, "It's You.",
-    // if the value is 'I', output, "I did it.",
-    // otherwise, output, "I don't know who did it."
-    if ( userChar == 'U' ) {
+// If the value of the char is 'U', output, "It's You.",
+// if the value is 'I', output, "I did it.",
+// otherwise, output, "I don't know who did it."
+if ( userChar ==
+ 'U' ) {
 
-        cout << "It's You." << endl;
+    cout << "It's You." << endl;
 
-    } else if ( userChar == 'I' ) {
+} else if ( userChar ==
+ 'I' ) {
 
-        cout << "I did it." << endl;
+    cout << "I did it." << endl;
 
-    } else {
+} else {
 
-        cout << "I don't know who did it." << endl;
+    cout << "I don't know who did it." << endl;
 
-    }
+}
 ```     
     
 ==
+
 ## QUESTION 6
 Output the following, showing the quotes as shown below:
 MLK said, "the measure of a man is where he stands in times of adversity."
@@ -79,6 +87,7 @@ cout << "MLK said, \"the measure of a man is where he stands in times of adversi
 ```     
     
 ==
+
 ## QUESTION 7
 Output the ASCII value of the plus sign (+). You must do this without consulting the ASCII table.
 
@@ -88,6 +97,7 @@ cout << static_cast<int>( '+' ) << endl;
 ```      
     
 ==
+
 ## QUESTION 8
 Output the char value that corresponds to the ASCII value 93.
 
@@ -97,6 +107,7 @@ cout << static_cast<char>( 93 ) << endl;
 ```  
     
 ==
+
 ## QUESTION 9
 Declare a double array of 4 elements.
 
@@ -106,21 +117,22 @@ double aList[4];
 ```      
 
 ==
+
 ## QUESTION 10
 Have the user input two doubles and display the sum and the product of those numbers.
 
 ANS.
 ```cpp
-    double d1, d2;
-    cout << "Enter two decimal numbers: ";
-    cin  >> d1 >> d2;
-    cout << endl;
+double d1, d2;
+cout << "Enter two decimal numbers: ";
+cin  >> d1 >> d2;
 
-    cout << "Sum:     " << d1 + d2 << endl;
-    cout << "Product: " << d1 * d2 << endl;
+cout << "Sum:     " << d1 + d2 << endl;
+cout << "Product: " << d1 * d2 << endl;
 ```      
 
 ==
+
 ## QUESTION 11
 Write and call a function to return the sum of two numbers passed as arguments. Output the return value in the place from which it was called to ensure it works properly.
 
@@ -130,7 +142,7 @@ ANS.
 using namespace std;
 
 /**
- * Returns the sum of two numbers passed as arguments.
+ * Returns the sum of two numbers that are passed in.
  */
 double sum( double d1, double d2 ) {
     return d1 + d2;
@@ -146,6 +158,7 @@ int main() {
 }
 ```      
 ==
+
 ## QUESTION 12
 
 DESCRIBE the problem with the following code:
@@ -160,6 +173,7 @@ Division by zero is illigal.
 ```      
     
 ==
+
 ## QUESTION 13
 
 Is the following line an error?  If so, what is the problem, if not, what is the value of the b variable?
@@ -168,7 +182,8 @@ bool b = 5 == 6;
 
 ANS.
 ```
-No, it is not an error. 5 == 6 is a valid comparison statement, which evaluates to false. Thus, the value of the b variable will be 0 (false).
+No, it is not an error. 
+Since the == operator has precedence over the = operator, the comparison statement 5 == 6 is evaluated before assignment is performed. Also (5 == 6) is a valid comparison statement, which evaluates to false. Thus, the value of the b variable will be 0 (false).
 ```
 
 ```cpp
@@ -176,6 +191,7 @@ bool b = ( 5 == 6 ); //==> b = false;
 ```  
     
 ==
+
 ## QUESTION 14
 
 Code a for loop to iterate and output "Hello" four times
@@ -188,6 +204,7 @@ for ( int i = 0; i < 4; i++ ) {
 ```      
 
 ==
+
 ## QUESTION 15
 
 Code a while loop to iterate and output "Hello" four times.
@@ -202,6 +219,7 @@ while ( i < 4 ) {
 ```      
     
 ==
+
 ## QUESTION 16
 
 Do all of these dependently, that is, use one of the multiple path structures to process this logic.

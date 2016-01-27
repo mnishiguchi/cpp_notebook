@@ -1,10 +1,43 @@
 # strings
 - [C-strings vs. strings](http://www.cs.fsu.edu/~myers/cop3330/notes/strings.html)
 
+**char array**
+
 ```cpp
 char name[] = "hungry"; // h,u,n,g,r,y,\0 ==> 7 characters
-
 ```
+
+```cpp
+// A string "Guy"
+// Length: 4
+// These are all synonymous:
+char name[] = { 'G', 'u', 'y', 0 }; 
+char name[] = { 'G', 'u', 'y', '\0' }; 
+char name[] = "Guy";
+char* name  = "Guy";
+
+// Printing the name of the char array.
+// NOTE: The array name of any other data types would print its memory address.
+// But char array is special. It prints the entire string.
+cout << "Printing name        : " << name << endl; //==> Guy
+
+int nums[5] = { 1, 2, 3, 4, 5 };
+cout << "Printing nums        : " << nums << endl;
+
+// Printing the memory address.
+cout << "Printing (void *)name: " << (void *)name << endl; //==> 0x7fff5fbff818
+
+// Printing a single character.
+cout << "Printing *name       : " << *name << endl; //==> G
+```
+
+**string type**
+- not a built-in type
+
+```cpp
+string myName = "Masatoshi";
+```
+
 
 ==
 

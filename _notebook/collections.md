@@ -1,5 +1,8 @@
 # Collections
-- [Standard Containers](http://www.cplusplus.com/reference/stl/)
+
+## [Standard Containers](http://www.cplusplus.com/reference/stl/)
+- array, vector, list, stack, queue, map, etc
+- A container is a holder object that stores a collection of other objects (its elements). They are implemented as class templates, which allows a great flexibility in the types supported as elements.
 
 ## Static Map as Class Member in C++
 http://stackoverflow.com/questions/19336236/static-map-as-class-member-in-c
