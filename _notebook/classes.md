@@ -87,6 +87,22 @@ void ShopItem::setNameAndPrice(string itemName, int itemPrice) {
 - Can create multiple constructors differing in parameter types
 - Provides different initialization values when creating a new objectdefining 
 
+#### Declaring an array of objects
+
+```cpp
+// NOTE: Default constructor is required to do this.
+VideoGame aGame[45];
+```
+
+```cpp
+// Can use different constructors for different elements.
+VideoGame games[] {
+   VideoGame( 9 ),
+   VideoGame( 10, "Battle", "Wii" ),
+   VideoGame( 30, "Larry", "Nintendo64" ),
+};
+```
+
 ### Member initialization list
 - an alternative approach for initializing data members in a constructor
 - consists of a comma-separated list of variableName(initValue) items
