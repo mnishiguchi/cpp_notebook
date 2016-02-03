@@ -87,11 +87,11 @@ cout << "MLK said, \"the measure of a man is where he stands in times of adversi
 ```     
 
 ```cpp
-cout << "MLK said, " << '"' << " the measure of ... adversity." << '"' << endl;
+cout << "MLK said, " << '"' << "the measure of ... adversity." << '"' << endl;
 ```   
 
 ```cpp
-cout << "MLK said, " << char( 34 ) << " the measure of ... adversity." << char( 34 ) << endl;
+cout << "MLK said, " << char( 34 ) << "the measure of ... adversity." << char( 34 ) << endl;
 ```   
 
 ==

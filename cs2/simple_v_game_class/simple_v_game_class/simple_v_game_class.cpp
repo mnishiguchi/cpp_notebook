@@ -8,8 +8,12 @@
 //
 
 #include <iostream>
-#include <iomanip>
 using namespace std;
+
+
+//========================================================================//
+// Declaration for the VGame class.
+//========================================================================//
 
 
 /**
@@ -17,16 +21,7 @@ using namespace std;
  */
 class VGame {
 public:
-
-    // Constructor that takes the initial value for all of the attributes.
-    VGame( string title, double cost, int minAge, bool matureThemed ) {
-
-        this->title         = title;
-        this->cost          = cost;
-        this->minAge        = minAge;
-        this->matureThemed  = matureThemed;
-
-    }
+    VGame( string title, double cost, int minAge, bool matureThemed );
 
     void setTitle( string );
     string getTitle() const;
@@ -41,7 +36,6 @@ public:
     bool isMature() const;
 
 private:
-
     string title;
     double cost;
     int minAge;
@@ -50,10 +44,20 @@ private:
 }; // end class VGame
 
 
-// ---
-// IMPLEMENTATION OF GETTERS AND SETTERS
-// ---
+//========================================================================//
+// Implementation for the VGame class
+//========================================================================//
 
+
+// Constructor that takes the initial value for all of the attributes.
+VGame::VGame( string title, double cost, int minAge, bool matureThemed ) {
+
+    this->title        = title;
+    this->cost         = cost;
+    this->minAge       = minAge;
+    this->matureThemed = matureThemed;
+
+}
 
 // Getter & setter for the title attribute.
 void VGame::setTitle( string title ) {
@@ -86,7 +90,9 @@ void VGame::setMinAge( int minAge ) {
 
 }
 int VGame::getMinAge() const {
+
   return this->minAge;
+
 }
 
 // Getter & setter for the matureThemed attribute.
@@ -102,85 +108,106 @@ bool VGame::isMature() const {
 }
 
 
-// ---
-// DECLARATION FOR UTILITY FUNCTIONS
-// ---
+//========================================================================//
+// Declaration for the utility functions.
+//========================================================================//
 
 
-double averageMinAgeForNonMature( VGame[], int );
+double getAvgAge( VGame[], int );
 int countMature( VGame[], int );
 int countNonMature( VGame[], int );
 void printVGame( VGame );
 void printVGames( VGame[], int );
 
 
-// ---
-// MAIN FUNCTIONS
-// ---
+//========================================================================//
+// Main function.
+//========================================================================//
 
 
+/**
+ * Test the required functionalities.
+ * - Test1. VGame's four attributes should be private.
+ * - Test2. VGame should have accessors and mutators for all four attributes.
+ * - Test3. The countMature function.
+ * - Test4. The getAvgAge function.
+ */
 int main() {
 
+    // Configure the size of the list.
+    const int listSize = 10;
+
     // Instantiate an array in main with at least four instances.
-    VGame myGames[] = {
+    // NOTE: Ensure that we instantiate correct number of elements.
+    VGame games[ listSize ] = {
 
-        VGame( "title_1", 12.3, 8, false ),
-        VGame( "title_2", 23.4, 20, true ),
-        VGame( "title_3", 34.5, 20, true ),
-        VGame( "title_4", 45.6, 16, false ),
-        VGame( "title_5", 56.7, 6, false )
-
+        VGame( "Super Mario Bros", 39.99, 9, false ),
+        VGame( "Donkey Kong", 29.99, 12, false ),
+        VGame( "Sim City", 49.99, 20, true ),
+        VGame( "Sangokushi", 99.99, 20, true ),
+        VGame( "Dragon Quest", 45.88, 10, false ),
+        VGame( "Pac-man", 29.99, 8, false ),
+        VGame( "Space Invaders", 33.50, 20, true ),
+        VGame( "Frogger", 44.50, 10, false ),
+        VGame( "Street Fighter", 45.6, 20, true ),
+        VGame( "Tetris", 25.99, 12, false )
     };
 
+    /*
+        INFORMATION
 
-    VGame aGame( "a_game", 99.9, 18, false );
+        - Total count: 10 ( Mature: 4, Non-mature: 6 )
 
-    //---------------------------------------------- //
+        - Total minAge of non-mature: 9 + 12 + 10 + 8 + 10 + 12 = 61
+        - Average minAge of non-mature: 61 / 6 = 10.1666...
+     */
+
+    // ---------------------------------------------- //
 
     cout << "Test1. VGame's four attributes should be private." << endl;
         cout << "Manually tested" << endl;
         cout << endl;
-        // aGame.title;          //==> Should cause a sytax error.
-        // aGame.cost;           //==> Should cause a sytax error.
-        // aGame.minAge;         //==> Should cause a sytax error.
-        // aGame.matureThemed;   //==> Should cause a sytax error.
+        // games[ 0 ].title;          //==> Should cause a compile-time error.
+        // games[ 0 ].cost;           //==> Should cause a compile-time error.
+        // games[ 0 ].minAge;         //==> Should cause a compile-time error.
+        // games[ 0 ].matureThemed;   //==> Should cause a compile-time error.
 
-    //---------------------------------------------- //
+    // ---------------------------------------------- //
 
     cout << "Test2. VGame should have accessors and mutators for all four attributes." << endl;
 
-        printVGame( aGame );
-        printVGames( myGames, 5 );
+        printVGames( games, listSize );
 
-    //---------------------------------------------- //
+    // ---------------------------------------------- //
 
     cout << "Test3. countMature" << endl;
 
         cout << "The number of games that are mature-themed: "
-             << countMature( myGames, 5 ) << endl;
+             << countMature( games, listSize ) << endl;
              //==> Should be 2.
 
         cout << endl;
 
-    //---------------------------------------------- //
+    // ---------------------------------------------- //
 
-    cout << "Test4. averageMinAgeForNonMature" << endl;
+    cout << "Test4. getAvgAge" << endl;
 
         cout << "The average minimum age of games that are NOT mature-themed: "
-             << averageMinAgeForNonMature( myGames, 5 ) << endl;
+             << getAvgAge( games, listSize ) << endl;
              //==> Should be 10.
 
         cout << endl;
 
-    //---------------------------------------------- //
+    // ---------------------------------------------- //
 
     return 0;
-}
+
+} // end main
 
 
-// ---
-// IMPLEMENTATION OF UTILITY FUNCTIONS
-// ---
+//========================================================================//
+// Implementation for  the utility functions.
+//========================================================================//
 
 
 /**
@@ -216,14 +243,15 @@ int countNonMature( VGame games[], int size ) {
  * @param vGame[] an array of VGame
  * @return        the average minimum age of games that are NOT mature-themed.
  */
-double averageMinAgeForNonMature( VGame games[], int size ) {
+double getAvgAge( VGame games[], int size ) {
 
-    int sumMinAgesNonMature = 0;
+    // NOTE: Since the return value will be of double type, we choose double type here.
+    double sumMinAgesNonMature = 0.0;
 
     // Iterate over the array.
     for ( int i = 0; i < size; i++ ) {
 
-        // If an element is mature theme, add its min age to the accumulator.
+        // If an element is NOT mature-themed, add its min age to the accumulator.
         if ( ! games[ i ].isMature() ) {
 
             sumMinAgesNonMature += games[ i ].getMinAge();
@@ -233,6 +261,7 @@ double averageMinAgeForNonMature( VGame games[], int size ) {
     }
 
     // Rerurn the average.
+    // NOTE: Ensure that the result will not be trucated which can cause inacurracy.
     return sumMinAgesNonMature / countNonMature( games, size );
 }
 
