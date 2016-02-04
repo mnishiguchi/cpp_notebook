@@ -1,8 +1,11 @@
 # Classes
-
-- good practice is to make ALL data members of a class private, using member functions to access that data
-- good practice explicitly uses the public: and private: keywords for clarity, rather than relying on defaults
 - [doc](http://www.cplusplus.com/doc/tutorial/classes/)
+- The word `const` at the end of the member functions specifies that these functions cannnot modify the member variables of an object of that class.
+
+## Good practice
+   + Make ALL data members of a class private, using member functions to access that data.
+   + Explicitly use the `public:` and `private:` keywords for clarity, rather than relying on defaults.
+   + initialize all variables when defined
 
 ```cpp
 #include <iostream>
@@ -78,16 +81,64 @@ void ShopItem::setNameAndPrice(string itemName, int itemPrice) {
 ==
 
 ## Constructors
-- Special class member function which can be used to initialize data members
+- Special class member function which can be used to **initialize data members**
 - A good practice is to initialize all variables when defined
 - Called automatically when a variable of that class type is defined
 - Has the same name as the class, has no return type
+
+### Precaution
+- C++ does not automatically initialize the variables
+- If a class has no constructor(s), C++ automatically provides the default constructor; however, the object declared is still uninitialized.
+- If a class has a constructor with parameters, C++ does not provide the default constructor.
+- If we declare an object and want the default constructor to be excuted, we should not place the empty parentheses after the object name in the object declaration statement.
 
 ### Constructor overloading
 - Can create multiple constructors differing in parameter types
 - Provides different initialization values when creating a new objectdefining 
 
-#### Declaring an array of objects
+### Member initialization list
+- An alternative approach for initializing data members in a constructor
+- Consists of a comma-separated list of variableName(initValue) items
+
+```cpp
+class SampleClass {
+   public:
+      SampleClass();
+      void print() const;
+
+   private:
+      int field1;
+      int field2;
+};
+
+// Member initialization list.
+SampleClass::SampleClass() : field1(100), field2(200) {
+   return;
+}
+```
+
+==
+
+## Destructors
+- Automatically executed when the class object goes out of scope.
+
+```cpp
+~ClassName();
+```
+
+### Calling constructor and destructor explicitly
+- http://www.geeksforgeeks.org/possible-call-constructor-destructor-explicitly/
+
+
+==
+
+## Declaring objects
+- The class should have the default constructor if a class has a constructors and we want to declare an array of that class's objects.
+
+```cpp
+// NOTE: Default constructor is required to do this.
+VideoGame aGame;
+```
 
 ```cpp
 // NOTE: Default constructor is required to do this.
@@ -103,26 +154,35 @@ VideoGame games[] {
 };
 ```
 
-### Member initialization list
-- an alternative approach for initializing data members in a constructor
-- consists of a comma-separated list of variableName(initValue) items
+==
 
-```cpp
-class SampleClass {
-   public:
-      SampleClass();
-      void print() const;
+## Built-in operation on classes
+- Most of C++'s built-in operations do not apply to classes.
+- e.g., arithmetic operators, rational operators (comparison)
+- cf. Operator overloading
 
-   private:
-      int field1;
-      int field2;
-};
+==
 
-SampleClass::SampleClass() : field1(100), field2(200) {
-   return;
-}
-```
+## Class Scope
 
-### Calling constructor and destructor explicitly
-- http://www.geeksforgeeks.org/possible-call-constructor-destructor-explicitly/
+- A class object can be either
+  + automatic
+     * created each time the control reaches its declaration and
+     * destroyed when the control exits the surrounding block) or
+  + static
+     * created once, when the control reaches its declaration, and destroyed when the program terminates).
 
+== 
+
+## Static members
+
+- C++ allocates only one memory space
+- static member variables of a class exist even when no object of that class type exists
+
+==
+
+## Struct vs Class
+
+- Both C++ classes ans structs have the same capabilities; however, most programmers ristrict their use of structures to adhere to their C-like structure form and thus do not use them to incude member functions.
+
+==
