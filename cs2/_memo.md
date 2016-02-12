@@ -80,6 +80,7 @@ int main() {
 }
 ```
 
+==
 
 ## sizeof oprator
 
@@ -90,4 +91,18 @@ int main() {
     cout << "sizeof double: " << sizeof d << endl;  //==> 8
 ```
 
-##
+==
+
+## C++ pointer arithmetic
+
+- The four arithmetic operators that can be used on pointers:
+  + `++`, 
+  + `--`, 
+  + `+`, 
+  + `-`
+
+==
+
+`&` is the address-of operator, and can be read simply as "address of"
+`*` is the dereference operator, and can be read as "value pointed to by"
+
