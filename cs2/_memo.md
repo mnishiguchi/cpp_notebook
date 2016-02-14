@@ -2,7 +2,7 @@
 
 ## Passing by value v passing by reference
 - passing by reference
-    - Passing &argument into a function
+- Passing &argument into a function
 
 ```
 // A Hero pointer is passed by value.
