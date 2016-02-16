@@ -15,11 +15,10 @@
 ==
 
 ## Inheritance
-- 
-    + Single inheritance
-        + derived from a single base class; 
-    + Multiple inheritance
-        + derived from more than one base class
+- Single inheritance
+    + derived from a single base class; 
+- Multiple inheritance
+    + derived from more than one base class
 
 ```cpp
 class className: memberAccessSpecifier baseClassName {
@@ -29,8 +28,9 @@ class className: memberAccessSpecifier baseClassName {
 };
 ```
 
-### Base Access Specifier
-- [Difference between private, public, and protected inheritance](http://stackoverflow.com/questions/860339/difference-between-private-public-and-protected-inheritance)
+--
+
+### [Difference between private, public, and protected inheritance](http://stackoverflow.com/questions/860339/difference-between-private-public-and-protected-inheritance)
 
 ```cpp
 class A 
@@ -65,6 +65,8 @@ class D : private A    // 'private' is default for classes
 };
 ```
 
+--
+
 ### "super" in C++
 
 - http://stackoverflow.com/a/180633/3837223
@@ -76,5 +78,5 @@ class D : private A    // 'private' is default for classes
 - 'has-a' relationship
 - one or more members of a class are objects of another class type.
 
-
+==
 

@@ -3,6 +3,8 @@
 - For non-dynamic arrays, whenever we declare an array, its size must be known.
 - cf. dynamic arrays: Arrays that are created by using pointers during program execution
 
+==
+
 ## Array Initialization During Declaration
 
 ```cpp
@@ -15,6 +17,8 @@ double sales[5] = { 12.25, 32.50, 16.90, 23, 45.68 };  // Good.
 // initialized during declaration, it is a good practice to do so.
 double sales[] = { 12.25, 32.50, 16.90, 23, 45.68 };  // Good.
 ```
+
+==
 
 ## Partial Initialization of Arrays During Declaration
 - When we declare and initialize an array simultaneously, we do not need to initialize all components of the array.
@@ -36,6 +40,8 @@ int list[25] = { 4, 7 };
 // follow the last uninitialized elements must be uninitialized.
 int list[10] = {2, 5, 6, , 8}; //  syntax error
 ```
+
+==
 
 ## Array size
 ```cpp
@@ -62,6 +68,8 @@ cout << endl;
 int list[ arraySize ];  // not allowed
 ```
 
+==
+
 ## Arrays as Parameters to Functions
 - In C++, arrays are passed by reference only.
 - NOTE: Because arrays are passed by reference only, we do not use the symbol `&` when declaring an array as a formal parameter.
@@ -77,16 +85,24 @@ void initialize(int list[], int listSize) {
 }
 ```
 
+==
+
 ## Constant Arrays as Formal Parameters
 - Prevent the function from changing the actual parameter
 - Any attempt to change constant results in a compile-time error.
 - It is a good programming practice to declare an array to be constant as a formal parameter if we do not want the function to modify the array.
 
+==
+
 ## The reason why arrays are passed by reference only
 - If C++ allowed arrays to be passed by value, the computer would have to allocate memory for the components of the formal parameter and copy the contents of the actual array into the corresponding formal parameter when the function is called. If the array size was large, this process would waste memory as well as the computer time needed for copying the data. That is why in C++ arrays are always passed by reference.
 
+==
+
 ## Functions Cannot Return a Value of the Type Array
 - C++ does not allow functions to return a value of the type array.
+
+==
 
 ## Arrays with enum
 - Integral Data Type that can be used for array indices.
@@ -110,10 +126,14 @@ for (paint = GREEN;    // Counter initially set to GREEN, which is equivalent to
 
 ```
 
+==
+
 ## Checking if a character array is empty
 ```cpp
 if (text[ 0 ] == '\0') {}
 ```
+
+==
 
 ## Two-dimensional arrays
 
@@ -137,28 +157,6 @@ int numVals[2][3] = {
 
 ==
 
-## Dynamic 2D arrays
-
-```cpp
-// Pointer to the 2D array
-int** board;
-
-// Decide on the size
-int numRows;
-int numColumns;
-
-// Create rows
-board = new int* [numRows];  // Create an array of int pointers
-
-// Create columns for each row
-for (int row = 0; row < numRows; row++) {
-    // For each row, create an int array
-    board[row] = new int[numColumns];
-}
-```
-
-==
-
 ## Initialiing an array to NULL
 - http://stackoverflow.com/questions/629017/how-does-array100-0-set-the-entire-array-to-0
 ```cpp
@@ -176,6 +174,7 @@ char aArray[100] = {};
 void showScores(int [], int);          // function prototype
 void showScores(int tests[], int size) // function header
 ```
+==
 
 ## const Parameters
 - Put the const keyword before the array parameter to tell the compiler that the array cannot be changed.
@@ -183,6 +182,7 @@ The compiler will report errors if the code in the function attempts to modify t
 ```cpp
 void p(const int list[], int arraySize)
 ```
+==
 
 ## Returning an Array from a Function 
 - Not allowed in C++
@@ -194,6 +194,8 @@ int[] reverse(const int list[], int size)               // NG
 // Good example.
 void reverse(const int list[], int newList[], int size) // GOOD
 ```
+
+==
 
 ## Prompt the user for an arbitrary number of elements
 
@@ -229,6 +231,37 @@ void inputNumbers(double* numbers, int& itemCount, const int MAX_COUNT) {
 
         }
     }
+}
+```
+
+==
+
+## Dynamic arrays
+- Arrays that are created during the excution of a program
+- If the array is very big and the data set is small, such a declaration would result in memory waste.
+- IMPORTANT: Range-based `for` loop cannot be used on dynamic arrays due to the fact that a dynamic array has no first and no last elements and so the functions `begin` and `end` cannot be called on the dynamic array.
+
+```cpp
+int* p;
+p = new int[ 10 ]
+```
+
+### Dynamic 2D arrays
+```cpp
+// Pointer to the 2D array
+int** board;
+
+// Decide on the size
+int numRows;
+int numColumns;
+
+// Create rows
+board = new int* [ numRows ];  // Create an array of int pointers
+
+// Create columns for each row
+for ( int row = 0; row < numRows; row++ ) {
+    // For each row, create an int array
+    board[row] = new int[ numColumns ];
 }
 ```
 

@@ -2,10 +2,12 @@
 - [doc](http://www.cplusplus.com/doc/tutorial/classes/)
 - The word `const` at the end of the member functions specifies that these functions cannnot modify the member variables of an object of that class.
 
+==
+
 ## Good practice
-   + Make ALL data members of a class private, using member functions to access that data.
-   + Explicitly use the `public:` and `private:` keywords for clarity, rather than relying on defaults.
-   + initialize all variables when defined
+   + Make ALL data members of a class private, using member functions to access that data
+   + Explicitly use the `public:` and `private:` keywords for clarity, rather than relying on defaults
+   + Initialize all variables when defined
 
 ```cpp
 #include <iostream>
@@ -85,16 +87,19 @@ void ShopItem::setNameAndPrice(string itemName, int itemPrice) {
 - A good practice is to initialize all variables when defined
 - Called automatically when a variable of that class type is defined
 - Has the same name as the class, has no return type
+- IMPORTANT:
+  + C++ does not automatically initialize the variables
+  + If a class has no constructor(s), C++ automatically provides the default constructor; however, the object declared is still uninitialized
+  + If a class has a constructor with parameters, C++ does not provide the default constructor
+  + If we declare an object and want the default constructor to be excuted, we should not place the empty parentheses after the object name in the object declaration statement
 
-### Precaution
-- C++ does not automatically initialize the variables
-- If a class has no constructor(s), C++ automatically provides the default constructor; however, the object declared is still uninitialized.
-- If a class has a constructor with parameters, C++ does not provide the default constructor.
-- If we declare an object and want the default constructor to be excuted, we should not place the empty parentheses after the object name in the object declaration statement.
+--
 
 ### Constructor overloading
 - Can create multiple constructors differing in parameter types
 - Provides different initialization values when creating a new objectdefining 
+
+--
 
 ### Member initialization list
 - An alternative approach for initializing data members in a constructor
@@ -121,14 +126,69 @@ SampleClass::SampleClass() : field1(100), field2(200) {
 
 ## Destructors
 - Automatically executed when the class object goes out of scope.
+- We can put the necessary code in the destructor to ensure that when an object goes out of scope, the memory created by pointer variables is deallocated.
+- IMPORTANT: For the destructor to work properly, the pointer p must have a valid value.
 
 ```cpp
-~ClassName();
+class ClassName {
+public:
+  ~ClassName();
+  ...
+private:
+  int x;
+  int size;
+  int* list;  // Must be deallocated when an object goes out of scope. 
+};
+
+ClassName::~ClassName() {
+
+  delete[] list;
+
+}
 ```
+
+--
 
 ### Calling constructor and destructor explicitly
 - http://www.geeksforgeeks.org/possible-call-constructor-destructor-explicitly/
 
+==
+
+## Copy constructor
+
+### Default member-wise copy constructor
+- Provided by the compiler
+- Shallow copy
+- Any pointer members will point to the same memory locations as those of the specified existing instance
+- Automatically excuted in the following situations:
+  + When an object is declared and initialized by using the value of another object
+  + When, as a parameter, an object is passed by value
+  + When the return value of a function is an object
+
+```cpp
+ClassName obj_3( obj_1 );
+```
+
+### Custom copy constructor
+- To force each object to have its own copy of data (deep copy), we must override the definition of the copy constructor provided by the compiler
+- We must provide our own definition of the copy constructor.
+
+```cpp
+/**
+ * The general syntax to include the copy constructor 
+ * in the definition of a class
+ * @param other an instance of the class as a constant reference parameter
+ */
+ClassName( const ClassName& other );
+```
+
+==
+
+## Class with pointer member variables
+- Do three things:
+1. Include the destructor in hte class
+2. Overload the assignment operator for the class
+3. Include the copy constructor
 
 ==
 
@@ -186,3 +246,18 @@ VideoGame games[] {
 - Both C++ classes ans structs have the same capabilities; however, most programmers ristrict their use of structures to adhere to their C-like structure form and thus do not use them to incude member functions.
 
 ==
+
+## object-oriented design (OOD)
+
+### The three basic principles of OOD
+
+- **Encapsulation**: The ability to combine data and operations on that data in a single unit.
+- **Inheritance**:   The ability to create new objects (classes) from existing objects (classes).
+- **Polymorphism**:  The ability to use the same expression to denote different operations.
+
+==
+
+## The `this` implicit parameter
+
+- Using `this->` makes clear that a class member is being accessed.
+- Essential if a data member and parameter have the same identifier
