@@ -1,12 +1,10 @@
 //
 //  main.cpp
-//  fun_thing
+//  20160216
 //
-//  Created by Masatoshi Nishiguchi on 2/9/16.
+//  Created by Masatoshi Nishiguchi on 2/16/16.
 //  Copyright © 2016 Masatoshi Nishiguchi. All rights reserved.
 //
-//
-
 
 #include <iostream>
 #include <string>
@@ -53,10 +51,10 @@ public:
     : FunThing( funLevel, thingName ) {}
 
   // Contains a string method called getPeopleNames().
-  string getPlayerName() const { return this->playerName; }
+  string* getPeopleNames() const;
 
 private:
-  string playerName;
+  string* peopleNames;
 
 }; // end ParlorGame
 
@@ -246,108 +244,16 @@ void printFunThings( FunThing things[], int size ) {
 
 int main() {
 
-  // A pointer for testing.
-  FunThing* testPtr = NULL;
+  double* d_1;
+  d_1 = new double(11);
 
+  double* d_2 = new double;
+  *d_2 = 22;
 
-  // 2) Declare an instance.
-  FunThing coding( 56, "C++" );
-
-
-  // 3) Declare an array of 3 instances.
-  // Make up attribute values as needed.
-  // Note, we are using only the 2-param constructor.
-  // That is, you should NOT make a default constructor at this time.
-
-  FunThing things[ 3 ] = {
-
-    FunThing( 83, "TypeScript" ),
-    FunThing( 48, "JavaScript" ),   // Least fun
-    FunThing( 95, "Ruby" )          // Funnest
-
-  };
-
-
-  // 8) Declare a pointer to FunThing called ftp.
-  // Point ftp to a new dynamic instance of FunThing.
-  FunThing* ftp = new FunThing( 100, "Vacation" );
-
-
-  // 10) Declare an array of Modern to four elements like: Modern funGames[4];
-  Modern funGames[4];
-
-  // 11) Set the funLevel of all the modern games to 3 in an efficient way.
-  for ( int i = 0; i < 4; i++ ) {
-    funGames[ i ].setFunLevel(3);
-  }
-  cout << "printing all the modern games' fun levels..." << endl;
-  for ( int i = 0; i < 4; i++ ) {
-    cout << "Modern #" << i << ": " << funGames[ i ].getFunLevel() << endl;
-  }
-
-  cout << "====================================================================" << endl;
-
-  // Print all
-  cout << "Printing all the fun things..." << endl;
-  printFunThings(things, 3);
-  cout << endl;
-
-  cout << "====================================================================" << endl;
-
-  // Test : getThingNameFunnest( FunThing things[], int size )
-
-  string thingName = "";
-  cout << "===>Test : getThingNameFunnest( FunThing things[], int size )" << endl;
-  cout << endl;
-
-  thingName = getThingNameFunnest( things, 3 );
-  cout << "getThingNameFunnest:  " << thingName << endl;
-  cout << "====================================================================" << endl;
-
-  // Test : getPointerLeastFun( FunThing things[], int size )
-
-  cout << "===>Test : getPointerLeastFun( FunThing things[], int size )" << endl;
-  cout << endl;
-
-  testPtr = getPointerLeastFun( things, 3 );
-  cout << "getPointerLeastFun:  " << testPtr << endl;
-  cout << "accessing its members..." << endl;
-  cout << "  name:              " << testPtr->getThingName() << endl;
-  cout << "  fun level:         " << testPtr->getFunLevel() << endl;
-  cout << "====================================================================" << endl;
-
-  // Test : findFunThing( string matchThis, FunThing things[], int size )
-
-  cout << "===>Test : findFunThing( string matchThis, FunThing things[], int size )" << endl;
-  cout << endl;
-
-  cout << "searching for \"Ruby\"..." << endl;
-  testPtr = findFunThing( "Ruby", things, 3 );
-  if ( testPtr != NULL ) {
-    cout << "findFunThing:        " << testPtr << endl;
-    cout << "accessing its members..." << endl;
-    cout << "  name:              " << testPtr->getThingName() << endl;
-    cout << "  fun level:         " << testPtr->getFunLevel() << endl;
-  } else {
-    cout << "not found" << endl;
-  }
-
-  cout << "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" << endl;
-
-  cout << "searching for \"C++\"..." << endl;
-  testPtr = findFunThing( "C++", things, 3 );
-  if ( testPtr != NULL ) {
-    cout << "findFunThing:        " << testPtr << endl;
-    cout << "accessing its members..." << endl;
-    cout << "  name:              " << testPtr->getThingName() << endl;
-    cout << "  fun level:         " << testPtr->getFunLevel() << endl;
-  } else {
-    cout << "not found" << endl;
-  }
-
-  cout << "====================================================================" << endl;
-
-  cout << endl;
+  cout << "d_1: "  << d_1 << endl;  // d_1: 0x100100020
+  cout << "d_2: "  << d_2 << endl;  // d_2: 0x100102c80
+  cout << "*d_1: " << *d_1 << endl; // *d_1: 11
+  cout << "*d_2: " << *d_2 << endl; // *d_2: 22
 
   return 0;
 

@@ -2,13 +2,6 @@
 - [doc](http://www.cplusplus.com/doc/tutorial/classes/)
 - The word `const` at the end of the member functions specifies that these functions cannnot modify the member variables of an object of that class.
 
-==
-
-## Good practice
-   + Make ALL data members of a class private, using member functions to access that data
-   + Explicitly use the `public:` and `private:` keywords for clarity, rather than relying on defaults
-   + Initialize all variables when defined
-
 ```cpp
 #include <iostream>
 #include <cmath>
@@ -50,6 +43,21 @@ int main() {
    return 0;
 }
 ```
+
+==
+
+## Good practice
+   + Make ALL data members of a class private, using member functions to access that data
+   + Explicitly use the `public:` and `private:` keywords for clarity, rather than relying on defaults
+   + Initialize all variables when defined
+
+==
+
+## Class with pointer member variables
+- Do three things:
+1. Include the **destructor** in the class
+2. **Overload the assignment operator** for the class
+3. Include the **copy constructor**
 
 ==
 
@@ -117,7 +125,7 @@ class SampleClass {
 };
 
 // Member initialization list.
-SampleClass::SampleClass() : field1(100), field2(200) {
+SampleClass::SampleClass() : field1( 100 ), field2( 200 ) {
    return;
 }
 ```
@@ -166,8 +174,14 @@ ClassName::~ClassName() {
   + When the return value of a function is an object
 
 ```cpp
+// Bad
+// If the class has a pointer memeber and destructor to deallocate it,
+// the destructor will be called on the same memory location every time
+// an instance is out of scope, which causes a run-time error.
 ClassName obj_3( obj_1 );
 ```
+
+--
 
 ### Custom copy constructor
 - To force each object to have its own copy of data (deep copy), we must override the definition of the copy constructor provided by the compiler
@@ -179,16 +193,13 @@ ClassName obj_3( obj_1 );
  * in the definition of a class
  * @param other an instance of the class as a constant reference parameter
  */
-ClassName( const ClassName& other );
+ClassName::ClassName( const ClassName& other ) {
+
+  // Initialize the new instance.
+  // (Deep copy the other instance to the new one)
+
+}
 ```
-
-==
-
-## Class with pointer member variables
-- Do three things:
-1. Include the destructor in hte class
-2. Overload the assignment operator for the class
-3. Include the copy constructor
 
 ==
 
@@ -259,5 +270,5 @@ VideoGame games[] {
 
 ## The `this` implicit parameter
 
-- Using `this->` makes clear that a class member is being accessed.
+- Using `this->` makes clear that a class member is being accessed
 - Essential if a data member and parameter have the same identifier

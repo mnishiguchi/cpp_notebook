@@ -80,6 +80,19 @@ new DataType[ intExp ];  // Allocate an array of variables
 pointerVariable = new type;
 ```
 
+```cpp
+  double* d_1;
+  d_1 = new double(11);
+
+  double* d_2 = new double;
+  *d_2 = 22;
+
+  cout << "d_1: "  << d_1 << endl;  // d_1: 0x100100020
+  cout << "d_2: "  << d_2 << endl;  // d_2: 0x100102c80
+  cout << "*d_1: " << *d_1 << endl; // *d_1: 11
+  cout << "*d_2: " << *d_2 << endl; // *d_2: 22
+```
+
 --
 
 ### The `delete` operator
