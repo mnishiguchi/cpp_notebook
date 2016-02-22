@@ -162,7 +162,7 @@ ClassName::~ClassName() {
 
 ==
 
-## Copy constructor
+## Copy constructors
 
 ### Default member-wise copy constructor
 - Provided by the compiler
@@ -172,9 +172,9 @@ ClassName::~ClassName() {
   + When an object is declared and initialized by using the value of another object
   + When, as a parameter, an object is passed by value
   + When the return value of a function is an object
+- IMPORTANT: Do not use this if the class has a pointer member.
 
 ```cpp
-// Bad
 // If the class has a pointer memeber and destructor to deallocate it,
 // the destructor will be called on the same memory location every time
 // an instance is out of scope, which causes a run-time error.
