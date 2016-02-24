@@ -1,9 +1,12 @@
-/**
- * Games List Class - Lecture Project
- * Due Date: Wednesday, March 2, 2016 7:32 PM
- *
- * Masatoshi Nishiguchi
- */
+//
+//  Computer Science II
+//  Lecture Project: Games List Class
+//
+//  Masatoshi Nishiguchi
+//
+//  Due: Wednesday, March 2, 2016 7:32 PM
+//
+
 
 #include <iostream>
 #include <string>
@@ -11,7 +14,7 @@ using namespace std;
 
 
 //---------------------------------------------------------
-//  Declare class FunThing
+//  class FunThing
 //---------------------------------------------------------
 
 
@@ -20,77 +23,37 @@ using namespace std;
  */
 class FunThing {
 public:
-  // Constructors
-  FunThing();
-  FunThing( string thingName, int funLevel );
+  // Constructors.
+  FunThing() {
+    funLevel  = -999;
+    thingName = "untitled";
+  }
+  FunThing( string thingName, int funLevel ) {
+    this->funLevel  = funLevel;
+    this->thingName = thingName;
+  }
 
-  // Destructor
+  // Destructor.
   // - No need for custom destructor because this class does not allocate any dynamic variables.
 
-  // Copy constructor
+  // Copy constructor.
   // - No need for custom copy because this class does not contain any pointer members.
 
-  // Setter & getter
-  int getFunLevel() const;
-  void setFunLevel( int funLevel );
-
-  string getThingName() const;
-  void setThingName( string thingName );
+  // Setters & getters.
+  int getFunLevel() const { return funLevel; }
+  void setFunLevel( int funLevel ) { this->funLevel = funLevel; }
+  string getThingName() const { return thingName; }
+  void setThingName( string thingName ) { this->thingName = thingName; }
 
 private:
   int funLevel;
   string thingName;
-}; // end FunThing
+
+}; // end class FunThing
 
 
 //---------------------------------------------------------
-//  Implement class FunThing
-//---------------------------------------------------------
-
-
-/**
- * The default constructor that sets the default values of the attributes.
- */
-FunThing::FunThing() {
-
-  this->funLevel  = -999;
-  this->thingName = "untitled";
-
-}
-/**
- * A 2-param constructor that sets the initial values of the attributes.
- */
-FunThing::FunThing( string thingName, int funLevel ) {
-
-  this->funLevel  = funLevel;
-  this->thingName = thingName;
-
-}
-// Setter & getter
-int FunThing::getFunLevel() const {
-
-  return this->funLevel;
-
-}
-void FunThing::setFunLevel( int funLevel ) {
-
-  this->funLevel = funLevel;
-
-}
-string FunThing::getThingName() const {
-
-  return this->thingName;
-
-}
-void FunThing::setThingName( string thingName ) {
-
-  this->thingName = thingName;
-
-}
-
-
-//---------------------------------------------------------
-//  Declare class Games
+//  class Games
 //---------------------------------------------------------
 
 
@@ -110,65 +73,38 @@ void FunThing::setThingName( string thingName ) {
  */
 class Games {
 public:
-
   // Constructor.
-  Games( int chunk );
+  Games( int chunk ) {
+    this->chunk = chunk;
+    this->count = 0;
+    this->data  = NULL;
+  }
 
-  // Destructor
-  // This class allocates dynamic variables.
-  ~Games();
+  // Destructor. Clean up all the dynamic variables.
+  ~Games() { deleteData(); }
 
-  // Copy constructor
-  // This class contains a pointer member.
+  // Override the copy constructor because this class contains a pointer member.
   Games( const Games& other );
 
+  // Public API.
   void add( string thingName, int funLevel );
+  // void add( const FunThing& thing );
   void deleteData();
-  int getCount() const;
   bool exists( string thingName );
+  int getCount() const { return count; }
 
 private:
+  int chunk;        // The current capacity of the list.
+  int count;        // The current number of the elements.
+  FunThing** data;  // Array of FunThing pointers.
 
-  // Array of FunThing pointers
-  FunThing** data;
-
-  // The current capacity of the list.
-  int chunk;
-
-  // The current number of the elements.
-  int count;
-
-  bool isEmpty() { return count == 0; }
-  bool isFull() { return count == this->chunk; }
-
+  // Private helper methods.
   void extendCapacity();
-};
+  bool isEmpty() { return count == 0; }
+  bool isFull() { return count == chunk; }
 
+}; // end class Games
 
-//---------------------------------------------------------
-//  Implement class FunThing
-//---------------------------------------------------------
-
-
-/**
- * The default constructor.
- */
-Games::Games( int chunk ) {
-
-  this->data  = NULL;
-  this->chunk = chunk;
-  this->count = 0;
-}
-
-/**
- * The custom destructor.
- */
-Games::~Games() {
-
-  // Clean up all the dynamic variables.
-  deleteData();
-
-}
 
 /**
  * The custom copy constructor.
@@ -177,11 +113,11 @@ Games::~Games() {
 Games::Games( const Games& other ) {
 
   // Copy the values of chunk and count.
-  this->chunk = other.chunk;
-  this->count = other.count;
+  chunk = other.chunk;
+  count = other.count;
 
   // Allocate the new array instance that is the same size as the other's.
-  this->data = new FunThing*[ chunk ];
+  data = new FunThing*[ chunk ];
 
   // Deep-copy the values of other's data into this collection.
   for ( int i = 0; i < count; i++ ) {
@@ -191,7 +127,8 @@ Games::Games( const Games& other ) {
 
   }
 
-}
+} // end constructor
+
 
 /**
  * Create a newFunThing and add it to the collection.
@@ -216,39 +153,39 @@ void Games::add( string thingName, int funLevel ) {
   // Update the count.
   count += 1;
 
-}
+} // end add
+
+
+// void Games::add( const FunThing& thing ) {
+//   FunThing ftp = FunThing( thing );
+// }
+
 
 /**
  * Clean up all the dynamic variables.
  */
 void Games::deleteData() {
 
+  // Iterate over the collection for the current element count.
   for ( int i = 0; i < count; i++ ) {
 
     delete data[ i ];
 
   }
 
-}
+} // end deleteData
 
 
 /**
- * @return the current number of elements it is holding.
- */
-int Games::getCount() const {
-
-  return count;
-
-}
-
-/**
- * @return true if a FunThing with the specified name exists in the collection, else false.
+ * @return true if a FunThing with the specified name exists in the collection,
+ * else false.
  */
 bool Games::exists( string thingName ) {
 
   // Iterate over the collection for the current element count.
   for ( int i = 0; i < count; i++ ) {
 
+      // Return true if found.
       if ( data[ i ]->getThingName() == thingName ) { return true; }
 
   }
@@ -256,7 +193,7 @@ bool Games::exists( string thingName ) {
   // If not found, return false.
   return false;
 
-}
+} // end exists
 
 
 /**
@@ -264,23 +201,23 @@ bool Games::exists( string thingName ) {
  */
 void Games::extendCapacity() {
 
-  // The link to old collection.
-  FunThing** temp = data;
+  // Remember the address of the old collection.
+  FunThing** old = data;
 
-  // Create a new collection.
+  // Create a new collection that is longer than the old one by one chunk.
   data = new FunThing*[ count + chunk ];
 
-  // Shallow-copy all pointers ionto the new collection.
+  // Shallow-copy all the pointers stored in the old collection into the new one.
   for ( int idx = 0; idx < count; idx++ ) {
 
-      data[ idx ] = temp[ idx ];
+      data[ idx ] = old[ idx ];
 
   }
 
   // Delete the old collection.
-  delete[] temp;
+  delete [] old;
 
-}
+} // end extendCapacity
 
 
 //---------------------------------------------------------
@@ -299,7 +236,10 @@ void Games::extendCapacity() {
 
 int main() {
 
-
+//    Games* toyBox;
+//    toyBox = new Games;
+//
+//    FunThing
 
 
 
