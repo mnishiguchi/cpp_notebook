@@ -147,7 +147,7 @@ void Games::add( string thingName, int funLevel ) {
   if ( isFull() ) {
     extendCapacity();
 
-    // DEBUG
+    // // DEBUG
     // cout << "---extendCapacity---" << endl;
     // cout << "  count:" << count << endl;
     // cout << "  size:" << size  << endl;
@@ -234,6 +234,8 @@ void Games::extendCapacity() {
  */
 void test_new_game_data_should_be_set_to_null() {
 
+    sleep(1);  // Simulate latency.
+
     Games games( 5 );
     assert( games.getData() == NULL );
 
@@ -246,6 +248,8 @@ void test_new_game_data_should_be_set_to_null() {
  * instance of FunThing and adding that to the array.
  */
 void test_games_should_be_able_to_dynamically_add_new_fun_thing_to_array() {
+
+    sleep(1);  // Simulate latency.
 
     Games* games = new Games( 5 );
 
@@ -282,6 +286,8 @@ void test_games_should_be_able_to_dynamically_add_new_fun_thing_to_array() {
  * When the list gets full, it should dynamically grow in capacity by one chunk.
  */
 void test_data_array_should_expand_capacity_by_chunk_when_full() {
+
+    sleep(1);  // Simulate latency.
 
     // Set up games whose chunk is 3.
     Games g3( 3 );
@@ -398,18 +404,71 @@ void test_data_array_should_expand_capacity_by_chunk_when_full() {
 
 
 //---------------------------------------------------------
+//  Utility functions
+//---------------------------------------------------------
+
+
+/**
+ * Print the information about all the data that the specified Games object holds.
+ * @param games A Games object.
+ */
+void printAll( const Games& games ) {
+
+    sleep(1);  // Simulate latency.
+
+    FunThing** data = games.getData();
+
+    for ( int i = 0, len = games.getCount(); i < len; i++ ) {
+        cout << "       ID : "  << i << endl;
+        cout << " funLevel : "  << data[ i ]->getFunLevel() << endl;
+        cout << "thingName : " << data[ i ]->getThingName() << endl;
+        cout << "-----------------------------------" << endl;
+    }
+
+}
+
+
+//---------------------------------------------------------
 //  The main function of this program
 //---------------------------------------------------------
 
 
 int main() {
 
-    // Call the test functions.
+    // Section 1: Call the test functions.
+
     test_new_game_data_should_be_set_to_null();
-      sleep(1);
     test_games_should_be_able_to_dynamically_add_new_fun_thing_to_array();
-      sleep(1);
     test_data_array_should_expand_capacity_by_chunk_when_full();
+
+    // Section 2: Create an actual collection.
+
+    cout << "Creating my collection..." << endl;
+    sleep(1);  // Simulate latency.
+
+    Games myCollection( 4 );
+    myCollection.add( "Arkansas", 100 );
+    myCollection.add( "Buffer overflow", 500 );
+    myCollection.add( "Cake", 432 );
+    myCollection.add( "Dad", 920 );
+    myCollection.add( "Eating", 938 );
+    myCollection.add( "Family", 484 );
+    myCollection.add( "Gif", 232 );
+    myCollection.add( "Hexagon", 606 );
+    myCollection.add( "Imagination", 855 );
+    myCollection.add( "Jagaimo", 293 );
+    myCollection.add( "Kabocha", 846 );
+    myCollection.add( "Lamb chops", 344 );
+    myCollection.add( "Masatoshi", 764 );
+    myCollection.add( "Networking", 123 );
+    myCollection.add( "Ozzy", 989 );
+    myCollection.add( "Popeyes", 765 );
+
+    cout << "Done" << endl;
+
+    // Print all
+    cout << "Printing my collection..." << endl;
+    printAll( myCollection );
 
     return 0;
 
