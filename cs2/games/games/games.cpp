@@ -83,8 +83,8 @@ public:
 
   // Public API.
   void add( string thingName, int funLevel );
+  bool contains( string thingName ) const;
   void deleteAll();
-  bool exists( string thingName ) const;
   int getChunk() const { return chunk; }
   int getCount() const { return count; }
   int getSize() const { return size; }
@@ -178,10 +178,10 @@ void Games::deleteAll() {
 
 
 /**
- * @return true if a FunThing with the specified name exists in the collection,
+ * @return true if a FunThing with the specified name contains in the collection,
  * else false.
  */
-bool Games::exists( string thingName ) const {
+bool Games::contains( string thingName ) const {
 
   // Iterate over the collection for the current element count.
   for ( int i = 0; i < count; i++ ) {
@@ -194,7 +194,7 @@ bool Games::exists( string thingName ) const {
   // If not found, return false.
   return false;
 
-} // end exists
+} // end contains
 
 
 /**
@@ -411,6 +411,8 @@ void test_data_array_should_expand_capacity_by_chunk_when_full() {
 /**
  * Print the information about all the data that the specified Games object holds.
  * @param games A Games object.
+ * IMPORTANT: The Games object must be passed in by reference so that we can access
+ * their memory locations.
  */
 void printAll( const Games& games ) {
 
@@ -428,6 +430,16 @@ void printAll( const Games& games ) {
 }
 
 
+/**
+ * Print the capacity and current element count of the specified Games object.
+ * @param games A Games object.
+ */
+void printCurrentElementCount( const Games& games ) {
+    cout << "Element count : " << games.getCount() << " out of " << games.getSize() << endl;
+    cout << "-----------------------------------" << endl;
+}
+
+
 //---------------------------------------------------------
 //  The main function of this program
 //---------------------------------------------------------
@@ -440,6 +452,7 @@ int main() {
     test_new_game_data_should_be_set_to_null();
     test_games_should_be_able_to_dynamically_add_new_fun_thing_to_array();
     test_data_array_should_expand_capacity_by_chunk_when_full();
+    cout << "===================================" << endl;
 
     // Section 2: Create an actual collection.
 
@@ -447,28 +460,50 @@ int main() {
     sleep(1);  // Simulate latency.
 
     Games myCollection( 4 );
-    myCollection.add( "Arkansas", 100 );
-    myCollection.add( "Buffer overflow", 500 );
-    myCollection.add( "Cake", 432 );
-    myCollection.add( "Dad", 920 );
-    myCollection.add( "Eating", 938 );
-    myCollection.add( "Family", 484 );
-    myCollection.add( "Gif", 232 );
-    myCollection.add( "Hexagon", 606 );
-    myCollection.add( "Imagination", 855 );
-    myCollection.add( "Jagaimo", 293 );
-    myCollection.add( "Kabocha", 846 );
-    myCollection.add( "Lamb chops", 344 );
-    myCollection.add( "Masatoshi", 764 );
-    myCollection.add( "Networking", 123 );
-    myCollection.add( "Ozzy", 989 );
-    myCollection.add( "Popeyes", 765 );
+    myCollection.add( "Arkansas", 100 ); printCurrentElementCount( myCollection );
+    myCollection.add( "Buffer overflow", 500 ); printCurrentElementCount( myCollection );
+    myCollection.add( "Cake", 432 ); printCurrentElementCount( myCollection );
+    myCollection.add( "Dad", 920 ); printCurrentElementCount( myCollection );
+    myCollection.add( "Eating", 938 ); printCurrentElementCount( myCollection );
+    myCollection.add( "Family", 484 ); printCurrentElementCount( myCollection );
+    myCollection.add( "Gif", 232 ); printCurrentElementCount( myCollection );
+    myCollection.add( "Hexagon", 606 ); printCurrentElementCount( myCollection );
+    myCollection.add( "Imagination", 855 ); printCurrentElementCount( myCollection );
+    myCollection.add( "Jagaimo", 293 ); printCurrentElementCount( myCollection );
+    myCollection.add( "Kabocha", 846 ); printCurrentElementCount( myCollection );
+    myCollection.add( "Lamb chops", 344 ); printCurrentElementCount( myCollection );
+    myCollection.add( "Masatoshi", 764 ); printCurrentElementCount( myCollection );
+    myCollection.add( "Networking", 123 ); printCurrentElementCount( myCollection );
+    myCollection.add( "Ozzy", 989 ); printCurrentElementCount( myCollection );
+    myCollection.add( "Popeyes", 765 ); printCurrentElementCount( myCollection );
 
     cout << "Done" << endl;
+    cout << "===================================" << endl;
 
     // Print all
     cout << "Printing my collection..." << endl;
     printAll( myCollection );
+
+    cout << "Done" << endl;
+    cout << "===================================" << endl;
+
+    // Search for Masatoshi.
+    cout << "Searching for \"Masatoshi\"..." << endl;
+    sleep(1);  // Simulate latency.
+    cout << ( myCollection.contains( "Masatoshi" ) ? "Found" : "Not found" ) << endl;
+    cout << "===================================" << endl;
+
+    // Search for C++.
+    cout << "Searching for \"C++\"..." << endl;
+    sleep(1);  // Simulate latency.
+    cout << ( myCollection.contains( "C++" ) ? "Found" : "Not found" ) << endl;
+    cout << "===================================" << endl;
+
+    // Search for Popeyes.
+    cout << "Searching for \"Popeyes\"..." << endl;
+    sleep(1);  // Simulate latency.
+    cout << ( myCollection.contains( "Popeyes" ) ? "Found" : "Not found" ) << endl;
+    cout << "===================================" << endl;
 
     return 0;
 

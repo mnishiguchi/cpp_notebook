@@ -1,40 +1,33 @@
-# [Operator overloading](http://www.tutorialspoint.com/cplusplus/cpp_overloading.htm)
-- `std::string` comes with preconfigured operators
-    + [relational operators (string)](http://www.cplusplus.com/reference/string/string/operators/)
-    + [std::string::compare](http://www.cplusplus.com/reference/string/string/compare/)
+//
+//  main.cpp
+//  20160225
+//
+//  Created by Masatoshi Nishiguchi on 2/25/16.
+//  Copyright © 2016 Masatoshi Nishiguchi. All rights reserved.
+//
 
-==
+#include <iostream>
+#include <string>
+using namespace std;
 
-Basic syntax.
-```cpp
-// Overloaded < operator
-bool operator>( const Z& rhs ) {
-    return val > rhs.val;
-}
 
-// How to use
-// `z1.operator>( z2 )` or simply `z1 > z2`
-```
-
-Member operator overload and non-member operator overload.
-```cpp
 class Z {
 public:
-  int val;
+    int val;
 
-  // Member Operator Overload
-  bool operator<( const Z& rhs ) {
-      return val < rhs.val;
-  }
-  bool operator>( const Z& rhs ) {
-      return val > rhs.val;
-  }
-  bool operator==( const Z& rhs ) {
-      return val == rhs.val;
-  }
-  bool operator!=( const Z& rhs ) {
-      return ! operator==( rhs );
-  }
+    // Member Operator Overload
+    bool operator<( const Z& rhs ) {
+        return val < rhs.val;
+    }
+    bool operator>( const Z& rhs ) {
+        return val > rhs.val;
+    }
+    bool operator==( const Z& rhs ) {
+        return val == rhs.val;
+    }
+    bool operator!=( const Z& rhs ) {
+        return ! operator==( rhs );
+    }
 
 }; // end class Z
 
@@ -47,7 +40,13 @@ ostream& operator<<( ostream& os, const Z& obj ) {
 }
 
 
+void usePtr( Z* z ) {
+
+}
+
+
 int main() {
+
     Z z1, z2;
 
     z1.val = 11;
@@ -68,12 +67,6 @@ int main() {
 
     //========================//
 
-    return 0;
-}
-```
-
-Three patterns to compare objects.
-```cpp
     // Pattern 1
     // Compare objects using the overloaded operator.
     if ( z1 > z2 ) {
@@ -100,9 +93,8 @@ Three patterns to compare objects.
     } else {
       cout << "False" << endl;
     }
-```
 
-== 
+    //------------------------//
 
-
-
+    return 0;
+}
