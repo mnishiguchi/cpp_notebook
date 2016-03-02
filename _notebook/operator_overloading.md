@@ -47,6 +47,12 @@ ostream& operator<<( ostream& os, const Z& obj ) {
 }
 
 
+// Non-member Operator Overload
+bool operator==( Class_A& lhs, Class_B& rhs ) {
+    return lhs.val == rhs.val;
+}
+
+
 int main() {
     Z z1, z2;
 
@@ -104,5 +110,7 @@ Three patterns to compare objects.
 
 == 
 
+## [The friend funcitons](http://www.cplusplus.com/doc/tutorial/inheritance/)
 
-
+- Allow a non-member function access private members outside of the class.
+- A friend class in C++ can access the "private" and "protected" members of the class in which it is declared as a friend.

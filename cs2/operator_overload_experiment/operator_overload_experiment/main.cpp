@@ -1,8 +1,8 @@
 //
 //  main.cpp
-//  20160225
+//  operator_overload_experiment
 //
-//  Created by Masatoshi Nishiguchi on 2/25/16.
+//  Created by Masatoshi Nishiguchi on 3/1/16.
 //  Copyright © 2016 Masatoshi Nishiguchi. All rights reserved.
 //
 
@@ -32,11 +32,24 @@ public:
 }; // end class Z
 
 
+class A {
+public:
+    int val;
+
+}; // end class A
+
+
 // Non-member Operator Overload
-// http://en.cppreference.com/w/cpp/language/operators
-// IMPORTANT: operator>> and operator<< as non-member functions
+// http://en.cppreference.com/w/cpp/language/operators.
+// cout is an instance of ostream class.
 ostream& operator<<( ostream& os, const Z& obj ) {
     return os << "The val is: " << obj.val;
+}
+
+
+// Non-member Operator Overload
+bool operator==( A& lhs, Z& rhs ) {
+    return lhs.val == rhs.val;
 }
 
 

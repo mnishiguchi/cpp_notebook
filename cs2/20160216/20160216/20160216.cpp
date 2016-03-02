@@ -219,7 +219,7 @@ void printFunThing( const FunThing& thing ) {
 
     cout << "name      : " << thing.getThingName()  << endl;
     cout << "fun level : " << thing.getFunLevel() << endl;
-    cout << "address   : " << &(thing) << endl;
+    cout << "address   : " << &( thing ) << endl;
 
 } // end printFunThing
 

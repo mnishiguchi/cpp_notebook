@@ -1,5 +1,7 @@
 # Virtual
 
+[the difference between an interface and an abstract class in Java](http://www.programmerinterview.com/index.php/java-questions/interface-vs-abstract-class/)
+
 ## Virtual functions
 
 - **Run-time binding** (instead of compile-time binding)
