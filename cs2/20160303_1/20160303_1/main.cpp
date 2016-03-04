@@ -1,6 +1,8 @@
 //
-//  main.cpp
-//  Problem 1
+//  Computer Science II
+//  Mid-tem exam : Problem 1
+//
+//  Masatoshi Nishiguchi
 //
 //  Created by Masatoshi Nishiguchi on 3/3/16.
 //  Copyright © 2016 Masatoshi Nishiguchi. All rights reserved.
