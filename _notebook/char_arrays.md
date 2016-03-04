@@ -1,5 +1,5 @@
 # Char arrays
-- Char pointer is special.
+- **Char pointer is special**.
 - When printed, it prints characters until the null is reached.
 - cf. Other pointers will point memory addresses as values.
 
