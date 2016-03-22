@@ -19,12 +19,15 @@
 
 - Logically, the destructor of the derived class should be executed when the derived class object goes out of scope
 
-- The destructor of the base class must be virtual.
+- **The destructor of the base class must be virtual.**
 - The virtual destructor of a base class automatically makes the destructor of a derived class virtual.
 - When a derived class object is passed to a formal parameter of the base class type, then when the object goes out of scope:
     1. the destructor of the derived class executes
     2. the destructor of the base class executes
         * the base class part (the members inherited from the base class) of the derived class object is also destroyed.
+
+### NOTE: There is no virtual constructor
+A virtual call is a mechanism to get work done given partial information. In particular, "virtual" allows us to call a function knowing only any interfaces and not the exact type of the object. To create an object you need complete information. In particular, you need to know the exact type of what you want to create. Consequently, a "call to a constructor" cannot be virtual.
 
 ==
 

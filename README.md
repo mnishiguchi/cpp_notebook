@@ -2,6 +2,7 @@
 
 - This repo is for me to practice the c++ programming.
 - I write notes on what I learned for future reference.
+- http://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-096-introduction-to-c-january-iap-2011/lecture-notes/MIT6_096IAP11_lec01.pdf
 
 ==
 

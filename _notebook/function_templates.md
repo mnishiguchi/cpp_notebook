@@ -1,5 +1,6 @@
 # Templates with the generic type
 - relieving the programmer from having to write redundant code that differs only by type
+- Take place of any data type including user-defined data types.
 
 ==
 
