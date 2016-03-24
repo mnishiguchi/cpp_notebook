@@ -108,6 +108,29 @@ Three patterns to compare objects.
     }
 ```
 
+==
+
+## [overloading ++ for both pre and post increment](http://stackoverflow.com/a/15244185/3837223)
+- [Increment/decrement operators](http://en.cppreference.com/w/cpp/language/operator_incdec)
+
+```cpp
+// prefix
+CSample& operator++()
+{
+  // implement increment logic on this instance, return reference to it.
+  return *this;
+}
+```
+
+```cpp
+// prefix
+CSample& operator++()
+{
+  // implement increment logic on this instance, return reference to it.
+  return *this;
+}
+```
+
 == 
 
 ## [The friend funcitons](http://www.cplusplus.com/doc/tutorial/inheritance/)

@@ -66,15 +66,17 @@ public:
   void setThingName( string thingName ) { this->thingName = thingName; }
 
   // Overload the pre-increment operators that takes no argument.
-  int operator++() {
-    // Increment the funLevel and return.
-    return ++funLevel;
+  FunThing& operator++() {
+    // Increment the funLevel and return reference to this instance.
+    this->funLevel += 1;
+    return *this;
   }
 
   // Overload the pre-decrement operators that takes no argument.
-  int operator--() {
-    // Decrement the funLevel and return.
-    return --funLevel;
+  FunThing& operator--() {
+    // Decrement the funLevel and return reference to this instance.
+    this->funLevel -= 1;
+    return *this;
   }
 
 private:
@@ -353,36 +355,36 @@ void Games::extendCapacity() {
 //====================================================//
 
 
-/**
- * Print the information about all the data that the specified Games object holds.
- * @param games A Games object.
- * IMPORTANT: The Games object must be passed in by reference so that we can access
- * their memory locations.
- */
-void printAll( const Games& games ) {
-
-    sleep(1);  // Simulate latency.
-
-    FunThing** data = games.getData();
-
-    for ( int i = 0, len = games.getCount(); i < len; i++ ) {
-        cout << "       ID : "  << i << endl;
-        cout << " funLevel : "  << data[ i ]->getFunLevel() << endl;
-        cout << "thingName : " << data[ i ]->getThingName() << endl;
-        cout << "-----------------------------------" << endl;
-    }
-
-}
-
-
-/**
- * Print the capacity and current element count of the specified Games object.
- * @param games A Games object.
- */
-void printCurrentElementCount( const Games& games ) {
-    cout << "Element count : " << games.getCount() << " out of " << games.getSize() << endl;
-    cout << "-----------------------------------" << endl;
-}
+// /**
+//  * Print the information about all the data that the specified Games object holds.
+//  * @param games A Games object.
+//  * IMPORTANT: The Games object must be passed in by reference so that we can access
+//  * their memory locations.
+//  */
+// void printAll( const Games& games ) {
+//
+//     sleep(1);  // Simulate latency.
+//
+//     FunThing** data = games.getData();
+//
+//     for ( int i = 0, len = games.getCount(); i < len; i++ ) {
+//         cout << "       ID : "  << i << endl;
+//         cout << " funLevel : "  << data[ i ]->getFunLevel() << endl;
+//         cout << "thingName : " << data[ i ]->getThingName() << endl;
+//         cout << "-----------------------------------" << endl;
+//     }
+//
+// }
+//
+//
+// /**
+//  * Print the capacity and current element count of the specified Games object.
+//  * @param games A Games object.
+//  */
+// void printCurrentElementCount( const Games& games ) {
+//     cout << "Element count : " << games.getCount() << " out of " << games.getSize() << endl;
+//     cout << "-----------------------------------" << endl;
+// }
 
 
 //====================================================//
@@ -401,11 +403,11 @@ int main() {
 
     // Section 2: Create an actual collection.
 
-    cout << "Creating my collection..." << endl;
-    sleep(1);  // Simulate latency.
-
-    Games myCollection( 4 );
-    myCollection.add( "Arkansas", 100 ); printCurrentElementCount( myCollection );
+    // cout << "Creating my collection..." << endl;
+    // sleep(1);  // Simulate latency.
+    //
+    // Games myCollection( 4 );
+    // myCollection.add( "Arkansas", 100 ); printCurrentElementCount( myCollection );
 
 
   return 0;
