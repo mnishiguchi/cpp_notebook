@@ -54,7 +54,7 @@ public:
 
   // Destructor.
   // The destructor of the base class must be virtual.
-  ~FunThing() {}
+  virtual ~FunThing() {}
 
   // Copy constructor.
   // - No need for custom copy because this class does not contain any pointer members.
@@ -88,7 +88,7 @@ private:
 
 /**
  * Subclass of FunThing
- * CrazySport( numberOfPlayers )
+ * CrazySport(thingName, funLevel, numberOfPlayers)
  * CrazySport must be able to take as a constructor argument the number of players.
  * All instances of CrazySport considered dangerous.
  */
@@ -96,9 +96,10 @@ class CrazySport : public FunThing {
 public:
 
   // Constructor
-  CrazySport( int numberOfPlayers )
+  // CrazySport( int numberOfPlayers )
+  CrazySport( string thingName, int funLevel, int numberOfPlayers )
     // Pass the funLevel and thingName to the parent's constructor.
-    : FunThing() {
+    : FunThing( thingName, funLevel ) {
 
       // Set the number of the players.
       this->numberOfPlayers = numberOfPlayers;
@@ -119,7 +120,7 @@ private:
 
 /**
  * Subclass of FunThing
- * DomesticChore( numberOfPlayers )
+ * DomesticChore( thingName, funLevel, numberOfPlayers )
  * DomesticChore must be able to take as a constructor argument the number of players.
  * All instances of DomesticChore are NOT dangerous
  */
@@ -127,7 +128,7 @@ class DomesticChore : public FunThing {
 public:
 
   // Constructor
-  DomesticChore( int numberOfPlayers )
+  DomesticChore( string thingName, int funLevel, int numberOfPlayers )
     // Pass the funLevel and thingName to the parent's constructor.
     : FunThing() {
 
@@ -150,16 +151,16 @@ private:
 
 /**
  * Subclass of FunThing
- * GenericThing( numberOfPlayers, isdangerous )
+ * GenericThing( thingName, funLevel, numberOfPlayers, isdangerous )
  * GenericThing must accept number of players and whether or not it is dangerous.
  */
 class GenericThing : public FunThing {
 public:
 
   // Constructor
-  GenericThing( int numberOfPlayers, bool isDangerous )
+  GenericThing( string thingName, int funLevel, int numberOfPlayers, bool isDangerous )
     // Pass the funLevel and thingName to the parent's constructor.
-    : FunThing() {
+    : FunThing( thingName, funLevel ) {
 
       // Set the number of the players.
       this->numberOfPlayers = numberOfPlayers;
@@ -207,7 +208,7 @@ public:
   Games( const Games& other );
 
   // Public API.
-  void add( string thingName, int funLevel );
+  void add( FunThing* thing );
   bool contains( string thingName ) const;
   void deleteAll();
   int getChunk() const { return chunk; }
@@ -257,19 +258,15 @@ Games::Games( const Games& other ) {
 /**
  * TODO
  * Create a newFunThing and add it to the collection.
- * @param thingName A string
- * @param funLevel  An int
+ * @param thing A FunThing pointer.
  */
-void Games::add( string thingName, int funLevel ) {
+void Games::add( FunThing* thing ) {
 
-  // Allocate a new FunThing.
-  FunThing* thing = new FunThing( thingName, funLevel );
-
-  // If empty, initialize the data collection.
+  // If the list is empty, initialize the data collection.
   // Dynamically creating an array of FunThing pointers.
   if ( isEmpty() ) { data = new FunThing*[ chunk ]; }
 
-  // If full, extend the capacity.
+  // If the list is full, extend the capacity.
   if ( isFull() ) {
     extendCapacity();
 
@@ -355,36 +352,36 @@ void Games::extendCapacity() {
 //====================================================//
 
 
-// /**
-//  * Print the information about all the data that the specified Games object holds.
-//  * @param games A Games object.
-//  * IMPORTANT: The Games object must be passed in by reference so that we can access
-//  * their memory locations.
-//  */
-// void printAll( const Games& games ) {
-//
-//     sleep(1);  // Simulate latency.
-//
-//     FunThing** data = games.getData();
-//
-//     for ( int i = 0, len = games.getCount(); i < len; i++ ) {
-//         cout << "       ID : "  << i << endl;
-//         cout << " funLevel : "  << data[ i ]->getFunLevel() << endl;
-//         cout << "thingName : " << data[ i ]->getThingName() << endl;
-//         cout << "-----------------------------------" << endl;
-//     }
-//
-// }
-//
-//
-// /**
-//  * Print the capacity and current element count of the specified Games object.
-//  * @param games A Games object.
-//  */
-// void printCurrentElementCount( const Games& games ) {
-//     cout << "Element count : " << games.getCount() << " out of " << games.getSize() << endl;
-//     cout << "-----------------------------------" << endl;
-// }
+/**
+ * Print the information about all the data that the specified Games object holds.
+ * @param games A Games object.
+ * IMPORTANT: The Games object must be passed in by reference so that we can access
+ * their memory locations.
+ */
+void printAll( const Games& games ) {
+
+    sleep(1);  // Simulate latency.
+
+    FunThing** data = games.getData();
+
+    for ( int i = 0, len = games.getCount(); i < len; i++ ) {
+        cout << "       ID : "  << i << endl;
+        cout << " funLevel : "  << data[ i ]->getFunLevel() << endl;
+        cout << "thingName : " << data[ i ]->getThingName() << endl;
+        cout << "-----------------------------------" << endl;
+    }
+
+}
+
+
+/**
+ * Print the capacity and current element count of the specified Games object.
+ * @param games A Games object.
+ */
+void printCurrentElementCount( const Games& games ) {
+    cout << "Element count : " << games.getCount() << " out of " << games.getSize() << endl;
+    cout << "-----------------------------------" << endl;
+}
 
 
 //====================================================//
@@ -397,17 +394,17 @@ int main() {
   // TODO
   // 3. Create some instances of each and add to games.
   // FunThing funThing; // Abstract class.
-  CrazySport crazySport( 11 );
-  DomesticChore domesticChore( 22 );
-  GenericThing genericThing( 33, true );
+  CrazySport* cs1     = new CrazySport( "Sumo", 33, 2 );
+  DomesticChore* dc1  = new DomesticChore( "Cleaning", 11, 1 );
+  GenericThing* gt1   = new GenericThing( "JavaScript", 128, 1, true );
 
-    // Section 2: Create an actual collection.
+  // Section 2: Create an actual collection.
 
-    // cout << "Creating my collection..." << endl;
-    // sleep(1);  // Simulate latency.
-    //
-    // Games myCollection( 4 );
-    // myCollection.add( "Arkansas", 100 ); printCurrentElementCount( myCollection );
+  cout << "Creating my collection..." << endl;
+  sleep(1);  // Simulate latency.
+
+  Games myCollection( 4 );
+  myCollection.add( cs1 ); printCurrentElementCount( myCollection );
 
 
   return 0;
