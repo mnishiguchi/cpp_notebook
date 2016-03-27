@@ -21,8 +21,8 @@ REQUIREMENTS
 1. DONE
 2. DONE
 3. DONE
+4. DONE
 -------
-4. TODO
 5. TODO
  */
 
@@ -34,143 +34,140 @@ REQUIREMENTS
 
 /**
  * An abstract class that represents a fun thing.
- * Include only a 2-param constructor that set sthe initial values of the attributes.
  */
 class FunThing {
 public:
-  // Requirement: Must now contain two purely virtual methods.
-  virtual bool isDangerous()=0;
-  virtual int getNumberOfPlayers()=0;
+    // Requirement: Must contain two purely virtual methods.
+    virtual bool isDangerous()=0;
+    virtual int getNumberOfPlayers()=0;
 
-  // Constructors.
-  FunThing() {
-    funLevel  = -999;
-    thingName = "untitled";
-  }
-  FunThing( string thingName, int funLevel ) {
-    this->funLevel  = funLevel;
-    this->thingName = thingName;
-  }
+    // Constructor that is called via subclasses.
+    FunThing( string thingName, int funLevel ) {
+        this->funLevel  = funLevel;
+        this->thingName = thingName;
+    }
 
-  // Destructor.
-  // The destructor of the base class must be virtual.
-  virtual ~FunThing() {}
+    // The destructor of the base class must be virtual.
+    virtual ~FunThing() {}
 
-  // Copy constructor.
-  // - No need for custom copy because this class does not contain any pointer members.
+    // Copy constructor.
+    // - No need for custom copy because this class does not contain any pointer members.
 
-  // Setters & getters.
-  int getFunLevel() const { return funLevel; }
-  void setFunLevel( int funLevel ) { this->funLevel = funLevel; }
-  string getThingName() const { return thingName; }
-  void setThingName( string thingName ) { this->thingName = thingName; }
+    // Setters & getters.
+    int getFunLevel() const { return funLevel; }
+    void setFunLevel( int funLevel ) { this->funLevel = funLevel; }
+    string getThingName() const { return thingName; }
+    void setThingName( string thingName ) { this->thingName = thingName; }
 
-  // Overload the pre-increment operators that takes no argument.
-  // @return The FunThing object that has been updated.
-  FunThing& operator++() {
-    // Increment the funLevel and return this instance by reference.
-    ++( this->funLevel );
-    return *this;
-  }
+    string getDangerText();
+    string getFunLevelText();
 
-  // Overload the pre-decrement operators that takes no argument.
-  // @return The FunThing object that has been updated.
-  FunThing& operator--() {
-    // Decrement the funLevel and return this instance by reference.
-    --( this->funLevel );
-    return *this;
-  }
+    // Overload the pre-increment operators that takes no argument.
+    // @return The FunThing object that has been updated.
+    FunThing& operator++() {
+        // Increment the funLevel and return this instance by reference.
+        ++( this->funLevel );
+        return *this;
+    }
 
+    // Overload the pre-decrement operators that takes no argument.
+    // @return The FunThing object that has been updated.
+    FunThing& operator--() {
+        // Decrement the funLevel and return this instance by reference.
+        --( this->funLevel );
+        return *this;
+    }
+
+protected:
+    int numberOfPlayers;
+    bool dangerous;
 private:
-  int funLevel;
-  string thingName;
+    int funLevel;
+    string thingName;
+
 }; // end FunThing
+
+/**
+ * if 8 or more        : super-fun
+ * if 7                : very fun
+ * if 3-6, inclusive   : ok fun
+ * if 0 - 2, inclusive : no fun
+ * if less than 0      : pretty boring
+ * @return text that describes the fun level.
+ */
+string FunThing::getFunLevelText() {
+    if      ( funLevel >= 8 ) { return "super-fun"; }
+    else if ( funLevel >= 7 ) { return "very fun"; }
+    else if ( funLevel >= 3 ) { return "ok fun"; }
+    else if ( funLevel >= 0 ) { return "no fun"; }
+
+    // Anything else is "pretty boring".
+    return "pretty boring";
+}
+
+/**
+ * @return "Be careful, it can be dangerous" if the FunThing is dangerous,
+ * else "It's fun for Everyone.
+ */
+string FunThing::getDangerText() {
+    return ( dangerous ) ? "Be careful, it can be dangerous" : "It's fun for Everyone";
+}
 
 
 /**
- * Subclass of FunThing
- * CrazySport(thingName, funLevel, numberOfPlayers)
- * CrazySport must be able to take as a constructor argument the number of players.
- * All instances of CrazySport considered dangerous.
+ * Subclass of FunThing. All instances of CrazySport considered dangerous.
  */
 class CrazySport : public FunThing {
 public:
-  // Constructor
-  // CrazySport( int numberOfPlayers )
-  CrazySport( string thingName, int funLevel, int numberOfPlayers )
-    // Pass the funLevel and thingName to the parent's constructor if necessary.
-    : FunThing( thingName, funLevel ) {
+    // Constructor
+    CrazySport( string thingName, int funLevel, int numberOfPlayers )
+        : FunThing( thingName, funLevel ) {
 
-      // Set the number of the players.
-      this->numberOfPlayers = numberOfPlayers;
-
-      // By default considered dangerous.
-      this->dangerous = true;
+        this->numberOfPlayers = numberOfPlayers;
+        this->dangerous       = true;  // By default considered dangerous.
     }
 
-  int getNumberOfPlayers() { return this->numberOfPlayers; }
-  bool isDangerous() { return this->dangerous; }
+    int getNumberOfPlayers() { return this->numberOfPlayers; }
+    bool isDangerous() { return this->dangerous; }
 
-private:
-  int numberOfPlayers;
-  bool dangerous;
 }; // end CrazySport
 
 
 /**
- * Subclass of FunThing
- * DomesticChore( thingName, funLevel, numberOfPlayers )
- * DomesticChore must be able to take as a constructor argument the number of players.
- * All instances of DomesticChore are NOT dangerous
+ * Subclass of FunThing. All instances of DomesticChore are NOT dangerous.
  */
 class DomesticChore : public FunThing {
 public:
-  // Constructor
-  DomesticChore( string thingName, int funLevel, int numberOfPlayers )
-    // Pass the funLevel and thingName to the parent's constructor if necessary.
-    : FunThing( thingName, funLevel ) {
+    // Constructor
+    DomesticChore( string thingName, int funLevel, int numberOfPlayers )
+        : FunThing( thingName, funLevel ) {
 
-      // Set the number of the players.
-      this->numberOfPlayers = numberOfPlayers;
-
-      // By default considered NOT dangerous.
-      this->dangerous = false;
+        this->numberOfPlayers = numberOfPlayers;
+        this->dangerous       = false;  // By default considered NOT dangerous.
     }
 
-  int getNumberOfPlayers() { return this->numberOfPlayers; }
+    int getNumberOfPlayers() { return this->numberOfPlayers; }
     bool isDangerous() { return this->dangerous; }
 
-private:
-  int numberOfPlayers;
-  bool dangerous;
 }; // end DomesticChore
 
 
 /**
- * Subclass of FunThing
- * GenericThing( thingName, funLevel, numberOfPlayers, isdangerous )
- * GenericThing must accept number of players and whether or not it is dangerous.
+ * Subclass of FunThing.
  */
 class GenericThing : public FunThing {
 public:
-  // Constructor
-  GenericThing( string thingName, int funLevel, int numberOfPlayers, bool isDangerous )
-    // Pass the funLevel and thingName to the parent's constructor if necessary.
-    : FunThing( thingName, funLevel ) {
+    // Constructor
+    GenericThing( string thingName, int funLevel, int numberOfPlayers, bool isDangerous )
+        : FunThing( thingName, funLevel ) {
 
-      // Set the number of the players.
-      this->numberOfPlayers = numberOfPlayers;
-
-      // Set whether or not it is dangerous.
-      this->dangerous = isDangerous;
+        this->numberOfPlayers = numberOfPlayers;
+        this->dangerous       = isDangerous;
     }
 
-  int getNumberOfPlayers() { return this->numberOfPlayers; }
-  bool isDangerous() { return this->dangerous; }
+    int getNumberOfPlayers() { return this->numberOfPlayers; }
+    bool isDangerous() { return this->dangerous; }
 
-private:
-  int numberOfPlayers;
-  bool dangerous;
 }; // end GenericThing
 
 
@@ -188,41 +185,42 @@ private:
  */
 class Games {
 public:
-  // Constructor.
-  Games( int chunk ) {
-    this->chunk = chunk;
-    this->count = 0;
-    this->data  = NULL;
-    this->size  = chunk;  // Initial size is initially set to chunk.
-  }
+    // Constructor.
+    Games( string title, int chunk ) {
+        this->title = title;
+        this->chunk = chunk;
+        this->count = 0;
+        this->data  = NULL;
+        this->size  = chunk;  // Initial size is initially set to chunk.
+    }
 
-  // Destructor. Clean up all the dynamic variables.
-  ~Games() { deleteAll(); }
+    // Destructor. Clean up all the dynamic variables.
+    ~Games() { deleteAll(); }
 
-  // Override the copy constructor because this class contains a pointer member.
-  Games( const Games& other );
+    // Override the copy constructor because this class contains a pointer member.
+    Games( const Games& other );
 
-  // Public API.
-  void add( FunThing* thing );
-  bool contains( string thingName ) const;
-  void deleteAll();
-  int getChunk() const { return chunk; }
-  int getCount() const { return count; }
-  int getSize() const { return size; }
-  FunThing** getData() const { return data; }
-  bool isEmpty() { return count == 0; }
-  bool isFull() { return ! isEmpty() && ( count % chunk == 0 ); }
-  void printDescription();
+    // Public API.
+    void add( FunThing* thing );
+    bool contains( string thingName ) const;
+    void deleteAll();
+    int getChunk() const { return chunk; }
+    int getCount() const { return count; }
+    int getSize() const { return size; }
+    FunThing** getData() const { return data; }
+    bool isEmpty() { return count == 0; }
+    bool isFull() { return ! isEmpty() && ( count % chunk == 0 ); }
+    void makeMoreFun();
+    string title;
 private:
-  int chunk;        // The amount by which the list size increment
-  int count;        // The current number of the elements.
-  int size;         // The current list size.
-  FunThing** data;  // Array of FunThing pointers.
+    int chunk;        // The amount by which the list size increment
+    int count;        // The current number of the elements.
+    int size;         // The current list size.
+    FunThing** data;  // Array of FunThing pointers.
 
-  // Private helper methods.
-  void extendCapacity();
-  string getDangerText( FunThing* );
-  string getFunLevelText( FunThing* );
+    // Private helper methods.
+    void extendCapacity();
+
 }; // end class Games
 
 
@@ -232,48 +230,44 @@ private:
  */
 Games::Games( const Games& other ) {
 
-  // Copy the values of chunk and count.
-  chunk = other.chunk;
-  count = other.count;
-  size  = other.size;
+    // Copy the values of chunk and count.
+    chunk = other.chunk;
+    count = other.count;
+    size  = other.size;
 
-  // Allocate the new array instance that is the same size as the other's.
-  // NOTE: Although FunThing is an abstract class, this code is valid, because
-  // it does not instantiate FunThing.
-  data = new FunThing*[ chunk ];
+    // Allocate the new array instance that is the same size as the other's.
+    // NOTE: Although FunThing is an abstract class, this code is valid, because
+    // it does not instantiate FunThing.
+    data = new FunThing*[ chunk ];
 
-  // Deep-copy the values of other's data into this collection.
-  for ( int i = 0; i < count; i++ ) {
-
-    data[ i ]->setThingName( other.data[ i ]->getThingName() );
-    data[ i ]->setFunLevel( other.data[ i ]->getFunLevel() );
-
-  }
+    // Deep-copy the values of other's data into this collection.
+    for ( int i = 0; i < count; i++ ) {
+        data[ i ]->setThingName( other.data[ i ]->getThingName() );
+        data[ i ]->setFunLevel( other.data[ i ]->getFunLevel() );
+    }
 
 } // end constructor
 
 
 /**
- * TODO
  * Create a newFunThing and add it to the collection.
  * @param thing A FunThing pointer.
  */
 void Games::add( FunThing* thing ) {
 
-  // If the list is empty, initialize the data collection.
-  // Dynamically creating an array of FunThing pointers.
-  if ( isEmpty() ) { data = new FunThing*[ chunk ]; }
+    // If the list is empty, initialize the data collection.
+    // Dynamically creating an array of FunThing pointers.
+    if ( isEmpty() ) { data = new FunThing*[ chunk ]; }
 
-  // If the list is full, extend the capacity.
-  if ( isFull() ) {
-    extendCapacity();
+    // If the list is full, extend the capacity.
+    if ( isFull() ) {
+        extendCapacity();
+        // DEBUG
+        // cout << "Extending capacity ===> { count:" << count << ", size:" << size << " }" << endl;
+    }
 
-    // DEBUG
-    cout << "Extending capacity ===> { count:" << count << ", size:" << size << " }" << endl;
-  }
-
-  data[ count ] = thing;  // Add it to the collection.
-  count += 1;             // Update the count.
+    data[ count ] = thing;  // Add it to the collection.
+    count += 1;             // Update the count.
 } // end add
 
 
@@ -281,13 +275,8 @@ void Games::add( FunThing* thing ) {
  * Clean up all the dynamic variables.
  */
 void Games::deleteAll() {
-
-  // Iterate over the collection for the current element count.
-  for ( int i = 0; i < count; i++ ) {
-
-    delete data[ i ];
-
-  }
+    // Iterate over the collection for the current element count.
+    for ( int i = 0; i < count; i++ ) { delete data[ i ]; }
 
 } // end deleteAll
 
@@ -298,16 +287,11 @@ void Games::deleteAll() {
  */
 bool Games::contains( string thingName ) const {
 
-  // Iterate over the collection for the current element count.
-  for ( int i = 0; i < count; i++ ) {
-
-      // Return true if found.
-      if ( data[ i ]->getThingName() == thingName ) { return true; }
-
-  }
-
-  // If not found, return false.
-  return false;
+    // Iterate over the collection for the current element count. Return true if found.
+    for ( int i = 0; i < count; i++ ) {
+        if ( data[ i ]->getThingName() == thingName ) { return true; }
+    }
+    return false;  // If not found, return false.
 
 } // end contains
 
@@ -317,103 +301,24 @@ bool Games::contains( string thingName ) const {
  */
 void Games::extendCapacity() {
 
-  // Remember the address of the old collection.
-  FunThing** old = data;
+    FunThing** old = data;         // Remember the address of the old collection.
+    size += chunk;                 // Update the size by one chunk.
+    data = new FunThing*[ size ];  // Create a new collection with new size.
 
-  // Update the size by one chunk.
-  size += chunk;
+    // Shallow-copy all the pointers stored in the old collection into the new one.
+    for ( int i = 0; i < count; i++ ) { data[ i ] = old[ i ]; }
 
-  // Create a new collection with new size.
-  data = new FunThing*[ size ];
-
-  // Shallow-copy all the pointers stored in the old collection into the new one.
-  for ( int i = 0; i < count; i++ ) {
-
-      data[ i ] = old[ i ];
-
-  }
-
-  // Delete the old collection.
-  delete [] old;
+    delete [] old;  // Delete the old collection.
 
 } // end extendCapacity
 
 
-/*
-
-
-4)
-
-FunThing: the name of the thing
-Players: the number of players
-Fun Level output
-Last line
-
-The Fun Level output must show the following text according to the funLevel:
-
-It's super-fun if 8 or more
-It's very fun if 7
-It's ok fun if 3-6, inclusive
-It's no fun if 0 - 2, inclusive
-It's pretty boring if less than 0
-
-
-For the last line
-
-If the FunThing is not dangerous, the last line should read:
-It's fun for Everyone
-otherwise, it should read
-Be careful, it can be dangerous
- */
-
 /**
- * TODO
- * Requirement:
- * Output the following 4 lines for each FunThing in the following way.
- * The output MUST be created via the stream-insertion operator.
+ * Iterate all of the FunThings held in Games and increment each FunThing by 1.
+ * This must be done by invoking the ++ operator on each method.
  */
-void Games::printDescription() {
-
-    // TODO: Overload the stream-insertion operator.
-
-    for ( int i = 0; i < count; i++ ) {
-        cout << "  Fun Thing : " << data[ i ]->getThingName() << endl;
-        cout << "    Players : " << data[ i ]->getNumberOfPlayers() << endl;
-        cout << "  Fun Level : " << data[ i ]->getFunLevel() << endl;
-        cout << "Description : " << data[ i ]->isDangerous() << endl;
-        cout << "-----------------------------------" << endl;
-    }
-
-}
-
-/**
- * Requirement:
- * if 8 or more        : super-fun
- * if 7                : very fun
- * if 3-6, inclusive   : ok fun
- * if 0 - 2, inclusive : no fun
- * if less than 0      : pretty boring
- * @param  funThing*
- * @return text that describes the fun level.
- */
-string Games::getFunLevelText( FunThing* funThing ) {
-  int level = funThing->getFunLevel();
-  if      ( level >= 8 ) { return "super-fun"; }
-  else if ( level >= 7 ) { return "very fun"; }
-  else if ( level >= 3 ) { return "ok fun"; }
-  else if ( level >= 0 ) { return "no fun"; }
-
-  // Anything else is "pretty boring".
-  return "pretty boring";
-}
-
-/**
- * @return "Be careful, it can be dangerous" if the FunThing is dangerous
- * else "It's fun for Everyone.
- */
-string getDangerText( FunThing* funThing ) {
-  return ( funThing->isDangerous() ) ? "Be careful, it can be dangerous"
-                                     : "It's fun for Everyone";
+void Games::makeMoreFun() {
+    for ( int i = 0; i < count; i++ ) { ++data[ i ]; }
 }
 
 
@@ -423,28 +328,25 @@ string getDangerText( FunThing* funThing ) {
 
 
 /**
- * Print the information about all the data that the specified Games object holds.
- * @param games A Games object.
- * IMPORTANT: The Games object must be passed in by reference so that we can access
- * their memory locations.
+ * Requirement:
+ * Non-member Operator Overload.
+ * Output the Games object via the stream-insertion operator.
+ * http://en.cppreference.com/w/cpp/language/operators
  */
-void printAll( const Games& games ) {
+ostream& operator<<( ostream& os, const Games& collection ) {
+    os << "Printing " << collection.title << "..." << endl;
 
-    cout << "Printing my collection..." << endl;
-    // sleep(1);  // Simulate latency.
-
-    FunThing** data = games.getData();
-
-    for ( int i = 0, len = games.getCount(); i < len; i++ ) {
-        if ( i%2 == 0 ) { sleep(1); }
-        cout << "             ID : " << i << endl;
-        cout << "       funLevel : " << data[ i ]->getFunLevel() << endl;
-        cout << "      thingName : " << data[ i ]->getThingName() << endl;
-        cout << "numberOfPlayers : " << data[ i ]->getNumberOfPlayers() << endl;
-        cout << "    isDangerous : " << data[ i ]->isDangerous() << endl;
-        cout << "-----------------------------------" << endl;
+    // Output all the items in the collection to ostream.
+    FunThing** data = collection.getData();
+    for ( int i = 0; i < collection.getCount(); i++ ) {
+        if ( i%2 == 0 ) { sleep(1); }  // Simulate latency.
+        os << "    Fun Thing : " << data[ i ]->getThingName() << endl;
+        os << "      Players : " << data[ i ]->getNumberOfPlayers() << endl;
+        os << "    Fun Level : " << data[ i ]->getFunLevelText() << endl;
+        os << "  Description : " << data[ i ]->getDangerText() << endl;
+        os << "  -----------------------------------" << endl;
     }
-
+    return os;
 }
 
 
@@ -452,7 +354,7 @@ void printAll( const Games& games ) {
  * Print the capacity and current element count of the specified Games object.
  * @param games A Games object.
  */
-void printCurrentElementCount( const Games& games ) {
+void printElementCount( const Games& games ) {
     sleep(1);  // Simulate latency.
     cout << "  { count:" << games.getCount() << ", size:" << games.getSize() << " }" << endl;
 }
@@ -482,9 +384,9 @@ void assert_eq( dataType expected, dataType actual ) {
     }
     cout << "  " << actual << " is equal to " << expected << endl;
 }
-void test_pre_increment_op_of_fun_thing() {
+void test_fun_thing_pre_increment() {
 
-    cout << "test_pre_increment_op_of_fun_thing..." << endl;
+    cout << "test_fun_thing_pre_increment..." << endl;
 
     // Set up.
     CrazySport cs1( "cs1", 43, 9 );
@@ -498,9 +400,9 @@ void test_pre_increment_op_of_fun_thing() {
 
     cout << "  Pass" << endl;
 }
-void test_pre_decrement_op_of_fun_thing() {
+void test_fun_thing_pre_decrement() {
 
-    cout << "test_pre_decrement_op_of_fun_thing..." << endl;
+    cout << "test_fun_thing_pre_decrement..." << endl;
 
     // Set up.
     DomesticChore dc1( "dc1", 43, 9 );
@@ -514,7 +416,24 @@ void test_pre_decrement_op_of_fun_thing() {
 
     cout << "  Pass" << endl;
 }
+void test_fun_thing_fun_level_text() {
 
+    cout << "test_fun_thing_fun_level_text" << endl;
+
+    cout << "  TODO" << endl;
+}
+void test_fun_thing_danger_text() {
+
+    cout << "test_fun_thing_danger_text" << endl;
+
+    cout << "  TODO" << endl;
+}
+void test_games_make_more_fun() {
+
+    cout << "test_games_make_more_fun" << endl;
+
+    cout << "  TODO" << endl;
+}
 
 //====================================================//
 // Main Function
@@ -523,8 +442,11 @@ void test_pre_decrement_op_of_fun_thing() {
 
 int main() {
     // Tests.
-    test_pre_increment_op_of_fun_thing();
-    test_pre_decrement_op_of_fun_thing();
+    test_fun_thing_pre_increment();
+    test_fun_thing_pre_decrement();
+    test_fun_thing_fun_level_text();
+    test_fun_thing_danger_text();
+    test_games_make_more_fun();
 
     // Requirement: Create some instances of each class.
     CrazySport* sumo        = new CrazySport( "sumo", 188, 2 );
@@ -535,16 +457,20 @@ int main() {
     GenericThing* coding    = new GenericThing( "coding", 255, 1, false );
 
     // Requirement: Add those instances to games.
-    cout << "Creating my collection..." << endl;
-    Games myCollection( 4 );
-    myCollection.add( sumo ); printCurrentElementCount( myCollection );
-    myCollection.add( laundry ); printCurrentElementCount( myCollection );
-    myCollection.add( debugging ); printCurrentElementCount( myCollection );
-    myCollection.add( homework ); printCurrentElementCount( myCollection );
-    myCollection.add( hockey ); printCurrentElementCount( myCollection );
-    myCollection.add( coding ); printCurrentElementCount( myCollection );
 
-    printAll( myCollection );
+    Games myCollection( "myCollection", 4 );
+    cout << "Creating " << myCollection.title << "..." << endl;
+    myCollection.add( sumo ); printElementCount( myCollection );
+    myCollection.add( laundry ); printElementCount( myCollection );
+    myCollection.add( debugging ); printElementCount( myCollection );
+    myCollection.add( homework ); printElementCount( myCollection );
+    myCollection.add( hockey ); printElementCount( myCollection );
+    myCollection.add( coding ); printElementCount( myCollection );
+    cout << "  Done" << endl;
+
+    // Output the Games object using a Stream insertion operator.
+    cout << myCollection;
+    cout << "  Done" << endl;
 
     return 0;
 
