@@ -10,21 +10,8 @@
 
 #include <iostream>
 #include <string>
-#include <assert.h>
+#include <cassert>
 using namespace std;
-
-
-/*
-------------
-REQUIREMENTS
-------------
-1. DONE
-2. DONE
-3. DONE
-4. DONE
--------
-5. TODO
- */
 
 
 //====================================================//
@@ -59,8 +46,8 @@ public:
     string getThingName() const { return thingName; }
     void setThingName( string thingName ) { this->thingName = thingName; }
 
-    string getDangerText();
-    string getFunLevelText();
+    string getDangerText() const;
+    string getFunLevelText() const;
 
     // Overload the pre-increment operators that takes no argument.
     // @return The FunThing object that has been updated.
@@ -95,7 +82,7 @@ private:
  * if less than 0      : pretty boring
  * @return text that describes the fun level.
  */
-string FunThing::getFunLevelText() {
+string FunThing::getFunLevelText() const {
     if      ( funLevel >= 8 ) { return "super-fun"; }
     else if ( funLevel >= 7 ) { return "very fun"; }
     else if ( funLevel >= 3 ) { return "ok fun"; }
@@ -109,7 +96,7 @@ string FunThing::getFunLevelText() {
  * @return "Be careful, it can be dangerous" if the FunThing is dangerous,
  * else "It's fun for Everyone.
  */
-string FunThing::getDangerText() {
+string FunThing::getDangerText() const {
     return ( dangerous ) ? "Be careful, it can be dangerous" : "It's fun for Everyone";
 }
 
@@ -318,7 +305,15 @@ void Games::extendCapacity() {
  * This must be done by invoking the ++ operator on each method.
  */
 void Games::makeMoreFun() {
-    for ( int i = 0; i < count; i++ ) { ++data[ i ]; }
+    for ( int i = 0; i < count; i++ ) {
+
+        // cout << data[ i ]->getFunLevel() << "===>";  // Debugging::before
+
+        // Since an array element is a pointer, we dereference it and then increment it.
+        ++( *data[ i ] );
+
+        // cout << data[ i ]->getFunLevel() << endl;    // Debugging::after
+    }
 }
 
 
@@ -333,17 +328,21 @@ void Games::makeMoreFun() {
  * Output the Games object via the stream-insertion operator.
  * http://en.cppreference.com/w/cpp/language/operators
  */
-ostream& operator<<( ostream& os, const Games& collection ) {
+ostream& operator<<( ostream& os, FunThing& thing ) {
+    os << "    Fun Thing : " << thing.getThingName() << endl;
+    os << "      Players : " << thing.getNumberOfPlayers() << endl;
+    os << "    Fun Level : " << thing.getFunLevelText() << endl;
+    os << "  Description : " << thing.getDangerText() << endl;
+    return os;
+}
+ostream& operator<<( ostream& os, Games& collection ) {
     os << "Printing " << collection.title << "..." << endl;
 
     // Output all the items in the collection to ostream.
     FunThing** data = collection.getData();
     for ( int i = 0; i < collection.getCount(); i++ ) {
         if ( i%2 == 0 ) { sleep(1); }  // Simulate latency.
-        os << "    Fun Thing : " << data[ i ]->getThingName() << endl;
-        os << "      Players : " << data[ i ]->getNumberOfPlayers() << endl;
-        os << "    Fun Level : " << data[ i ]->getFunLevelText() << endl;
-        os << "  Description : " << data[ i ]->getDangerText() << endl;
+        os << *data[ i ];
         os << "  -----------------------------------" << endl;
     }
     return os;
@@ -365,75 +364,134 @@ void printElementCount( const Games& games ) {
 //====================================================//
 
 
-// template <typename dataType>
-// bool my_assert( bool ( *conditionalFun )( dataType value ), string errorMsg ) {
-//   return true;
-// }
-// template <typename dataType>
-// bool my_refute( bool ( *conditionalFun )( dataType value ), string errorMsg ) {
-//   return ! my_assert<dataType>();
-// }
-// template <typename dataType>
-// bool zeroOrGreater( dataType value ) { return value >= 0; }
-
-template <typename dataType>
-void assert_eq( dataType expected, dataType actual ) {
+template <typename DataType>
+void assert_eq( DataType expected, DataType actual ) {
     if ( expected != actual ) {
-        cout << "  Fail: " << actual << " should be equal to " << expected << endl;
+        cout << "  Fail: \"" << actual << "\" should be equal to \"" << expected << "\"" << endl;
         assert( false );
     }
-    cout << "  " << actual << " is equal to " << expected << endl;
+    cout << "  \"" << actual << "\" is equal to \"" << expected << "\"" << endl;
 }
+
 void test_fun_thing_pre_increment() {
 
     cout << "test_fun_thing_pre_increment..." << endl;
 
-    // Set up.
-    CrazySport cs1( "cs1", 43, 9 );
+    // Create a FunThing with initial funlevel being 43.
+    CrazySport cs1( "cs1", 43, 99 );
     assert_eq<int>( 43, cs1.getFunLevel() );
 
     // Increment the CrazySport object.
-    ++cs1;
-    assert_eq<int>( 44, cs1.getFunLevel() );
-    ++cs1;
-    assert_eq<int>( 45, cs1.getFunLevel() );
+    ++cs1; assert_eq<int>( 44, cs1.getFunLevel() );
+    ++cs1; assert_eq<int>( 45, cs1.getFunLevel() );
 
     cout << "  Pass" << endl;
 }
+
 void test_fun_thing_pre_decrement() {
 
     cout << "test_fun_thing_pre_decrement..." << endl;
 
-    // Set up.
-    DomesticChore dc1( "dc1", 43, 9 );
+    // Create a FunThing with initial funlevel being 43.
+    DomesticChore dc1( "dc1", 43, 99 );
     assert_eq<int>( 43, dc1.getFunLevel() );
 
     // Decrement the DomesticChore object.
-    --dc1;
-    assert_eq<int>( 42, dc1.getFunLevel() );
-    --dc1;
-    assert_eq<int>( 41, dc1.getFunLevel() );
+    --dc1; assert_eq<int>( 42, dc1.getFunLevel() );
+    --dc1; assert_eq<int>( 41, dc1.getFunLevel() );
 
     cout << "  Pass" << endl;
 }
+
+/**
+ * if 8 or more        : super-fun
+ * if 7                : very fun
+ * if 3-6, inclusive   : ok fun
+ * if 0 - 2, inclusive : no fun
+ * if less than 0      : pretty boring
+ */
 void test_fun_thing_fun_level_text() {
 
     cout << "test_fun_thing_fun_level_text" << endl;
 
-    cout << "  TODO" << endl;
+    // Create a FunThing with initial funlevel being 9.
+    DomesticChore dc1( "dc1", 9, 1000 );
+
+    // Check if the text is correct according to fun level.
+    assert_eq<string>( dc1.getFunLevelText(), "super-fun" );
+
+    dc1.setFunLevel( 8 );
+    assert_eq<string>( dc1.getFunLevelText(), "super-fun" );
+
+    dc1.setFunLevel( 7 );
+    assert_eq<string>( dc1.getFunLevelText(), "very fun" );
+
+    dc1.setFunLevel( 6 );
+    assert_eq<string>( dc1.getFunLevelText(), "ok fun" );
+
+    dc1.setFunLevel( 3 );
+    assert_eq<string>( dc1.getFunLevelText(), "ok fun" );
+
+    dc1.setFunLevel( 2 );
+    assert_eq<string>( dc1.getFunLevelText(), "no fun" );
+
+    dc1.setFunLevel( 0 );
+    assert_eq<string>( dc1.getFunLevelText(), "no fun" );
+
+    dc1.setFunLevel( -1 );
+    assert_eq<string>( dc1.getFunLevelText(), "pretty boring" );
+
+    cout << "  Pass" << endl;
 }
+
+/**
+ * "Be careful, it can be dangerous" if the FunThing is dangerous,
+ * else "It's fun for Everyone."
+ */
 void test_fun_thing_danger_text() {
 
     cout << "test_fun_thing_danger_text" << endl;
 
-    cout << "  TODO" << endl;
+    // Create a dangerous thing and a safe thing.
+    CrazySport danger( "danger", 8, 9 );
+    DomesticChore safe( "safe", 8, 9 );
+
+    assert_eq<string>( "Be careful, it can be dangerous", danger.getDangerText() );
+    assert_eq<string>( "It's fun for Everyone", safe.getDangerText() );
+
+    cout << "  Pass" << endl;
 }
+
 void test_games_make_more_fun() {
 
     cout << "test_games_make_more_fun" << endl;
 
-    cout << "  TODO" << endl;
+    // Create FunThing objects.
+    CrazySport* sumo        = new CrazySport( "sumo", 10, 2 );
+    DomesticChore* laundry  = new DomesticChore( "laundry", 20, 1 );
+    GenericThing* debugging = new GenericThing( "debugging", 30, 41, true );
+
+    // Create a collection.
+    Games myCollection( "myCollection", 4 );
+    myCollection.add( sumo );
+    myCollection.add( laundry );
+    myCollection.add( debugging );
+
+    // Make them more fun for the first time.
+    myCollection.makeMoreFun();
+    assert_eq<int>( 11, sumo->getFunLevel() );
+    assert_eq<int>( 21, laundry->getFunLevel() );
+    assert_eq<int>( 31, debugging->getFunLevel() );
+
+    // Make them more fun for the second time.
+    myCollection.makeMoreFun();
+    assert_eq<int>( 12, sumo->getFunLevel() );
+    assert_eq<int>( 22, laundry->getFunLevel() );
+    assert_eq<int>( 32, debugging->getFunLevel() );
+
+    cout << "  Pass" << endl;
 }
+
 
 //====================================================//
 // Main Function
@@ -442,13 +500,15 @@ void test_games_make_more_fun() {
 
 int main() {
     // Tests.
-    test_fun_thing_pre_increment();
-    test_fun_thing_pre_decrement();
-    test_fun_thing_fun_level_text();
-    test_fun_thing_danger_text();
-    test_games_make_more_fun();
+
+    // test_fun_thing_pre_increment();
+    // test_fun_thing_pre_decrement();
+    // test_fun_thing_fun_level_text();
+    // test_fun_thing_danger_text();
+    // test_games_make_more_fun();
 
     // Requirement: Create some instances of each class.
+
     CrazySport* sumo        = new CrazySport( "sumo", 188, 2 );
     DomesticChore* laundry  = new DomesticChore( "laundry", 11, 1 );
     GenericThing* debugging = new GenericThing( "debugging", 13, 41, true );
