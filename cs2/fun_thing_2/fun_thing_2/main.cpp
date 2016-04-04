@@ -501,11 +501,11 @@ void test_games_make_more_fun() {
 int main() {
     // Tests.
 
-    // test_fun_thing_pre_increment();
-    // test_fun_thing_pre_decrement();
-    // test_fun_thing_fun_level_text();
-    // test_fun_thing_danger_text();
-    // test_games_make_more_fun();
+     test_fun_thing_pre_increment();
+     test_fun_thing_pre_decrement();
+     test_fun_thing_fun_level_text();
+     test_fun_thing_danger_text();
+     test_games_make_more_fun();
 
     // Requirement: Create some instances of each class.
 
