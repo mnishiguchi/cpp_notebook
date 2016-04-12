@@ -74,7 +74,49 @@ A class with ALL purely virtual methods is considered an interface
     + Controlling behavior
     + Dictating what is done not how it’s done
 
+==
 
+## Creating vector of Abstract datatype 
+- Since we cannot instantiate an abstract class, we must use pointer of that class as a datatype for a vector, and pass in objects of a subclass into that vector.
+
+```cpp
+#include <iostream>
+#include <vector>
+using namespace std;
+
+/**
+ * An abstract class.
+ */
+class Person {
+public:
+    virtual bool isSuper()=0;
+};
+
+/**
+ * A class that implements the Person class.
+ */
+class Programmer : public Person {
+public:
+    bool isSuper() { return true; }
+};
+
+int main() {
+
+    // Bad example.
+    Programmer masa;
+    vector<Person> people;
+    people.push_back( masa );  // Error: because Person cannot be instantiated.
+
+    //=================
+
+    // Good example
+    Programmer* masa = new Programmer;
+    vector<Person*> people;
+    people.push_back( masa );  // Good:
+
+    return 0;
+}
+```
 
 
 

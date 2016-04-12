@@ -60,12 +60,107 @@ public:
         --( this->funLevel );
         return *this;
     }
-
-private:
+protected:
     int funLevel;
     string thingName;
 
 }; // end FunThing
+
+/**
+ * Non-member Operator Overload.
+ */
+ostream& operator<<( ostream& os, const FunThing& obj ) {
+
+    // TODO
+    return os << "TODO: overload << operator for FunThing" << endl;
+
+}
+
+
+//====================================================//
+// FunThing family A
+//====================================================//
+
+
+/**
+ * Subclass of FunThing.
+ */
+class GenericThing : public FunThing {
+public:
+    // Constructor
+    GenericThing( string thingName, int funLevel, int numberOfPlayers, bool isDangerous )
+        : FunThing( thingName, funLevel ) {
+
+        this->numberOfPlayers = numberOfPlayers;
+        this->dangerous       = isDangerous;
+    }
+
+    int getNumberOfPlayers() { return this->numberOfPlayers; }
+    bool isDangerous() { return this->dangerous; }
+    string getFunLevelText() const;
+    string getDangerText() const;
+
+protected:
+    bool dangerous;
+    int numberOfPlayers;
+}; // end GenericThing
+
+
+/**
+ * if 8 or more        : super-fun
+ * if 7                : very fun
+ * if 3-6, inclusive   : ok fun
+ * if 0 - 2, inclusive : no fun
+ * if less than 0      : pretty boring
+ * @return text that describes the fun level.
+ */
+string GenericThing::getFunLevelText() const {
+    if      ( funLevel >= 8 ) { return "super-fun"; }
+    else if ( funLevel >= 7 ) { return "very fun"; }
+    else if ( funLevel >= 3 ) { return "ok fun"; }
+    else if ( funLevel >= 0 ) { return "no fun"; }
+
+    // Anything else is "pretty boring".
+    return "pretty boring";
+}
+
+
+/**
+ * @return "Be careful, it can be dangerous" if the GenericThing is dangerous,
+ * else "It's fun for Everyone.
+ */
+string GenericThing::getDangerText() const {
+    return ( dangerous ) ? "Be careful, it can be dangerous" : "It's fun for Everyone";
+}
+
+
+/**
+ * Subclass of FunThing. All instances of CrazySport considered dangerous.
+ */
+class CrazySport : public GenericThing {
+public:
+    // Constructor
+    CrazySport( string thingName, int funLevel, int numberOfPlayers )
+        : GenericThing( thingName, funLevel, numberOfPlayers, true ) {
+    }
+}; // end CrazySport
+
+
+/**
+ * Subclass of GenericThing. All instances of DomesticChore are NOT dangerous.
+ */
+class DomesticChore : public GenericThing {
+public:
+    // Constructor
+    DomesticChore( string thingName, int funLevel, int numberOfPlayers )
+        : GenericThing( thingName, funLevel, numberOfPlayers, false ) {
+    }
+}; // end DomesticChore
+
+
+//====================================================//
+// FunThing family B
+//====================================================//
 
 
 /**
@@ -80,21 +175,15 @@ public:
     // Requirement:
     // @return a VERY SHORT (50 characters or less) string of the basic rules of the game.
     virtual string getRules() const =0;
+    virtual void setRules( string ) const =0;
+
+    // NOTE: This is an abstract class; it does not hold any attributes.
+    // Instead, add appropriate attributes in subclasses.
 
     // Constructor
     BoardGame( string thingName, int funLevel, string rules )
         : FunThing( thingName, funLevel ) {
     }
-
-    void setRules( string rules ) {
-        if ( rules.length() > 50 ) {
-            throw std::length_error(std::string("Error: max length is 50 characters for rules"));
-        }
-        this->rules = rules;
-    }
-
-protected:
-    string rules;
 }; // end BoardGame
 
 
@@ -121,6 +210,15 @@ public:
     string getRules() const {
         return rules;
     }
+    void setRules( string rules ) {
+        if ( rules.length() > 50 ) {
+            throw std::length_error(std::string("Error: max length is 50 characters for rules"));
+        }
+        this->rules = rules;
+    }
+
+private:
+    string rules;
 }; // end TwoPlayerBG
 
 
@@ -135,18 +233,10 @@ public:
         this->rules = "undefined";
     }
 
-    string getRules() const {
-        return rules;
-    }
+    string getRules() const { return this->rules; }
+private:
+    string rules;
 }; // end MultiPlayerBG
-
-
-//====================================================//
-// Utility functions
-//====================================================//
-
-
-
 
 
 //====================================================//
@@ -178,18 +268,18 @@ int main() {
     // Instantiate at least two instances of TwoPlayerBG and MultiPlayerBG.
     string rules = "Lorem ipsum dolor sit amet.";
 
-    TwoPlayerBG* chess      = new TwoPlayerBG( "chess", 43, rules );
-    TwoPlayerBG* poker      = new TwoPlayerBG( "poker", 55, rules );
-    MultiPlayerBG* trouble  = new MultiPlayerBG( "trouble", 11, rules );
-    MultiPlayerBG* sorry    = new MultiPlayerBG( "sorry", 132, rules );
+    // TwoPlayerBG* chess      = new TwoPlayerBG( "chess", 43, rules );
+    // TwoPlayerBG* poker      = new TwoPlayerBG( "poker", 55, rules );
+    // MultiPlayerBG* trouble  = new MultiPlayerBG( "trouble", 11, rules );
+    // MultiPlayerBG* sorry    = new MultiPlayerBG( "sorry", 132, rules );
 
     // Appropriately add each instance to the following vector:
     vector<FunThing*> v_boardGames;
 
-    v_boardGames.push_back(chess);
-    v_boardGames.push_back(poker);
-    v_boardGames.push_back(trouble);
-    v_boardGames.push_back(sorry);
+    // v_boardGames.push_back(chess);
+    // v_boardGames.push_back(poker);
+    // v_boardGames.push_back(trouble);
+    // v_boardGames.push_back(sorry);
 
     // Correctly iterate v_boardGames and << appropriately to output through
     // the left-shift operator.
