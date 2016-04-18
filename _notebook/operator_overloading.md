@@ -131,6 +131,12 @@ CSample& operator++()
 }
 ```
 
+==
+
+## Overloading Square Bracket [] Operator
+- http://www.cplusplus.com/forum/general/62240/
+
+
 == 
 
 ## [The friend funcitons](http://www.cplusplus.com/doc/tutorial/inheritance/)

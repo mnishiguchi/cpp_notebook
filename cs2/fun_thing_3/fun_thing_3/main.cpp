@@ -4,7 +4,7 @@
 //
 //  Masatoshi Nishiguchi
 //
-//  Due: Saturday, April 16
+//  Due: Tuesday, April 19
 //
 
 
@@ -50,7 +50,7 @@ public:
     // Setters & getters.
     int getFunLevel() const { return funLevel; }
     void setFunLevel( int funLevel ) { this->funLevel = funLevel; }
-    string getThingName() const { return thingName; }
+    virtual string getThingName() const { return thingName; }
     void setThingName( string thingName ) { this->thingName = thingName; }
 
     // Overload the pre-increment operators that takes no argument.
@@ -68,6 +68,7 @@ public:
         --( this->funLevel );
         return *this;
     }
+
 protected:
     int funLevel;
     string thingName;
@@ -109,7 +110,7 @@ class GenericThing : public FunThing {
 public:
     // Constructor
     GenericThing( string thingName, int funLevel, int numberOfPlayers, bool isDangerous )
-        : FunThing( thingName, funLevel ) {
+    : FunThing( thingName, funLevel ) {
 
         this->numberOfPlayers = numberOfPlayers;
         this->dangerous       = isDangerous;
@@ -188,7 +189,7 @@ ostream& operator<<( ostream& os, GenericThing& thing ) {
 class CrazySport : public GenericThing {
 public:
     CrazySport( string thingName, int funLevel, int numberOfPlayers )
-        : GenericThing( thingName, funLevel, numberOfPlayers, true ) {
+    : GenericThing( thingName, funLevel, numberOfPlayers, true ) {
     }
 }; // end CrazySport
 
@@ -210,12 +211,10 @@ public:
 
 
 /**
- * An abstruct class that extends FunThing. Throws std::length_error when the rules are too long.
+ * An abstruct class that Extends FunThing.
  */
 class BoardGame : public FunThing {
 public:
-    // Requirement:
-    // @return a VERY SHORT (50 characters or less) string of the basic rules of the game.
     virtual string getRules() const =0;
     virtual void setRules( string ) =0;
 
@@ -224,7 +223,7 @@ public:
 
     // Constructor
     BoardGame( string thingName, int funLevel )
-        : FunThing( thingName, funLevel ) {
+    : FunThing( thingName, funLevel ) {
 
         // All BoardGame instances are not considered dangerous.
         this->dangerous = false;
@@ -264,12 +263,13 @@ void BoardGame::ouputToStream( ostream& st ) {
 
 /**
  * Extends BoardGame. All TwoPlayerBG instances will always have two and exactly two players.
+ * Throws std::length_error when the rules are too long.
  */
 class TwoPlayerBG : public BoardGame {
 public:
     // Constructor
     TwoPlayerBG( string thingName, int funLevel, string rules )
-        : BoardGame( thingName, funLevel ) {
+    : BoardGame( thingName, funLevel ) {
 
         setRules(rules);
         this->numberOfPlayers = 2;
@@ -277,6 +277,8 @@ public:
 
     string getRules() const { return rules; }
 
+    // Requirement:
+    // @return a VERY SHORT (50 characters or less) string of the basic rules of the game.
     void setRules( string rules ) {
         if ( rules.length() > 50 ) {
             throw std::length_error( std::string("Error: max length is 50 characters for rules") );
@@ -290,13 +292,14 @@ private:
 
 
 /**
- * extends BoardGame
+ * Extends BoardGame
+ * Throws std::length_error when the rules are too long.
  */
 class MultiPlayerBG : public BoardGame {
 public:
     // Constructor
     MultiPlayerBG( string thingName, int funLevel, string rules, int numberOfPlayers )
-        : BoardGame( thingName, funLevel ) {
+    : BoardGame( thingName, funLevel ) {
 
         setRules(rules);
         this->numberOfPlayers = numberOfPlayers;
@@ -304,15 +307,195 @@ public:
 
     string getRules() const { return this->rules; }
 
+    // Requirement:
+    // @return a VERY SHORT (50 characters or less) string of the basic rules of the game.
     void setRules( string rules ) {
         if ( rules.length() > 50 ) {
             throw std::length_error( std::string("Error: max length is 50 characters for rules") );
         }
         this->rules = rules;
     }
+
 private:
     string rules;
 }; // end MultiPlayerBG
+
+//====================================================//
+// Games class
+//====================================================//
+
+
+/**
+ * The Games class represents a dynamic collection of the FunThing pointers.
+ * - When the list gets full, it will be extended by chunk.
+ * - Upon instantiation, this dynamic array should be set to NULL.
+ * - Has the ability to dynamically allocate a new instance of FunThing and
+ * add that to the internal array.
+ */
+class Games {
+public:
+    // Constructors.
+    Games() {
+        this->title = "untitled";
+        this->chunk = 8;
+        this->count = 0;
+        this->data  = NULL;
+        this->size  = chunk;  // Initial size is initially set to chunk.
+    }
+    Games( string title, int chunk ) {
+        this->title = title;
+        this->chunk = chunk;
+        this->count = 0;
+        this->data  = NULL;
+        this->size  = chunk;  // Initial size is initially set to chunk.
+    }
+
+    // Destructor. Clean up all the dynamic variables.
+    ~Games() { deleteAll(); }
+
+    // Override the copy constructor because this class contains a pointer member.
+    Games( const Games& other );
+
+    // Operator overload for [].
+    FunThing* operator[]( int index ) const {
+
+        if ( index < 0 ) {
+            throw std::runtime_error( "Negative index" );
+        } else if ( index > count - 1 ) {
+            throw std::runtime_error( "Index out of bounds" );
+        }
+
+        return this->data[ index ];
+    }
+
+    // Public API.
+    void add( FunThing* thing );
+    bool contains( string thingName ) const;
+    void deleteAll();
+    int getChunk() const { return chunk; }
+    int getCount() const { return count; }
+    int getSize() const { return size; }
+    FunThing** getData() const { return data; }
+    bool isEmpty() { return count == 0; }
+    bool isFull() { return ! isEmpty() && ( count % chunk == 0 ); }
+    void makeMoreFun();
+    string title;
+private:
+    int chunk;        // The amount by which the list size increment
+    int count;        // The current number of the elements.
+    int size;         // The current list size.
+    FunThing** data;  // Array of FunThing pointers.
+
+    // Private helper methods.
+    void extendCapacity();
+
+}; // end class Games
+
+
+/**
+ * The custom copy constructor.
+ * Initialize the new instance. (Deep copy the other instance to the new one)
+ */
+Games::Games( const Games& other ) {
+
+    // Copy the values of chunk and count.
+    chunk = other.chunk;
+    count = other.count;
+    size  = other.size;
+
+    // Allocate the new array instance that is the same size as the other's.
+    // NOTE: Although FunThing is an abstract class, this code is valid, because
+    // it does not instantiate FunThing.
+    data = new FunThing*[ chunk ];
+
+    // Deep-copy the values of other's data into this collection.
+    for ( int i = 0; i < count; i++ ) {
+        data[ i ]->setThingName( other.data[ i ]->getThingName() );
+        data[ i ]->setFunLevel( other.data[ i ]->getFunLevel() );
+    }
+
+} // end constructor
+
+
+/**
+ * Create a newFunThing and add it to the collection.
+ * @param thing A FunThing pointer.
+ */
+void Games::add( FunThing* thing ) {
+
+    // If the list is empty, initialize the data collection.
+    // Dynamically creating an array of FunThing pointers.
+    if ( isEmpty() ) { data = new FunThing*[ chunk ]; }
+
+    // If the list is full, extend the capacity.
+    if ( isFull() ) {
+        extendCapacity();
+        // DEBUG
+        // cout << "Extending capacity ===> { count:" << count << ", size:" << size << " }" << endl;
+    }
+
+    data[ count ] = thing;  // Add it to the collection.
+    count += 1;             // Update the count.
+} // end add
+
+
+/**
+ * Clean up all the dynamic variables.
+ */
+void Games::deleteAll() {
+    // Iterate over the collection for the current element count.
+    for ( int i = 0; i < count; i++ ) { delete data[ i ]; }
+
+} // end deleteAll
+
+
+/**
+ * @return true if a FunThing with the specified name contains in the collection,
+ * else false.
+ */
+bool Games::contains( string thingName ) const {
+
+    // Iterate over the collection for the current element count. Return true if found.
+    for ( int i = 0; i < count; i++ ) {
+        if ( data[ i ]->getThingName() == thingName ) { return true; }
+    }
+    return false;  // If not found, return false.
+
+} // end contains
+
+
+/**
+ * Extend the capacity of the data by one chunk.
+ */
+void Games::extendCapacity() {
+
+    FunThing** old = data;         // Remember the address of the old collection.
+    size += chunk;                 // Update the size by one chunk.
+    data = new FunThing*[ size ];  // Create a new collection with new size.
+
+    // Shallow-copy all the pointers stored in the old collection into the new one.
+    for ( int i = 0; i < count; i++ ) { data[ i ] = old[ i ]; }
+
+    delete [] old;  // Delete the old collection.
+
+} // end extendCapacity
+
+
+/**
+ * Iterate all of the FunThings held in Games and increment each FunThing by 1.
+ * This must be done by invoking the ++ operator on each method.
+ */
+void Games::makeMoreFun() {
+    for ( int i = 0; i < count; i++ ) {
+
+        // cout << data[ i ]->getFunLevel() << "===>";  // Debugging::before
+
+        // Since an array element is a pointer, we dereference it and then increment it.
+        ++( *data[ i ] );
+
+        // cout << data[ i ]->getFunLevel() << endl;    // Debugging::after
+    }
+}
 
 
 //====================================================//
@@ -320,16 +503,45 @@ private:
 //====================================================//
 
 
-template <typename DataType>
-void assert_eq( DataType expected, DataType actual ) {
-    if ( expected != actual ) {
-        cout << "  Fail: \"" << actual << "\" should be equal to \"" << expected << "\"" << endl;
-        assert( false );
-    }
-    // cout << "  \"" << actual << "\" is equal to \"" << expected << "\"" << endl;
-}
+// template <typename DataType>
+// void assert_eq( DataType expected, DataType actual ) {
+//     if ( expected != actual ) {
+//         cout << "  Fail: \"" << actual << "\" should be equal to \"" << expected << "\"" << endl;
+//         assert( false );
+//     }
+//     // cout << "  \"" << actual << "\" is equal to \"" << expected << "\"" << endl;
+// }
 
-// TODO
+
+//====================================================//
+// Extras
+//====================================================//
+
+void extra_credit() {
+    Games games;
+
+    //FunThings added to g here
+    FunThing* sumo            = new CrazySport( "sumo", 53, 2 );
+    FunThing* bungee_jumping  = new CrazySport( "bungee_jumping", 23, 1 );
+    FunThing* marathon        = new CrazySport( "marathon", 71, 1 );
+    FunThing* street_fighting = new CrazySport( "street_fighting", 93, 30 );
+    games.add( sumo );
+    games.add( bungee_jumping );
+    games.add( marathon );
+    games.add( street_fighting );
+
+    FunThing* val = games[ 3 ];  //This should be valid code that returns the pointer at index 3
+    cout << "val: " << val->getThingName() << endl;
+
+    try {
+        val = games[ -3 ];  //This code must throw a char array string exception stating "Negative index"
+        val = games[ 456 ]; //This code must throw a char array string exception stating "Index out of bounds", assuming you haven't added this many FunThings
+
+    } catch ( std::exception& ex ) {
+        std::cerr << "Exception caught: " << ex.what() << '\n';
+    }
+
+}
 
 
 //====================================================//
@@ -338,21 +550,21 @@ void assert_eq( DataType expected, DataType actual ) {
 
 
 int main() {
-    // Tests.
-    // TODO
 
     // Prepare the rules.
     map<string, string> rules;
-    rules["chess"]   = "Each player begins the game with 16 pieces lorem";
+    rules["chess"]   = "Each player begins the game with 16 pieces";
     rules["poker"]   = "The right to deal a hand rotates among the players";
     rules["trouble"] = "Land on an opponent's peg to bump it back home!";
     rules["sorry"]   = "Each player in turn draws one card from the stack";
+
 
     // Instantiate at least two instances of TwoPlayerBG and MultiPlayerBG.
     TwoPlayerBG* chess     = new TwoPlayerBG( "chess", 43, rules["chess"] );
     TwoPlayerBG* poker     = new TwoPlayerBG( "poker", 55, rules["poker"] );
     MultiPlayerBG* trouble = new MultiPlayerBG( "trouble", 11, rules["trouble"], 5 );
     MultiPlayerBG* sorry   = new MultiPlayerBG( "sorry", 132, rules["sorry"], 6 );
+
 
     // Appropriately add each instance to the following vector:
     vector<FunThing*> v_boardGames;
@@ -361,6 +573,7 @@ int main() {
     v_boardGames.push_back( poker );
     v_boardGames.push_back( trouble );
     v_boardGames.push_back( sorry ) ;
+
 
     // Correctly iterate v_boardGames and << appropriately to output through
     // the left-shift operator (via ouputToStream method).
@@ -387,6 +600,8 @@ int main() {
         // Output the info.
         currentElement->ouputToStream( cout );
     }
+
+    extra_credit();
 
     return 0;
 

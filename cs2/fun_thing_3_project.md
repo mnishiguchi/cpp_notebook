@@ -28,8 +28,6 @@ Correctly iterate v_boardGames and << appropriately to output through the left-s
 ### Classes to create
 You only need to make three classes, but if you can defend a reason to use more.
 
----TODO---
-
 ### FunThing
 You are NOT allowed to change the design of FunThing.  From previous assignments, your FunThing must contain a <<, -- and ++ overload as well as the two purely virtual methods.
 
