@@ -29,9 +29,11 @@ using namespace std;
 class FunThing {
 public:
     // NOTE: Subclasses of this class must implement these methods so that they can be used.
-    virtual bool isDangerous()=0;
-    virtual int getNumberOfPlayers()=0;
-    virtual void ouputToStream( ostream& stream )=0;
+    virtual bool isDangerous() =0;
+    virtual int getNumberOfPlayers() =0;
+
+    // Run-time binding.
+    virtual void ouputToStream( ostream& stream );
 
     // Constructor that is called via subclasses.
     FunThing( string thingName, int funLevel ) {
@@ -84,6 +86,16 @@ ostream& operator<<( ostream& os, FunThing& thing ) {
 }
 
 
+/**
+ * Run-time binding.
+ * Allows the insertion operator code to simply call this and pass the ostream as an argument.
+ */
+void FunThing::ouputToStream( ostream& stream ) {
+    // printf("Called from FunThing\n");
+    cout << *this << endl;
+};
+
+
 //====================================================//
 // The FunThing family A
 //====================================================//
@@ -106,7 +118,9 @@ public:
     // Implement methods that are required by parent class.
     int getNumberOfPlayers() { return this->numberOfPlayers; }
     bool isDangerous() { return this->dangerous; }
-    void ouputToStream( ostream& st );
+
+    // Run-time binding.
+    virtual void ouputToStream( ostream& stream );
 
     // Other methods.
     string getFunLevelText() const;
@@ -122,8 +136,7 @@ protected:
  * Allows the insertion operator code to simply call this and pass the ostream as an argument.
  */
 void GenericThing::ouputToStream( ostream& st ) {
-
-    // TODO
+    // printf("Called from GenericThing\n");
     cout << *this << endl;
 }
 
@@ -220,7 +233,9 @@ public:
     // Implement methods that are required by parent class.
     int getNumberOfPlayers() { return this->numberOfPlayers; }
     bool isDangerous() { return this->dangerous; }
-    void ouputToStream( ostream& st );
+
+    // Run-time binding.
+    virtual void ouputToStream( ostream& st );
 
 protected:
     bool dangerous;
@@ -229,22 +244,22 @@ protected:
 
 
 /**
- * Allows the insertion operator code to simply call this and pass the ostream as an argument.
- */
-void BoardGame::ouputToStream( ostream& st ) {
-
-    // TODO
-    cout << *this << endl;
-}
-
-
-/**
  * Non-member Operator Overload.
  * All BoardGame will output ONLY their rules when this operator is applied.
  */
 ostream& operator<<( ostream& os, const BoardGame& obj ) {
-    return os << "Rules of " << obj.getThingName() << "\n" << obj.getRules();
+    return os << "--- " << obj.getThingName() << " ---\n" << obj.getRules();
 }
+
+
+/**
+ * Run-time binding. Override super's implementation.
+ * Allows the insertion operator code to simply call this and pass the ostream as an argument.
+ */
+void BoardGame::ouputToStream( ostream& st ) {
+    // printf("Called from BoardGame\n");
+    cout << *this << endl;
+};
 
 
 /**
@@ -255,13 +270,13 @@ public:
     // Constructor
     TwoPlayerBG( string thingName, int funLevel, string rules )
         : BoardGame( thingName, funLevel ) {
-        this->rules = "undefined";
+
+        setRules(rules);
         this->numberOfPlayers = 2;
     }
 
-    string getRules() const {
-        return rules;
-    }
+    string getRules() const { return rules; }
+
     void setRules( string rules ) {
         if ( rules.length() > 50 ) {
             throw std::length_error( std::string("Error: max length is 50 characters for rules") );
@@ -282,11 +297,13 @@ public:
     // Constructor
     MultiPlayerBG( string thingName, int funLevel, string rules, int numberOfPlayers )
         : BoardGame( thingName, funLevel ) {
-        this->rules = rules;
+
+        setRules(rules);
         this->numberOfPlayers = numberOfPlayers;
     }
 
     string getRules() const { return this->rules; }
+
     void setRules( string rules ) {
         if ( rules.length() > 50 ) {
             throw std::length_error( std::string("Error: max length is 50 characters for rules") );
@@ -296,12 +313,6 @@ public:
 private:
     string rules;
 }; // end MultiPlayerBG
-
-
-//====================================================//
-// Utility functions
-//====================================================//
-
 
 
 //====================================================//
@@ -315,7 +326,7 @@ void assert_eq( DataType expected, DataType actual ) {
         cout << "  Fail: \"" << actual << "\" should be equal to \"" << expected << "\"" << endl;
         assert( false );
     }
-    cout << "  \"" << actual << "\" is equal to \"" << expected << "\"" << endl;
+    // cout << "  \"" << actual << "\" is equal to \"" << expected << "\"" << endl;
 }
 
 // TODO
@@ -332,10 +343,10 @@ int main() {
 
     // Prepare the rules.
     map<string, string> rules;
-    rules["chess"]   = "The Chess rules: Lorem ipsum dolor sit amet.";
-    rules["poker"]   = "The Poker rules: Lorem ipsum dolor sit amet.";
-    rules["trouble"] = "The Trouble rules: Lorem ipsum dolor sit amet.";
-    rules["sorry"]   = "The Sorry rules: Lorem ipsum dolor sit amet.";
+    rules["chess"]   = "Each player begins the game with 16 pieces lorem";
+    rules["poker"]   = "The right to deal a hand rotates among the players";
+    rules["trouble"] = "Land on an opponent's peg to bump it back home!";
+    rules["sorry"]   = "Each player in turn draws one card from the stack";
 
     // Instantiate at least two instances of TwoPlayerBG and MultiPlayerBG.
     TwoPlayerBG* chess     = new TwoPlayerBG( "chess", 43, rules["chess"] );
@@ -346,13 +357,13 @@ int main() {
     // Appropriately add each instance to the following vector:
     vector<FunThing*> v_boardGames;
 
-    v_boardGames.push_back(chess);
-    v_boardGames.push_back(poker);
-    v_boardGames.push_back(trouble);
-    v_boardGames.push_back(sorry);
+    v_boardGames.push_back( chess );
+    v_boardGames.push_back( poker );
+    v_boardGames.push_back( trouble );
+    v_boardGames.push_back( sorry ) ;
 
     // Correctly iterate v_boardGames and << appropriately to output through
-    // the left-shift operator.
+    // the left-shift operator (via ouputToStream method).
     // Your loop must be coded in such a way that it will work for any number of
     // vector elements.
 
@@ -364,8 +375,8 @@ int main() {
 
     // Iterate over the vector using that iterator.
     cout << "v_boardGames contains:\n";
-    for ( iterator = v_boardGames.begin() ;
-          iterator != v_boardGames.end() ;
+    for ( iterator  = v_boardGames.begin() ;
+          iterator != v_boardGames.end()   ;
           iterator++ ) {
 
         // Retrieve the current element.
@@ -373,7 +384,7 @@ int main() {
         // - That element is a FunThing pointer.
         currentElement = *iterator;
 
-        // Output the info by dereferencing that FunThing pointer.
+        // Output the info.
         currentElement->ouputToStream( cout );
     }
 

@@ -31,7 +31,7 @@ A virtual call is a mechanism to get work done given partial information. In par
 
 ==
 
-## Abstract class and Pure virtual functions
+## Abstract class and Purely virtual functions
 
 - **Pure virtual functions**: the expression `= 0` before the semiclolon 
 - **Abstract class**: a class that contains one or more pure virtual functions
@@ -118,5 +118,9 @@ int main() {
 }
 ```
 
+==
 
+## Calling subclass methods from superclass in a vector C++
+- http://stackoverflow.com/questions/24844084/calling-subclass-methods-from-superclass-in-a-vector-c
+- Run-time binding using virtual keyword.
 

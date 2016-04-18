@@ -14,8 +14,6 @@ Instantiate at least two instances of TwoPlayerBG and MultiPlayerBG.  Appropriat
 
 vector<FunThing*> v_boardGames;
 
----TODO---
-
 Correctly iterate v_boardGames and << appropriately to output through the left-shift operator.  Your loop must be coded in such a way that it will work for any number of vector elements.
 
 ==
@@ -29,6 +27,8 @@ Correctly iterate v_boardGames and << appropriately to output through the left-s
 
 ### Classes to create
 You only need to make three classes, but if you can defend a reason to use more.
+
+---TODO---
 
 ### FunThing
 You are NOT allowed to change the design of FunThing.  From previous assignments, your FunThing must contain a <<, -- and ++ overload as well as the two purely virtual methods.
