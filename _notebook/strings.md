@@ -319,4 +319,10 @@ if (subString != 0) {
 }
 ```
 
+==
 
+## [Comparing character arrays and string literals in C++](http://stackoverflow.com/a/1639437/3837223)
+- Use std::strcmp
+    + `int strcmp( const char *lhs, const char *rhs );` 
+    + returns 0 if strings are equal.
+    + `#include <cstring>`

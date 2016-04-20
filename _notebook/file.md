@@ -44,8 +44,68 @@ outFile.close();
 ## Checking if a file was successfully opened
 
 ```cpp
-if (!inFile.is_open() || !outFile.is_open()) {
+if ( ! inFile.is_open() || ! outFile.is_open() ) {
     cout << "Error opening a file" << endl;
 }
 ```
 
+==
+
+```cpp
+int main() {
+
+    ifstream reader;
+
+    // Temporary data containers for each line.
+    char acctName[101], acctType[11];
+    double acctBal;
+    BankAccount* newAccount;
+
+    // Create a bank
+    Bank* bank = new Bank;
+
+    // Open the appropriate file
+    reader.open( "/Users/masa/data_cpp_exercises/bank_data.txt" );
+
+    // Loop will terminate once there is no more data to read from file
+    while( ! reader.eof() ) {
+
+        // Reads the name of the account holder into acctName
+        reader.getline( acctName, 100, ',' );
+
+        // Reads the account type of the account into acctType
+        reader.getline( acctType, 10, ',' );
+
+        // Reads the balance into acctBal
+        reader >> acctBal;
+
+        reader.ignore();
+
+        //************************************************
+
+        // Data validation (rejecting data with an empty string)
+        if ( acctName[0] == '\0' || acctType[0] == '\0' ) {
+           cout << "Ignored data with empty name or empty type." << endl;
+           continue;
+        }
+
+        // Create a new account with this data set and add to the bank.
+        newAccount = new BankAccount( acctName, acctType, acctBal );
+        bank->addAccount( newAccount );
+
+        drawLine();
+
+        // Clear the variables.
+        acctName[0] = '\0';
+        acctType[0] = '\0';
+        acctBal     = NULL;
+
+        //************************************************
+    }
+    reader.close();  // Close the file
+```
+
+==
+
+## [Comparing character arrays and string literals in C++](http://stackoverflow.com/a/1639437/3837223)
+- `std::strcmp` returns 0 if strings are equal.
