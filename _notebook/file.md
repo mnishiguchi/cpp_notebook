@@ -4,6 +4,8 @@
 - We must declare variables, which include ifstream variables for input and ofstream variables for output
 - Note: Make sure the filename has an **absolute path**. [Apple Support Communities](https://discussions.apple.com/thread/6588941?start=0&tstart=0)
 
+[](http://stackoverflow.com/a/4324667/3837223)
+
 ## fstream
 - used for file I/O
 - contains the definitions of two data types:
@@ -109,3 +111,68 @@ int main() {
 
 ## [Comparing character arrays and string literals in C++](http://stackoverflow.com/a/1639437/3837223)
 - `std::strcmp` returns 0 if strings are equal.
+
+==
+
+```cpp
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <string>
+...
+
+    ifstream thingsFile;
+
+    // Five fields: [tType, tName, funLevel, numPlayers, dangerous]
+    string fields[ 5 ];
+
+    //
+    thingsFile.open( "/Users/masa/Desktop/cpp_notebook/data_files/funthingfile.txt" );
+
+    // if (thingsFile.good()) { cout << "GOOD" << endl; }
+    // else                   { cout << "BAD" << endl; }
+
+    // Temp var to hold an instance.
+    FunThing* funThing;
+
+    // A collection to hold all the data that was read from a file.
+    vector<FunThing*> collection;
+
+    // Read each row.
+    // istream& getline (char* s, streamsize n, char delim );
+    // http://www.cplusplus.com/reference/istream/istream/getline/
+    // http://stackoverflow.com/a/19936571/3837223
+    string row;
+    while ( getline( thingsFile, row ) ) {
+
+        int columnIndex = 0;  // Initialize columnIndex.
+
+        // Read each field delimited by ',' from the row.
+        istringstream rowStream( row );
+        string field;
+        while ( getline( rowStream, field, ',' ) ) {
+
+            fields[ columnIndex ] = field; // Store value for each field.
+            columnIndex += 1;              // Update columnIndex.
+        }
+
+        // Create a new FunThing instance.
+        funThing = createAppropriateFunThing( fields, 5 );
+
+        // Ignore this item and continue if the instantiation fails.
+        if ( funThing == NULL ) { continue; }
+
+        // Push this item to collection.
+        collection.push_back( funThing );
+
+        // // Clear all the temp variables.
+        // for ( int i = 0; i < 5; i++ ) { fields[ i ] = ""; }
+        // funThing = NULL;
+
+        // // DEBUG: Print all the fields in this row.
+        // for ( int i = 0; i < 5; i++ ) {
+        //     cout << "Field " << i << ": " << fields[i] << endl;
+        // }
+
+    } // end while
+```
