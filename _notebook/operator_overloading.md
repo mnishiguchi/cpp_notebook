@@ -136,6 +136,63 @@ CSample& operator++()
 ## Overloading Square Bracket [] Operator
 - http://www.cplusplus.com/forum/general/62240/
 
+==
+
+## [Comparing objects and inheritance](http://stackoverflow.com/a/2825479/3837223)
+
+```cpp
+class Base // Base is an abstract class
+{
+    virtual bool equals(const Base& b) = 0;
+};
+
+class A : public Base
+{
+    virtual bool equals(const Base& base)
+    {
+        if (const A* a = dynamic_cast<const A*>(&base))
+        {
+            // Return true iff this and a are equal.
+        }
+        return false;
+    }
+};
+
+class B : public Base
+{
+    virtual bool equals(const Base& base)
+    {
+        if (const B* b = dynamic_cast<const B*>(&base))
+        {
+            // Return true iff this and b are equal.
+        }
+        return false;
+    }
+};
+```
+
+```cpp
+bool GenericThing::operator<( const FunThing& _other ) {
+
+    // Run-time casting.
+    // http://stackoverflow.com/a/2825479/3837223
+    const GenericThing* other = dynamic_cast<const GenericThing*>( &_other );
+
+    printf("Called from GenericThing\n");
+
+    if ( funLevel != other->getFunLevel() ) {
+        return funLevel < other->getFunLevel();
+
+    } else if ( dangerous != other->dangerous ) {
+        return dangerous < other->dangerous;
+
+    } else if ( numberOfPlayers != other->numberOfPlayers ) {
+        return numberOfPlayers > other->numberOfPlayers;
+    }
+
+    return thingName < other->getThingName();
+}
+```
 
 == 
 

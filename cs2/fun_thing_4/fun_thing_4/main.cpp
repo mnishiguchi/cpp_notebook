@@ -69,8 +69,10 @@ public:
         return *this;
     }
 
+    // Minimal implementation that can be overriden by subclasses.
     virtual bool operator<( const FunThing& other ) {
-      printf("Called from FunThing\n");
+
+      // printf("Called from FunThing\n");
 
       return funLevel < other.funLevel;
     }
@@ -134,7 +136,7 @@ public:
     string getDangerText() const;
 
     // Override the super's < operator.
-    virtual bool operator<( const GenericThing& other );
+    virtual bool operator<( const FunThing& other );
 
 protected:
     bool dangerous;
@@ -150,7 +152,7 @@ ostream& operator<<( ostream& os, GenericThing& thing ) {
     os << "    Fun Level : "
        << thing.getFunLevelText() << " ("<< thing.getFunLevel() << ")" << endl;
     os << "       Danger : "
-       << thing.getDangerText() << " ("<< thing.isDangerous() << ")" << endl;
+       << thing.getDangerText()   << " ("<< thing.isDangerous() << ")" << endl;
     os << "      Players : "
        << thing.getNumberOfPlayers() << endl;
     os << "         Name : "
@@ -216,21 +218,24 @@ string GenericThing::getDangerText() const {
     if all these values are the same, use the alphabetical order of the thing
     name to determine which is "greater".
  */
-bool GenericThing::operator<( const GenericThing& other ) {
+bool GenericThing::operator<( const FunThing& _other ) {
 
-    printf("Called from GenericThing\n");
+    // http://stackoverflow.com/a/2825479/3837223
+    const GenericThing* other = dynamic_cast< const GenericThing* >( &_other );
 
-    if ( funLevel != other.getFunLevel() ) {
-        return funLevel < other.getFunLevel();
+    // printf("Called from GenericThing\n");
 
-    } else if ( dangerous != other.dangerous ) {
-        return dangerous < other.dangerous;
+    if ( funLevel != other->getFunLevel() ) {
+        return funLevel < other->getFunLevel();
 
-    } else if ( numberOfPlayers != other.numberOfPlayers ) {
-        return numberOfPlayers > other.numberOfPlayers;
+    } else if ( dangerous != other->dangerous ) {
+        return dangerous < other->dangerous;
+
+    } else if ( numberOfPlayers != other->numberOfPlayers ) {
+        return numberOfPlayers > other->numberOfPlayers;
     }
 
-    return thingName < other.getThingName();
+    return thingName < other->getThingName();
 }
 
 
@@ -275,22 +280,10 @@ public:
 //====================================================//
 
 
+// bool compareFunThingPointers( FunThing * const & lhs,  FunThing * const & rhs );
 FunThing* createAppropriateFunThing( string* fields );
+void getHighLowThings( list<FunThing*> &collection, FunThing* &min, FunThing* &max );
 void printAll( list<FunThing*> &collection );
-
-bool CompareFunThingPointers( FunThing * const & lhs,  FunThing * const & rhs ) {
-    if ( lhs->getFunLevel() != rhs->getFunLevel() ) {
-        return lhs->getFunLevel() < rhs->getFunLevel();
-
-    } else if ( lhs->isDangerous() != rhs->isDangerous() ) {
-        return lhs->isDangerous() < rhs->isDangerous();
-
-    } else if ( lhs->getNumberOfPlayers() != rhs->getNumberOfPlayers() ) {
-        return lhs->getNumberOfPlayers() > rhs->getNumberOfPlayers();
-    }
-
-    return lhs->getThingName() < rhs->getThingName();
-}
 
 
 int main() {
@@ -300,11 +293,10 @@ int main() {
     // Five fields: [tType, tName, funLevel, numPlayers, dangerous]
     string fields[ 5 ];
 
-    //
+    cout << "Opening file..." << endl;
     thingsFile.open( "/Users/masa/Desktop/cpp_notebook/data_files/funthingfile.txt" );
 
-    // if (thingsFile.good()) { cout << "GOOD" << endl; }
-    // else                   { cout << "BAD" << endl; }
+    // cout << (thingsFile.good() ? "GOOD" : "BAD") << endl;  // DEBUG
 
     // Temp var to hold an instance.
     FunThing* funThing;
@@ -330,45 +322,104 @@ int main() {
             columnIndex += 1;              // Update columnIndex.
         }
 
-        // Create a new FunThing instance.
+        // Create a new FunThing instance based on data.
         funThing = createAppropriateFunThing( fields );
 
-        // Ignore this item and continue if the instantiation fails.
-        if ( funThing == NULL ) { continue; }
+        // If the instantiation was successful.
+        if ( funThing != NULL ) {
 
-        // Push this item to collection.
-        collection.push_back( funThing );
+            collection.push_back( funThing ); // Push this item to collection.
+        }
 
-        // // Clear all the temp variables.
-        // for ( int i = 0; i < 5; i++ ) { fields[ i ] = ""; }
-        // funThing = NULL;
+        // Clear all the temp variables.
+        for ( int i = 0; i < 5; i++ ) { fields[ i ] = ""; }
+        funThing = NULL;
 
         // // DEBUG: Print all the fields in this row.
         // for ( int i = 0; i < 5; i++ ) { cout << "Field " << i << ": " << fields[i] << endl; }
 
     } // end while
 
-    cout << "Closing the file" << endl;
+    cout << "Closing file..." << endl;
     thingsFile.close();
 
     // Printing all
+    cout << "Printing all items that were loaded from file..." << endl;
     printAll( collection );
 
-    // Sort
-    cout << "Sorting" << endl;
-
-    collection.sort( CompareFunThingPointers );
-    printAll( collection );
+    // Printing min and max.
+    cout << "Printing the least and the greatest of all..." << endl;
+    FunThing* min;
+    FunThing* max;
+    getHighLowThings( collection, min, max );
+    cout << "Min:\n" << *min << endl;
+    cout << "Max:\n" << *max << endl;
 
     return 0;
 
 } // end main
 
 
+// bool compareFunThingPointers( FunThing * const & lhs,  FunThing * const & rhs ) {
+//     return *lhs < *rhs;
+// }
+
+
+/**
+ * @param  fields An string array of five data items.
+ * @return        A new instance of FunThing that is of the specified type or
+ * NULL if the passed in fields are invalid.
+ */
+FunThing* createAppropriateFunThing( string* fields ) {
+
+    if ( "GT" == fields[ 0 ] ) {
+        // Signature: GenericThing( string thingName, int funLevel, int numberOfPlayers, bool isDangerous )
+        return new GenericThing(  fields[ 1 ],
+                                  stoi( fields[ 2 ] ),
+                                  stoi( fields[ 3 ] ),
+                                  "1" == fields[ 4 ] );
+    } else if ( "DC" == fields[ 0 ] ) {
+        // Signature: DomesticChore( string thingName, int funLevel, int numberOfPlayers )
+        return new DomesticChore( fields[ 1 ],
+                                  stoi( fields[ 2 ] ),
+                                  stoi( fields[ 3 ] ) );
+    } else if ( "CS" == fields[ 0 ] ) {
+        // Signature: CrazySport( string thingName, int funLevel, int numberOfPlayers )
+        return new CrazySport(    fields[ 1 ],
+                                  stoi( fields[ 2 ] ),
+                                  stoi( fields[ 3 ] ) );
+    }
+    return NULL;
+}
+
+
+/**
+ * Sort the passed-in collection by ASC order and assign min and max to the
+ * variables passed in as 2nd and 3rd arguments.
+ * @param collection the STL container list<FunThing*>
+ * @param min  A reference to FunThing* to which the "least" will be assigned.
+ * @param max  A reference to FunThing* to which the "greatest" will be assigned.
+ */
+void getHighLowThings( list<FunThing*> &collection,
+                            FunThing* &min,
+                            FunThing* &max ) {
+
+    // Passing a lambda expression to `sort()` as a comparator.
+    collection.sort(
+        []( FunThing * const & lhs,  FunThing * const & rhs ) {
+            return *lhs < *rhs;
+        }
+    );
+    min = collection.front();  // Assign min.
+    max = collection.back();   // Assign max.
+}
+
+
 /**
  * Output all the elements in a collection.
  */
 void printAll( list<FunThing*> &collection ) {
+
     // Create an iterator of list<FunThing*> type.
     list<FunThing*>::iterator iterator;
 
@@ -391,30 +442,3 @@ void printAll( list<FunThing*> &collection ) {
     }
 }
 
-
-/**
- * @param  fields An string array of five data items.
- * @return        A new instance of FunThing that is of the specified type or
- * NULL if the passed in fields are invalid.
- */
-FunThing* createAppropriateFunThing( string* fields ) {
-
-    if ( "GT" == fields[ 0 ] ) {
-        // GenericThing( string thingName, int funLevel, int numberOfPlayers, bool isDangerous )
-        return new GenericThing(  fields[ 1 ],
-                                  stoi( fields[ 2 ] ),
-                                  stoi( fields[ 3 ] ),
-                                  "1" == fields[ 4 ] );
-    } else if ( "DC" == fields[ 0 ] ) {
-        // DomesticChore( string thingName, int funLevel, int numberOfPlayers )
-        return new DomesticChore( fields[ 1 ],
-                                  stoi( fields[ 2 ] ),
-                                  stoi( fields[ 3 ] ) );
-    } else if ( "CS" == fields[ 0 ] ) {
-        // CrazySport( string thingName, int funLevel, int numberOfPlayers )
-        return new CrazySport(    fields[ 1 ],
-                                  stoi( fields[ 2 ] ),
-                                  stoi( fields[ 3 ] ) );
-    }
-    return NULL;
-}
