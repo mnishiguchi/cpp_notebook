@@ -26,3 +26,51 @@ for ( int i = 0; i < it != myQueue; it++ ) {
 
 }
 ```
+
+```cpp
+    // Create an iterator of vector<FunThing*> type.
+    vector<FunThing*>::iterator iterator;
+
+    // An temp variable to make the code easier to understand.
+    FunThing* currentElement;
+
+    // Iterate over the vector using that iterator.
+    cout << "v_boardGames contains:\n";
+    for ( iterator  = v_boardGames.begin() ;
+          iterator != v_boardGames.end()   ;
+          iterator++ ) {
+
+        // Retrieve the current element.
+        // - The iterator is a pointer pointing to the current element.
+        // - That element is a FunThing pointer.
+        currentElement = *iterator;
+
+        // Output the info.
+        currentElement->ouputToStream( cout );
+    }
+```
+
+```cpp
+    collection.sort( compareFunThingPointers );
+
+    // Create a reverse-iterator of list<FunThing*> type.
+    list<FunThing*>::reverse_iterator iterator;
+
+    // An temp variable to make the code easier to understand.
+    FunThing* currentElement;
+
+    // Iterate over the list using that iterator.
+    int count = 0;
+    for ( iterator  = collection.rbegin() ;
+          iterator != collection.rend() && count < howMany ;
+          iterator++, count++ ) {
+
+        // Retrieve the current element.
+        // - The iterator is a pointer pointing to the current element.
+        // - That element is a FunThing pointer.
+        currentElement = *iterator;
+
+        // Push the element to the highestThings list.
+        highestThings.push_back( currentElement );
+    }
+```

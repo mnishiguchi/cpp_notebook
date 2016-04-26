@@ -9,10 +9,10 @@
 #include <fstream>
 #include <sstream>
 #include <string>
-#include <cstring>
 #include <list>
 #include <stdexcept>
-#include <cassert>
+// #include <cstring>
+// #include <cassert>
 
 using namespace std;
 
@@ -259,7 +259,6 @@ public:
 }; // end DomesticChore
 
 
-
 //====================================================//
 // Test functions
 //====================================================//
@@ -280,8 +279,9 @@ public:
 //====================================================//
 
 
-// bool compareFunThingPointers( FunThing * const & lhs,  FunThing * const & rhs );
+bool compareFunThingPointers( FunThing * const & lhs,  FunThing * const & rhs );
 FunThing* createAppropriateFunThing( string* fields );
+void getHighest( list<FunThing*> &collection, list<FunThing*> &highestThings, int howMany );
 void getHighLowThings( list<FunThing*> &collection, FunThing* &min, FunThing* &max );
 void printAll( list<FunThing*> &collection );
 
@@ -355,19 +355,45 @@ int main() {
     cout << "Min:\n" << *min << endl;
     cout << "Max:\n" << *max << endl;
 
+    // Get top 4 items from the collection.
+    // Ensure you are prepared to catch any exceptions thrown by getHighest().
+    list<FunThing*> highestThings;
+    try {
+        cout << "Obtaining top 4 items from the collection..." << endl;
+        getHighest( collection, highestThings, 4 );
+        // getHighest( collection, highestThings, -1 ); //==> Error
+        // getHighest( collection, highestThings, 42 ); //==> Error
+
+    } catch( char const* error ) {  // Catch a string literal.
+        cerr << error << endl;
+    }
+
+    // Iterate highestThings to see the results
+    printAll( highestThings );
+
+    // Delete all dynamic items in the collection.
+    // NOTE: Since highestThings are alias of highest items in collection, they
+    // need not be deleted.
+    collection.clear();
+
     return 0;
 
 } // end main
 
 
-// bool compareFunThingPointers( FunThing * const & lhs,  FunThing * const & rhs ) {
-//     return *lhs < *rhs;
-// }
+//====================================================//
+// Ulils
+//====================================================//
+
+
+bool compareFunThingPointers( FunThing * const & lhs, FunThing * const & rhs ) {
+    return *lhs < *rhs;
+}
 
 
 /**
  * @param  fields An string array of five data items.
- * @return        A new instance of FunThing that is of the specified type or
+ * @return A new instance of FunThing that is of the specified type or
  * NULL if the passed in fields are invalid.
  */
 FunThing* createAppropriateFunThing( string* fields ) {
@@ -394,22 +420,65 @@ FunThing* createAppropriateFunThing( string* fields ) {
 
 
 /**
+ * Fill a vector with x highest FunThings contained in a supplied STL container.
+ * A string exception must be thrown if the number of highest elements sought (x)
+ * is greater than the number of elements in the container or if that number is
+ * less-than 1.
+ * @param collection    An STL container list<FunThing*> used as data source.
+ * @param highestThings An STL container list<FunThing*> to store the result.
+ * @param howMany       Specifies how many items to obtain from the highest.
+ */
+void getHighest( list<FunThing*> &collection,
+                 list<FunThing*> &highestThings,
+                 int howMany ) {
+
+    // A string exception must be thrown if the number of highest elements
+    // sought (x) is greater than the number of elements in the container or if
+    // that number is less-than 1.
+    if ( howMany < 1 ) {
+        // throw new out_of_range();
+        throw("Error: the number of highest elements sought must be greater than 1");
+
+    } else if ( howMany > collection.size() ) {
+        // throw new out_of_range();
+        throw( "Error: the number of highest elements sought must not be greater than the number of elements in the container" );
+    }
+
+    collection.sort( compareFunThingPointers );
+
+    // Create a reverse-iterator of list<FunThing*> type.
+    list<FunThing*>::reverse_iterator iterator;
+
+    // An temp variable to make the code easier to understand.
+    FunThing* currentElement;
+
+    // Iterate over the list using that iterator.
+    int count = 0;
+    for ( iterator  = collection.rbegin() ;
+          iterator != collection.rend() && count < howMany ;
+          iterator++, count++ ) {
+
+        // Retrieve the current element.
+        currentElement = *iterator;
+
+        // Push the element to the highestThings list.
+        highestThings.push_back( currentElement );
+    }
+}
+
+
+/**
  * Sort the passed-in collection by ASC order and assign min and max to the
  * variables passed in as 2nd and 3rd arguments.
- * @param collection the STL container list<FunThing*>
- * @param min  A reference to FunThing* to which the "least" will be assigned.
- * @param max  A reference to FunThing* to which the "greatest" will be assigned.
+ * @param collection An STL container list<FunThing*>
+ * @param min        A reference to FunThing* to which the "least" will be assigned.
+ * @param max        A reference to FunThing* to which the "greatest" will be assigned.
  */
 void getHighLowThings( list<FunThing*> &collection,
-                            FunThing* &min,
-                            FunThing* &max ) {
+                       FunThing* &min,
+                       FunThing* &max ) {
 
-    // Passing a lambda expression to `sort()` as a comparator.
-    collection.sort(
-        []( FunThing * const & lhs,  FunThing * const & rhs ) {
-            return *lhs < *rhs;
-        }
-    );
+    collection.sort( compareFunThingPointers );
     min = collection.front();  // Assign min.
     max = collection.back();   // Assign max.
 }
@@ -427,18 +496,14 @@ void printAll( list<FunThing*> &collection ) {
     FunThing* currentElement;
 
     // Iterate over the list using that iterator.
-    cout << "Collection contains:\n";
     for ( iterator  = collection.begin() ;
           iterator != collection.end()   ;
           iterator++ ) {
 
         // Retrieve the current element.
-        // - The iterator is a pointer pointing to the current element.
-        // - That element is a FunThing pointer.
         currentElement = *iterator;
 
         // Output the info.
         currentElement->ouputToStream( cout );
     }
 }
-

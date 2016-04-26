@@ -12,7 +12,7 @@
 - used to manage objects of a given type.
 - classified into three categories
     + Sequence containers (also called sequential containers)
-        * `vector`, `deque` , `list`
+        * `vector`, `deque`, `list`
         * Every object in a sequence container has a specific position. 
         
     + Associative containers
